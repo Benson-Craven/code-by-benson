@@ -4,7 +4,7 @@ import Image from "next/image"
 const HeroSectionII = () => {
     return (
         <section className="flex min-h-screen w-full flex-col justify-end rounded-md bg-neutral-100 p-10 font-helvetica text-slate-900">
-            <h1 className="mx-4 mb-16 w-1/2 text-6xl tracking-tight text-black">
+            <h1 className="mx-4 mb-16 w-1/2 text-4xl tracking-tight text-black">
                 Melbourne based{" "}
                 <span className="inline-block">
                     <Image
