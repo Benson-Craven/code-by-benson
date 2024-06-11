@@ -10,15 +10,15 @@ const HeroSectionII = () => {
                     <Image
                         src={"/images/portrait-bnw.JPG"}
                         alt="Portrait"
-                        width={50}
-                        height={50}
+                        width={30}
+                        height={30}
                         className="relative cursor-pointer overflow-hidden rounded-full"
                     />
                 </span>{" "}
                 developer crafting engaging, human-focused digital experiences
                 for a range of forward-thinking brands.
             </h1>
-            <div className="flex w-full justify-between px-5 pb-5 text-xl font-light">
+            <div className="flex w-full justify-between px-5 pb-5 text-base font-light">
                 <div>
                     <p>
                         Freelance <br />
