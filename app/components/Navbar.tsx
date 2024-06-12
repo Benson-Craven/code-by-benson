@@ -4,7 +4,13 @@ import React from "react"
 const Navbar = () => {
     return (
         <nav className="fixed top-0 z-10 flex w-full justify-between p-10 font-helvetica text-base text-white mix-blend-difference">
-            <div>Code by Benson</div>
+            <Link href="/">
+                <div className="flex cursor-pointer">
+                    <p className="mx-2 hover:rotate-180">&copy;</p> Code by
+                    Benson
+                </div>
+            </Link>
+
             <div className="flex space-x-10">
                 <Link href="/link1">
                     <p className="hover:text-blue-500">Projects</p>

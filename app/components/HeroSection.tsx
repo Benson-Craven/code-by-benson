@@ -1,83 +1,79 @@
 "use client"
 
-import React from "react"
-import { Vortex } from "./Vortex"
-import { motion } from "framer-motion"
+import React, { useRef } from "react"
+import Image from "next/image"
+import { motion, useInView } from "framer-motion"
 
-interface AnimatedLettersProps {
-    title: string
-}
-
-const singleLetterAnimation = {
-    initial: { y: 400, opacity: 0 },
-    animate: (index: number) => ({
-        y: 0,
-        opacity: 1,
-        transition: {
-            ease: "easeInOut", // Using a built-in easing function
-            duration: 1,
-            delay: index * 0.1, // stagger effect
-        },
-    }),
-}
-
-const AnimatedLetters: React.FC<AnimatedLettersProps> = ({ title }) => (
-    <motion.span className="row-title" initial="initial" animate="animate">
-        {Array.from(title).map((letter, index) => (
-            <motion.span
-                key={index}
-                variants={singleLetterAnimation}
-                initial="initial"
-                animate="animate"
-                custom={index}
-            >
-                {letter}
-            </motion.span>
-        ))}
-    </motion.span>
-)
+const phrases = [" Freelance Front End Developer"]
 
 const HeroSection = () => {
+    const body = useRef(null)
+    // const isInView = useInView(body, { once: true, margin: "-75%" })
+
+    const animation = {
+        initial: { y: "100%", opacity: 0 },
+        enter: (i: number) => ({
+            y: "0",
+            opacity: 1,
+            transition: {
+                duration: 0.8,
+                ease: [0.5, 0.75, 0.9, 1],
+                delay: 0.075 * i,
+            },
+        }),
+    }
+
     return (
-        <section className="relative min-h-screen overflow-hidden p-4 md:p-8 lg:p-16">
-            {/* <Vortex backgroundColor="black" particleCount={150} baseHue={150}> */}
+        <section className="flex min-h-screen w-full flex-col justify-end rounded-tr-full bg-neutral-100 p-10 font-helvetica text-slate-900">
+            <div className="overflow-hidden">
+                <motion.h1
+                    ref={body}
+                    variants={animation}
+                    initial="initial"
+                    animate={"enter"}
+                    className="mx-4 mb-16 w-1/2 text-xl tracking-tight text-black md:text-4xl"
+                >
+                    Melbourne based{" "}
+                    <span className="inline-block">
+                        <Image
+                            src={"/images/portrait-bnw.JPG"}
+                            alt="Portrait"
+                            width={30}
+                            height={30}
+                            className="relative cursor-pointer overflow-hidden rounded-full"
+                        />
+                    </span>{" "}
+                    developer crafting engaging, human-focused digital
+                    experiences for a range of forward-thinking brands.
+                </motion.h1>
+            </div>
+
             <motion.div
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                    ease: "easeInOut",
-                    duration: 1,
-                    delay: 0.6,
-                }}
-                className="mx-5 my-20 font-helvetica lowercase"
+                ref={body}
+                variants={animation}
+                initial="initial"
+                animate={"enter"}
+                className="flex w-full justify-between px-5 pb-5 text-sm font-light md:text-base"
             >
-                <h1 className="text-[100px] leading-tight md:text-[100px] lg:text-[187px]">
-                    <AnimatedLetters title="Code by Benson" />
-                </h1>
-                <div className="container mx-auto">
-                    <div className="w-full">
-                        <p className="p-4 text-justify">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Phasellus imperdiet, nulla et dictum interdum,
-                            nisi lorem egestas odio, vitae scelerisque enim
-                            ligula venenatis dolor. Maecenas nisl est, ultrices
-                            nec congue eget, auctor vitae massa.
-                        </p>
-                    </div>
+                <div>
+                    <p>
+                        Freelance <br />
+                        Front End Developer
+                    </p>
+                </div>
+                <div className="flex space-x-10">
+                    <p className="px-10">
+                        Based in <br />
+                        Melbourne
+                    </p>
+                    <p>
+                        Get in touch <br />
+                        <b className="cursor-pointer">
+                            bensoncraven@hotmail.co.uk
+                        </b>
+                    </p>
                 </div>
             </motion.div>
-            {/* // </Vortex> */}
-
-            {/* <div className="absolute bottom-20 left-10 w-1/3 bg-blue-500 p-5 font-helvetica text-white">
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam
-          voluptatum perspiciatis voluptate. Corrupti magni quisquam voluptates
-          voluptatem incidunt error aliquam accusantium perferendis labore in!
-          Possimus odit et beatae maxime laboriosam in dolor. Explicabo ratione
-          quo labore quaerat possimus aliquid dolor unde aspernatur ipsam,
-          voluptatum corrupti asperiores placeat expedita repellat. Ullam?
-        </p>
-      </div> */}
         </section>
     )
 }
