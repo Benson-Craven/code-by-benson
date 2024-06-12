@@ -1,3 +1,5 @@
+"use client"
+
 import { motion, useInView } from "framer-motion"
 import React, { useRef, useMemo } from "react"
 import { slideUp, opacity } from "./animation.js"
