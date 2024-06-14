@@ -13,7 +13,7 @@ const Manifesto = () => {
     const words = useMemo(() => phrase.split(" "), [phrase])
 
     return (
-        <div className="flex h-screen items-center justify-center bg-neutral-100 px-52 font-helvetica text-black">
+        <div className="flex h-screen flex-col items-center justify-center rounded-br-full bg-neutral-100 px-52 font-helvetica text-black md:flex-row">
             <div ref={descriptionRef} className="flex items-center space-x-8">
                 {/* Here is where the animation works using the useMemo Hook */}
                 <p className="text-xl tracking-tight md:text-4xl">
