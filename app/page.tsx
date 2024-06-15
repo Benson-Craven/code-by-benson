@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect } from "react"
-import CapsuleSection from "./components/Capsule/page"
 import Footer from "./components/Footer"
 import HeroSection from "./components/HeroSection"
 import Manifesto from "./components/Manifesto/page"
@@ -24,7 +23,6 @@ export default function Home() {
                 <Manifesto />
                 <Banner />
                 <Projects />
-                {/* <CapsuleSection /> */}
                 <Testimonials />
                 <Footer />
             </section>
