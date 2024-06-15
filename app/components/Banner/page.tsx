@@ -17,7 +17,7 @@ interface SliderProps {
     src: string
     left: string
     progress: MotionValue<number>
-    direction: "left" | "right"
+    direction: string
 }
 
 const Banner: React.FC = () => {
