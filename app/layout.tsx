@@ -16,8 +16,8 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en">
-            <body>
+        <html lang="en" className="scroll-smooth font-helvetica">
+            <body className="overflow-x-hidden bg-black">
                 <Navbar />
                 {children}
             </body>

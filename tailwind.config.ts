@@ -20,6 +20,9 @@ const config: Config = {
             fontFamily: {
                 helvetica: ["Helvetica Neue", "sans-serif"],
             },
+            translate: {
+                "1/3": "-33.33%",
+            },
         },
     },
     plugins: [],

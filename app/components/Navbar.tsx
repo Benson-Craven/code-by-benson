@@ -4,7 +4,7 @@ import React from "react"
 const Navbar = () => {
     return (
         <nav className="fixed top-0 z-10 flex w-full justify-between p-10 font-helvetica text-base text-white mix-blend-difference">
-            <Link href="/">
+            <Link href="/" scroll={false}>
                 <div className="flex cursor-pointer">
                     <p className="mx-2 hover:rotate-180">&copy;</p> Code by
                     Benson
