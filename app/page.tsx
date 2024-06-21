@@ -23,12 +23,12 @@ export default function Home() {
             <section>
                 <HeroSection />
                 <ParallaxSection />
-                <Manifesto />
+                {/* <Manifesto /> */}
                 <Banner />
                 <Projects />
                 {/* <Testimonials /> */}
                 <ProgressBar />
-                {/* <Footer /> */}
+                <Footer />
             </section>
         </main>
     )

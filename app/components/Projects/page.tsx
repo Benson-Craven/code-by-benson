@@ -1,34 +1,49 @@
 "use client"
 import { motion, useTransform, useScroll } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import React from "react"
 
-const ProjectSection: React.FC = () => (
-    <div className="rounded-tl-full bg-white font-helvetica">
-        <ProjectSectionCarousel />
-    </div>
-)
-
-const ProjectSectionCarousel: React.FC = () => {
+const ProjectSection: React.FC = () => {
     const targetRef = useRef<HTMLDivElement | null>(null)
     const { scrollYProgress } = useScroll({
         target: targetRef,
     })
 
-    // Adjusted transform values to ensure all cards scroll into view
+    const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsSmallScreen(window.innerWidth < 768) // Adjust this breakpoint as needed
+        }
+
+        checkScreenSize()
+        window.addEventListener("resize", checkScreenSize)
+
+        return () => window.removeEventListener("resize", checkScreenSize)
+    }, [])
+
     const cardWidth = 100 / cards.length
     const x = useTransform(
         scrollYProgress,
         [0, 1],
-        ["0%", `-${100 - cardWidth}%`],
+        isSmallScreen ? ["0%", "0%"] : ["0%", `-${100 - cardWidth}%`],
     )
+
     return (
-        <section ref={targetRef} className="relative h-[300vh]">
-            <div className="flex items-center justify-start px-10">
-                <span className="font-serif md:text-8xl">Projects</span>
+        <section
+            ref={targetRef}
+            className={`relative ${isSmallScreen ? "h-auto" : "h-[300vh]"} rounded-bl-[300px] rounded-br-[300px] rounded-tl-full bg-neutral-100`}
+        >
+            <div className="flex items-center justify-start rounded-tr-full px-10">
+                <span className="text-5xl md:text-8xl">Projects</span>
             </div>
-            <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-                <motion.div style={{ x }} className="flex gap-8">
+            <div
+                className={` ${isSmallScreen ? "static mt-20 h-auto overflow-visible" : "sticky top-0 ml-10 h-screen overflow-hidden"} flex items-center`}
+            >
+                <motion.div
+                    style={{ x }}
+                    className={`flex gap-8 ${isSmallScreen ? "flex-col items-center justify-center" : "flex-row flex-nowrap"} `}
+                >
                     {cards.map((card) => (
                         <Card card={card} key={card.id} />
                     ))}
@@ -38,8 +53,9 @@ const ProjectSectionCarousel: React.FC = () => {
     )
 }
 
+// Modify the Card component to be responsive
 const Card: React.FC<{ card: CardType }> = ({ card }) => (
-    <div className="group relative h-[450px] w-[450px] overflow-hidden rounded-md bg-neutral-200">
+    <div className="group relative h-[450px] w-[450px] max-w-full overflow-hidden rounded-lg border-none">
         <div
             style={{
                 backgroundImage: `url(${card.url})`,
@@ -53,6 +69,7 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => (
                 {card.title}
             </p>
         </div>
+        <p>Hello</p>
     </div>
 )
 
@@ -66,37 +83,37 @@ type CardType = {
 
 const cards: CardType[] = [
     {
-        url: "/images/abstract/1.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 1",
         id: 1,
     },
     {
-        url: "/images/abstract/2.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 2",
         id: 2,
     },
     {
-        url: "/images/abstract/3.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 3",
         id: 3,
     },
     {
-        url: "/images/abstract/4.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 4",
         id: 4,
     },
     {
-        url: "/images/abstract/5.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 5",
         id: 5,
     },
     {
-        url: "/images/abstract/6.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 6",
         id: 6,
     },
     {
-        url: "/images/abstract/7.jpg",
+        url: "/images/Pic1.JPG",
         title: "Title 7",
         id: 7,
     },

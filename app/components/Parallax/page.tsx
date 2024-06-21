@@ -21,7 +21,7 @@ const Parallax = () => {
         console.log("Page scroll: ", latest)
     })
 
-    const opacity = useTransform(scrollYProgress, [0.8, 0.95], [1, 0])
+    const opacity = useTransform(scrollYProgress, [0.77, 0.91], [1, 0])
     const opacityGrid = useTransform(scrollYProgress, [0.6, 0.8], [1, 0])
 
     return (
@@ -35,7 +35,7 @@ const Parallax = () => {
                     <div className="flex h-[100vh] w-[100vw] flex-col items-center justify-end">
                         <motion.h2
                             style={{ opacity }}
-                            className="z-3 relative mb-16 block max-w-[90vw] shrink grow-0 items-end text-center text-6xl"
+                            className="z-3 relative mb-16 block max-w-[90vw] shrink grow-0 items-end text-center text-2xl md:text-4xl lg:text-6xl"
                         >
                             Helping brands to stand out in the digital era.
                             Together we will set the new status quo. No
