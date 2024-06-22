@@ -34,7 +34,7 @@ const HeroSection = () => {
                     className="mx-4 mb-16 w-1/2 text-xl tracking-tight text-black md:text-4xl"
                 >
                     Melbourne based{" "}
-                    <span className="inline-block">
+                    <span className="hidden md:inline-block">
                         <Image
                             src={"/images/portrait-bnw.JPG"}
                             alt="Portrait"
@@ -53,7 +53,7 @@ const HeroSection = () => {
                 variants={animation}
                 initial="initial"
                 animate={"enter"}
-                className="flex w-full justify-between px-5 pb-5 text-sm font-light md:text-base"
+                className="flex w-full flex-col justify-between px-5 pb-5 text-sm font-light md:flex-row md:text-base"
             >
                 <div>
                     <p>
@@ -61,8 +61,8 @@ const HeroSection = () => {
                         Front End Developer
                     </p>
                 </div>
-                <div className="flex space-x-10">
-                    <p className="px-10">
+                <div className="flex space-x-10 py-5 md:py-0">
+                    <p className="md:px-10">
                         Based in <br />
                         Melbourne
                     </p>

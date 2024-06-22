@@ -11,7 +11,7 @@ const Navbar = () => {
                 </div>
             </Link>
 
-            <div className="flex space-x-10">
+            <div className="hidden md:flex md:space-x-10">
                 <Link href="/link1">
                     <p className="hover:text-blue-500">Projects</p>
                 </Link>

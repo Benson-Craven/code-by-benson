@@ -37,6 +37,10 @@ const ProjectSection: React.FC = () => {
             <div className="flex items-center justify-start rounded-tr-full px-10">
                 <span className="text-5xl md:text-8xl">Projects</span>
             </div>
+            <div className="flex h-6 w-screen justify-center">
+                <h2 className="font-semibold leading-relaxed">SCROLL DOWN</h2>
+            </div>
+
             <div
                 className={` ${isSmallScreen ? "static mt-20 h-auto overflow-visible" : "sticky top-0 ml-10 h-screen overflow-hidden"} flex items-center`}
             >
@@ -84,37 +88,37 @@ type CardType = {
 const cards: CardType[] = [
     {
         url: "/images/Pic1.JPG",
-        title: "Title 1",
+        title: "Project 1",
         id: 1,
     },
     {
         url: "/images/Pic1.JPG",
-        title: "Title 2",
+        title: "Project 2",
         id: 2,
     },
     {
         url: "/images/Pic1.JPG",
-        title: "Title 3",
+        title: "Project 3",
         id: 3,
     },
     {
         url: "/images/Pic1.JPG",
-        title: "Title 4",
+        title: "Project 4",
         id: 4,
     },
     {
         url: "/images/Pic1.JPG",
-        title: "Title 5",
+        title: "Project 5",
         id: 5,
     },
     {
         url: "/images/Pic1.JPG",
-        title: "Title 6",
+        title: "Project 6",
         id: 6,
     },
     {
         url: "/images/Pic1.JPG",
-        title: "Title 7",
+        title: "Project 7",
         id: 7,
     },
 ]

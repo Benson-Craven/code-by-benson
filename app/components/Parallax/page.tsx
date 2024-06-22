@@ -49,7 +49,7 @@ const Parallax = () => {
             <div className="relative mx-auto mt-[200px] block w-[100vw] px-[30px]">
                 <motion.div
                     style={{ opacity: opacityGrid }}
-                    className="grid grid-cols-[.75fr_1fr_1fr_1.25fr_1.25fr_1.25fr_1fr_.75fr] gap-0"
+                    className="grid gap-0 md:grid-cols-[.75fr_1fr_1fr_1.25fr_1.25fr_1.25fr_1fr_.75fr]"
                 >
                     <div className="col-start-2 row-start-1">
                         <Image
