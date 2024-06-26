@@ -45,7 +45,10 @@ const Banner: React.FC = () => {
 
     return (
         <main>
-            <div ref={container} className="mb-[20vh] mt-[20vh]">
+            <div
+                ref={container}
+                className="mb-[20vh] mt-[20vh] overflow-hidden"
+            >
                 {sliders.map((slider, index) => (
                     <Slider
                         key={index}

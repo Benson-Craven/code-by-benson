@@ -31,7 +31,7 @@ const HeroSection = () => {
                     variants={animation}
                     initial="initial"
                     animate={"enter"}
-                    className="mx-4 mb-16 w-1/2 text-xl tracking-tight text-black md:text-4xl"
+                    className="mx-4 mb-16 w-2/3 text-xl tracking-tight text-black md:w-1/2 md:text-4xl"
                 >
                     Melbourne based{" "}
                     <span className="hidden md:inline-block">

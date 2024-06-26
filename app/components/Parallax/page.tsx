@@ -17,9 +17,9 @@ const Parallax = () => {
         offset: ["start end", "end start"],
     })
 
-    useMotionValueEvent(scrollYProgress, "change", (latest) => {
-        console.log("Page scroll: ", latest)
-    })
+    // useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    //     console.log("Page scroll: ", latest)
+    // })
 
     const opacity = useTransform(scrollYProgress, [0.77, 0.91], [1, 0])
     const opacityGrid = useTransform(scrollYProgress, [0.6, 0.8], [1, 0])
