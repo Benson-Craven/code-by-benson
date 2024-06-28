@@ -53,7 +53,7 @@ const HeroSection = () => {
                 variants={animation}
                 initial="initial"
                 animate={"enter"}
-                className="flex w-full flex-col justify-between px-5 pb-5 text-sm font-light md:flex-row md:text-base"
+                className="mb-5 flex w-full flex-col justify-between px-5 pb-5 text-sm font-light md:flex-row md:text-base"
             >
                 <div>
                     <p>

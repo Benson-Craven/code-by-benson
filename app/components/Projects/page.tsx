@@ -1,5 +1,10 @@
 "use client"
-import { motion, useTransform, useScroll } from "framer-motion"
+import {
+    motion,
+    useTransform,
+    useScroll,
+    useMotionValueEvent,
+} from "framer-motion"
 import { useRef } from "react"
 import React from "react"
 
@@ -12,29 +17,30 @@ const ProjectSection: React.FC = () => {
     const cardWidth = 100 / cards.length
     const x = useTransform(
         scrollYProgress,
-        [0.15, 1],
+        [0.1, 1],
         ["0%", `-${100 - cardWidth}%`],
     )
+    const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0])
+
+    // useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    //     console.log("Page scroll: ", latest)
+    // })
 
     return (
         <section
             ref={targetRef}
             className="relative h-[300vh] rounded-bl-[300px] rounded-br-[300px] rounded-tl-full bg-neutral-100"
         >
-            {/* <div className="flex h-6 w-screen justify-center">
-                <h2 className="font-semibold leading-relaxed">SCROLL DOWN</h2>
-            </div> */}
-            {/* <div className="flex items-center justify-start rounded-tr-full px-10">
-                <span className="text-3xl md:text-7xl">Projects</span>
-            </div> */}
-
-            <div className="sticky top-16 z-10 ml-5 flex h-auto mix-blend-difference md:ml-10">
+            <motion.div
+                style={{ opacity }}
+                className="sticky top-24 border-2 border-blue-500 pl-5 mix-blend-difference"
+            >
                 <h2 className="text-5xl">Projects</h2>
-            </div>
-            <div className="sticky top-0 flex min-h-screen items-center overflow-hidden">
+            </motion.div>
+            <div className="sticky top-44 flex h-1/5 flex-col items-start justify-center overflow-hidden border-2 border-red-500">
                 <motion.div
                     style={{ x }}
-                    className="ml-5 flex flex-row flex-nowrap gap-8 md:ml-10"
+                    className="mb-10 flex flex-row flex-nowrap gap-8 pl-5 mix-blend-normal md:pb-10 md:pl-9"
                 >
                     {cards.map((card) => (
                         <Card card={card} key={card.id} />
@@ -55,7 +61,7 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => (
                 className="h-[250px] w-full rounded-lg object-cover transition-transform duration-300 hover:scale-105 md:h-[500px]"
             />
         </div>
-        <div className="mt-3 bg-neutral-100">
+        <div className="mt-3 text-black">
             <h3 className="mb-2 text-lg mix-blend-difference sm:text-2xl">
                 {card.title}
             </h3>
@@ -162,3 +168,14 @@ const cards: CardType[] = [
 //         </a>
 //     </div>
 // </div>
+
+{
+    /* <div className="flex h-6 w-screen justify-center">
+                <h2 className="font-semibold leading-relaxed">SCROLL DOWN</h2>
+            </div> */
+}
+{
+    /* <div className="flex items-center justify-start rounded-tr-full px-10">
+                <span className="text-3xl md:text-7xl">Projects</span>
+            </div> */
+}

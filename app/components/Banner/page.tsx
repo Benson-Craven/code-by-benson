@@ -34,7 +34,7 @@ const Banner: React.FC = () => {
             left: "-65%",
             direction: "left",
         },
-        { title: "UX Designer", src: Pic2, left: "-15%", direction: "right" },
+        { title: "UX Designer", src: Pic2, left: "-85%", direction: "right" },
         {
             title: "Front End Developer",
             src: Pic3,
@@ -79,7 +79,7 @@ const Slider: React.FC<SliderProps> = ({
             className="relative flex whitespace-nowrap font-helvetica tracking-tight"
             style={{ left, x }}
         >
-            {Array(3)
+            {Array(5)
                 .fill(0)
                 .map((_, index) => (
                     <Phrase key={index} title={title} src={src} />

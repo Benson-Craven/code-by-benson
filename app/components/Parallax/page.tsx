@@ -32,10 +32,10 @@ const Parallax = () => {
             {/* Here is the div where the content will stick the top and the other div can cross over creating the illusion of the text remaining at the bottom of the div */}
             <div className="z-1 sticky bottom-auto top-0 h-[100vh] w-[100vw] overflow-hidden mix-blend-difference">
                 <div className="z-3 relative h-full">
-                    <div className="flex h-[100vh] w-[100vw] flex-col items-center justify-end">
+                    <div className="flex h-[100vh] w-[100vw] flex-col items-center justify-end pb-5">
                         <motion.h2
                             style={{ opacity }}
-                            className="z-3 relative mb-16 block max-w-[90vw] shrink grow-0 items-end text-center text-2xl md:text-4xl lg:text-6xl"
+                            className="z-3 relative block max-w-[90vw] shrink grow-0 items-end pb-5 text-center text-3xl md:text-5xl lg:text-6xl"
                         >
                             Helping brands to stand out in the digital era.
                             Together we will set the new status quo. No
