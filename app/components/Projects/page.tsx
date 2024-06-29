@@ -33,14 +33,14 @@ const ProjectSection: React.FC = () => {
         >
             <motion.div
                 style={{ opacity }}
-                className="sticky top-24 border-2 border-blue-500 pl-5 mix-blend-difference"
+                className="sticky top-24 mb-8 pl-5 mix-blend-difference md:pl-10"
             >
                 <h2 className="text-5xl">Projects</h2>
             </motion.div>
-            <div className="sticky top-44 flex h-1/5 flex-col items-start justify-center overflow-hidden border-2 border-red-500">
+            <div className="sticky top-44 flex flex-col items-start justify-center overflow-hidden">
                 <motion.div
                     style={{ x }}
-                    className="mb-10 flex flex-row flex-nowrap gap-8 pl-5 mix-blend-normal md:pb-10 md:pl-9"
+                    className="mb-10 flex flex-row flex-nowrap gap-8 pl-5 md:pl-10"
                 >
                     {cards.map((card) => (
                         <Card card={card} key={card.id} />
@@ -53,15 +53,15 @@ const ProjectSection: React.FC = () => {
 
 // Modify the Card component to be responsive
 const Card: React.FC<{ card: CardType }> = ({ card }) => (
-    <div className="flex h-auto w-[250px] flex-col overflow-hidden md:w-[500px]">
-        <div className="mb-2">
+    <div className="flex min-h-max flex-col overflow-hidden">
+        <div className="mb-2 h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px] lg:h-[450px] lg:w-[450px]">
             <img
                 src={card.url}
                 alt={card.title}
-                className="h-[250px] w-full rounded-lg object-cover transition-transform duration-300 hover:scale-105 md:h-[500px]"
+                className="h-full w-full rounded-lg object-cover transition-transform duration-300 hover:scale-105"
             />
         </div>
-        <div className="mt-3 text-black">
+        <div className="mt-2 text-black">
             <h3 className="mb-2 text-lg mix-blend-difference sm:text-2xl">
                 {card.title}
             </h3>

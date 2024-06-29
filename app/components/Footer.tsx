@@ -32,9 +32,10 @@ const Footer = () => {
                             Have a project in mind?
                         </h3>
                     </div>
-                    <div className="flex flex-col text-5xl md:text-7xl">
-                        <span>✺</span>
-                        <h2 className="text-neutral-100">Let's Collaborate</h2>
+                    <div className="text-5xl md:text-7xl">
+                        <h2 className="tracking-tight text-neutral-100">
+                            <span>✺</span> Let's Collaborate
+                        </h2>
                     </div>
                     <div className="mt-5 flex items-center justify-between">
                         <h4 className="text-lg md:text-3xl">

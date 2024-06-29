@@ -35,7 +35,7 @@ const Parallax = () => {
                     <div className="flex h-[100vh] w-[100vw] flex-col items-center justify-end pb-5">
                         <motion.h2
                             style={{ opacity }}
-                            className="z-3 relative block max-w-[90vw] shrink grow-0 items-end pb-5 text-center text-3xl md:text-5xl lg:text-6xl"
+                            className="z-3 relative block max-w-[90vw] shrink grow-0 items-end pb-6 text-center text-2xl md:pb-8 md:text-5xl lg:text-6xl"
                         >
                             Helping brands to stand out in the digital era.
                             Together we will set the new status quo. No
@@ -49,7 +49,7 @@ const Parallax = () => {
             <div className="relative mx-auto mt-[200px] block w-[100vw] px-[30px]">
                 <motion.div
                     style={{ opacity: opacityGrid }}
-                    className="grid gap-0 md:grid-cols-[.75fr_1fr_1fr_1.25fr_1.25fr_1.25fr_1fr_.75fr]"
+                    className="grid w-full grid-cols-[1fr_1fr_1fr] gap-y-9 object-scale-down md:grid-cols-[.75fr_1fr_1fr_1.25fr_1.25fr_1.25fr_1fr_.75fr] md:gap-0"
                 >
                     <div className="col-start-2 row-start-1">
                         <Image
