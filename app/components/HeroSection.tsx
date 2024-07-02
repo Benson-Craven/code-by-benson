@@ -16,9 +16,9 @@ const HeroSection = () => {
             y: "0",
             opacity: 1,
             transition: {
-                duration: 0.8,
+                duration: 1,
                 ease: [0.5, 0.75, 0.9, 1],
-                delay: 0.075 * i,
+                delay: 1.05,
             },
         }),
     }

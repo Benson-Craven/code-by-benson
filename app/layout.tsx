@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import Navbar from "./components/Navbar"
+import Navbar from "./components/Navbar/Navbar"
 
 export const metadata: Metadata = {
     title: "Code by Benson",
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="scroll-smooth font-helvetica">
-            <body className="overflow-x-hidden bg-black">
+            <body className="overflow-x-hidden">
                 <Navbar />
                 {children}
             </body>

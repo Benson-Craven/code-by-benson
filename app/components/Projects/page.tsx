@@ -22,10 +22,6 @@ const ProjectSection: React.FC = () => {
     )
     const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0])
 
-    // useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    //     console.log("Page scroll: ", latest)
-    // })
-
     return (
         <section
             ref={targetRef}
@@ -42,8 +38,16 @@ const ProjectSection: React.FC = () => {
                     style={{ x }}
                     className="mb-10 flex flex-row flex-nowrap gap-8 pl-5 md:pl-10"
                 >
-                    {cards.map((card) => (
-                        <Card card={card} key={card.id} />
+                    {cards.map((card, index) => (
+                        <motion.div
+                            key={card.id}
+                            initial={{ opacity: index < 3 ? 1 : 0 }} // Adjust this condition based on how many cards are initially in view
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true, amount: 0.5 }}
+                            transition={{ duration: 1 }}
+                        >
+                            <Card card={card} />
+                        </motion.div>
                     ))}
                 </motion.div>
             </div>
@@ -51,7 +55,6 @@ const ProjectSection: React.FC = () => {
     )
 }
 
-// Modify the Card component to be responsive
 const Card: React.FC<{ card: CardType }> = ({ card }) => (
     <div className="flex min-h-max flex-col overflow-hidden">
         <div className="mb-2 h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px] lg:h-[450px] lg:w-[450px]">
@@ -131,51 +134,3 @@ const cards: CardType[] = [
         id: 7,
     },
 ]
-
-// <div className="group relative h-[450px] w-[450px] max-w-full overflow-hidden rounded-3xl border-none">
-//     <div
-//         style={{
-//             backgroundImage: `url(${card.url})`,
-//             backgroundSize: "cover",
-//             backgroundPosition: "center",
-//         }}
-//         className="absolute inset-0 z-0 transition-transform duration-300 group-hover:scale-110"
-//     />
-
-//     <div className=""></div>
-
-//     <div className="absolute inset-0 z-10 grid place-content-center">
-//         <p className="rounded-xl bg-gradient-to-br from-white/20 to-white/0 p-8 text-6xl font-black uppercase text-white backdrop-blur-lg">
-//             {card.title}
-//         </p>
-//     </div>
-//     <p>Hello</p>
-// </div>
-
-// <div className="relative flex h-[500px] w-[560px] flex-col flex-nowrap justify-start gap-6 overflow-x-hidden overflow-y-hidden p-5">
-//     <div
-//         style={{
-//             backgroundImage: `url(${card.url})`,
-//             backgroundSize: "cover",
-//             backgroundPosition: "center",
-//         }}
-//         className="absolute inset-0 block cursor-pointer rounded-3xl transition-transform duration-300 hover:scale-110"
-//     />
-//     <div className="p-4">
-//         <h3 className="text-lg font-semibold">{card.title}</h3>
-//         <a href="#" className="text-blue-500 hover:underline">
-//             View project →
-//         </a>
-//     </div>
-// </div>
-
-{
-    /* <div className="flex h-6 w-screen justify-center">
-                <h2 className="font-semibold leading-relaxed">SCROLL DOWN</h2>
-            </div> */
-}
-{
-    /* <div className="flex items-center justify-start rounded-tr-full px-10">
-                <span className="text-3xl md:text-7xl">Projects</span>
-            </div> */
-}

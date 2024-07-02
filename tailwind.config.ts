@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+import { PluginAPI } from "tailwindcss/types/config"
 
 const config: Config = {
     content: [
@@ -23,8 +24,19 @@ const config: Config = {
             translate: {
                 "1/3": "-33.33%",
             },
+            perspective: {
+                "80vw": "80vw",
+            },
         },
     },
-    plugins: [],
+    plugins: [
+        function ({ addUtilities }: PluginAPI) {
+            addUtilities({
+                ".perspective-80vw": {
+                    perspective: "80vw",
+                },
+            })
+        },
+    ],
 }
 export default config

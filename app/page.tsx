@@ -9,6 +9,7 @@ import Banner from "./components/Banner/page"
 import Testimonials from "./components/Testimonials/page"
 import ParallaxSection from "./components/Parallax/page"
 import ProgressBar from "./components/ProgressBar/page"
+import Lenis from "lenis"
 
 export default function Home() {
     // useEffect(() => {
@@ -16,6 +17,18 @@ export default function Home() {
     //         const LocomotiveScroll = (await import("locomotive-scroll")).default
     //         const locomotiveScroll = new LocomotiveScroll()
     //     })()
+    // }, [])
+
+    // useEffect(() => {
+    //     const lenis = new Lenis()
+
+    //     function raf(time: number) {
+    //         lenis.raf(time)
+
+    //         requestAnimationFrame(raf)
+    //     }
+
+    //     requestAnimationFrame(raf)
     // }, [])
 
     return (
