@@ -14,9 +14,14 @@ const config: Config = {
                     "0%": { transform: "translateX(0)" },
                     "100%": { transform: "translateX(calc(-100% - 1rem))" },
                 },
+                slider: {
+                    "0%": { transform: "translateX(0%)" },
+                    "100%": { transform: "translateX(-100%)" },
+                },
             },
             animation: {
                 slide: "slide 10s linear infinite",
+                slider: "slider 12s linear infinite",
             },
             fontFamily: {
                 helvetica: ["Helvetica Neue", "sans-serif"],

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { opacity, slideLeft, mountAnim } from "./anim"
 import Link from "./Link"
+import { useEffect } from "react"
 
 const menu = [
     {
@@ -33,6 +34,14 @@ interface Props {
 }
 
 const Menu: React.FC<Props> = ({ closeMenu }) => {
+    useEffect(() => {
+        // Prevent scrolling on mount
+        document.body.style.overflow = "hidden"
+        return () => {
+            // Re-enable scrolling on unmount
+            document.body.style.overflow = ""
+        }
+    }, [])
     return (
         <div className="fixed left-0 top-0 z-20 m-0 flex h-[100vh] w-[100vw] flex-col justify-between">
             <div className="flex justify-end p-5">
