@@ -11,6 +11,7 @@ interface LinkProps {
         images: string
     }
     index: number
+    closeMenu: () => void
 }
 
 interface SliderProps {
@@ -18,14 +19,15 @@ interface SliderProps {
     description: string
 }
 
-const MenuLink: React.FC<LinkProps> = ({ data, index }) => {
+const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
     const { title, description, images } = data
     const [scope, animate] = useAnimate()
     const outer = useRef(null)
     const inner = useRef(null)
 
-    const animateIn = async (e) => {
-        const bounds = e.target.getBoundingClientRect()
+    const animateIn = async (e: React.MouseEvent<HTMLDivElement>) => {
+        const bounds = e.currentTarget.getBoundingClientRect()
+
         const direction = e.clientY < bounds.top + bounds.height / 2 ? -1 : 1
 
         await animate(
@@ -46,8 +48,8 @@ const MenuLink: React.FC<LinkProps> = ({ data, index }) => {
         )
     }
 
-    const animateOut = (e) => {
-        const bounds = e.target.getBoundingClientRect()
+    const animateOut = (e: React.MouseEvent<HTMLDivElement>) => {
+        const bounds = e.currentTarget.getBoundingClientRect()
 
         const direction = e.clientY < bounds.top + bounds.height / 2 ? -1 : 1
 
@@ -75,10 +77,16 @@ const MenuLink: React.FC<LinkProps> = ({ data, index }) => {
             onMouseLeave={(e) => {
                 animateOut(e)
             }}
+            onClick={() => {
+                closeMenu()
+            }}
             ref={scope}
             className="mb-5 flex h-[9vw] w-full origin-top cursor-pointer items-center justify-center border-t-[1px] p-2 last:border-b-[1px]"
         >
-            <Link href={"/"} className="w-full text-[7vw]">
+            <Link
+                href={`/${title.toLowerCase()}`}
+                className="w-full text-[7vw]"
+            >
                 {title}
             </Link>
             <div

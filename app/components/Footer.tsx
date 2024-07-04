@@ -28,7 +28,7 @@ const Footer = () => {
             <footer className="max-w-screen relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
                 <div className="flex flex-col flex-nowrap gap-6 py-6">
                     <div className="relative flex flex-wrap justify-start text-base">
-                        <h3 className="text-2xl text-slate-500">
+                        <h3 className="text-2xl tracking-tight text-slate-500">
                             Have a project in mind?
                         </h3>
                     </div>
@@ -38,7 +38,7 @@ const Footer = () => {
                         </h2>
                     </div>
                     <div className="mt-5 flex items-center justify-between">
-                        <h4 className="text-lg md:text-3xl">
+                        <h4 className="text-lg tracking-tight md:text-3xl">
                             bensoncraven@hotmail.co.uk
                         </h4>
 

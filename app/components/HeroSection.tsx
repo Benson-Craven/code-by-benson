@@ -68,7 +68,7 @@ const HeroSection = () => {
                     </p>
                     <p>
                         Get in touch <br />
-                        <b className="cursor-pointer">
+                        <b className="cursor-pointer tracking-tight">
                             bensoncraven@hotmail.co.uk
                         </b>
                     </p>

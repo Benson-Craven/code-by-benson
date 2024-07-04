@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
         >
             <Link href="/" scroll={false}>
                 <div className="flex cursor-pointer">
-                    <p className="mx-2 text-black hover:rotate-180">
+                    <p className="mx-2 tracking-tight text-black hover:rotate-180">
                         &copy; Code by Benson
                     </p>
                 </div>

@@ -31,7 +31,7 @@ const ProjectSection: React.FC = () => {
                 style={{ opacity }}
                 className="sticky top-24 mb-8 pl-5 mix-blend-difference md:pl-10"
             >
-                <h2 className="text-5xl">Projects</h2>
+                <h2 className="text-5xl tracking-tight">Projects</h2>
             </motion.div>
             <div className="sticky top-44 flex flex-col items-start justify-center overflow-hidden">
                 <motion.div

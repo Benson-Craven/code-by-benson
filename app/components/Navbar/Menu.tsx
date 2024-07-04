@@ -65,7 +65,14 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
 
             <div className="flex h-fit w-full flex-col items-center justify-center">
                 {menu.map((el, index) => {
-                    return <Link data={el} index={index} key={index} />
+                    return (
+                        <Link
+                            data={el}
+                            index={index}
+                            key={index}
+                            closeMenu={closeMenu}
+                        />
+                    )
                 })}
             </div>
 

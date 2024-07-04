@@ -91,7 +91,7 @@ const Slider: React.FC<SliderProps> = ({
 const Phrase: React.FC<PhraseProps> = ({ title, src }) => {
     return (
         <div className="flex items-center gap-5 px-5">
-            <p className="text-[7.5vw]">{title}</p>
+            <p className="text-[7.5vw] tracking-tight">{title}</p>
             <span className="relative aspect-[4/2] h-[7.5vw] overflow-hidden rounded-full">
                 <Image
                     style={{ objectFit: "cover" }}
