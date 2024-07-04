@@ -9,7 +9,7 @@ const menu = [
 
         description: "To See Everything",
 
-        images: ["projects1.jpg", "projects2.jpg"],
+        images: "projects2.jpg",
     },
 
     {
@@ -17,7 +17,7 @@ const menu = [
 
         description: "To Learn Everything",
 
-        images: ["agence1.jpg", "agence2.jpg"],
+        images: "agence1.jpg",
     },
 
     {
@@ -25,7 +25,7 @@ const menu = [
 
         description: "To Send a FAX",
 
-        images: ["contact1.jpg", "contact2.jpg"],
+        images: "contact1.jpg",
     },
 ]
 
