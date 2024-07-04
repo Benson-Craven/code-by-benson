@@ -40,8 +40,6 @@ export default function Home() {
                 <Banner />
                 <Projects />
                 {/* <Testimonials /> */}
-                <ProgressBar />
-                <Footer />
             </section>
         </main>
     )

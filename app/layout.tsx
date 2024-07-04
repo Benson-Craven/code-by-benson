@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import Navbar from "./components/Navbar/Navbar"
 import Footer from "./components/Footer"
+import ProgressBar from "./components/ProgressBar/page"
 
 export const metadata: Metadata = {
     title: "Code by Benson",
@@ -18,6 +19,7 @@ export default function RootLayout({
             <body className="overflow-x-hidden">
                 <Navbar />
                 {children}
+                <ProgressBar />
                 <Footer />
             </body>
         </html>

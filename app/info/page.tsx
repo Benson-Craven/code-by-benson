@@ -39,7 +39,7 @@ const Info: React.FC = () => {
 
             <p
                 ref={container}
-                className="flex w-screen flex-wrap p-10 text-6xl tracking-tight text-black"
+                className="flex w-screen flex-wrap p-10 text-2xl tracking-tight text-black md:text-6xl"
             >
                 {words.map((word, i) => {
                     const start = i / words.length
@@ -55,7 +55,6 @@ const Info: React.FC = () => {
                     )
                 })}
             </p>
-            <div className="h-[50vh] bg-black" />
         </section>
     )
 }
