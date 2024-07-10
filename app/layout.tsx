@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import Navbar from "./components/Navbar/Navbar"
 import Footer from "./components/Footer"
-import ProgressBar from "./components/ProgressBar/page"
+import ProgressBar from "./components/ProgressBar"
 
 export const metadata: Metadata = {
     title: "Code by Benson",

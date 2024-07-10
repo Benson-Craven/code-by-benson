@@ -3,6 +3,7 @@
 import React, { useRef } from "react"
 import Image from "next/image"
 import { motion, useInView } from "framer-motion"
+import Link from "next/link"
 
 const phrases = [" Freelance Front End Developer"]
 
@@ -34,15 +35,20 @@ const HeroSection = () => {
                     className="mx-4 mb-16 w-2/3 text-xl tracking-tight text-black md:w-1/2 md:text-4xl"
                 >
                     Melbourne based{" "}
-                    <span className="hidden md:inline-block">
-                        <Image
-                            src={"/images/portrait-bnw.JPG"}
-                            alt="Portrait"
-                            width={30}
-                            height={30}
-                            className="relative cursor-pointer overflow-hidden rounded-full"
-                        />
-                    </span>{" "}
+                    <Link href={"/info"}>
+                        <motion.span
+                            className="hidden md:inline-block"
+                            whileHover={{ scale: 0.9 }}
+                        >
+                            <Image
+                                src={"/images/portrait-bnw.JPG"}
+                                alt="Portrait"
+                                width={30}
+                                height={30}
+                                className="relative cursor-pointer overflow-hidden rounded-full"
+                            />
+                        </motion.span>{" "}
+                    </Link>
                     developer crafting engaging, human-focused digital
                     experiences for a range of forward-thinking brands.
                 </motion.h1>

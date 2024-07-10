@@ -1,67 +1,88 @@
-import React from "react"
+"use client"
+
+import React, { useEffect, useRef } from "react"
 import { FaArrowRightLong } from "react-icons/fa6"
+import { motion, useAnimation, useInView } from "framer-motion"
 
 const Footer = () => {
-    return (
-        // <footer className="h-2/3 w-screen rounded-lg bg-black">
-        //     <section className="p-10 font-helvetica text-white">
-        //         <div className="mt-20">
-        //             <h1 className="text-3xl tracking-tight md:text-6xl">
-        //                 <span className="mx-4">✺</span> Let's Chat
-        //             </h1>
-        //         </div>
-        //         <div className="mt-5 flex items-center justify-between">
-        //             <h3 className="text-l mx-7 font-mono italic md:text-2xl">
-        //                 cravenbenson@gmail.com
-        //             </h3>
-        //             <div className="mb-10 flex text-sm font-light md:text-base">
-        //                 {["Github", "Behance", "Dribble"].map((text) => (
-        //                     <p key={text} className="mx-4">
-        //                         {text}
-        //                     </p>
-        //                 ))}
-        //             </div>
-        //         </div>
-        //     </section>
-        // </footer>
-        <>
-            <footer className="max-w-screen relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
-                <div className="flex flex-col flex-nowrap gap-6 py-6">
-                    <div className="relative flex flex-wrap justify-start text-base">
-                        <h3 className="text-2xl tracking-tight text-slate-500">
-                            Have a project in mind?
-                        </h3>
-                    </div>
-                    <div className="text-5xl md:text-7xl">
-                        <h2 className="tracking-tight text-neutral-100">
-                            <span>✺</span> Let's Collaborate
-                        </h2>
-                    </div>
-                    <div className="mt-5 flex items-center justify-between">
-                        <h4 className="text-lg tracking-tight md:text-3xl">
-                            bensoncraven@hotmail.co.uk
-                        </h4>
+    const controls = useAnimation()
+    const ref = useRef(null)
+    const isInView = useInView(ref, { once: true })
 
-                        <span className="fill-white pr-8">
-                            <FaArrowRightLong />
-                        </span>
+    useEffect(() => {
+        if (isInView) {
+            controls.start((i) => ({
+                opacity: 1,
+                transition: { delay: Math.random() * 0.9 },
+                duration: 300,
+            }))
+        }
+    }, [controls, isInView])
+
+    const sentence = "Let's Collaborate"
+    const characters = sentence.split("")
+
+    return (
+        <footer className="max-w-screen relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
+            <div className="flex flex-col flex-nowrap gap-6 py-6">
+                <div className="relative flex flex-wrap justify-start text-base">
+                    <h3 className="text-2xl tracking-tight text-slate-500">
+                        Have a project in mind?
+                    </h3>
+                </div>
+                <div className="text-5xl md:text-7xl">
+                    <h2 className="flex tracking-tight text-neutral-100">
+                        <motion.span
+                            animate={{ rotate: [0, 180] }} // Rotate from 0 to 360 degrees
+                            transition={{
+                                repeat: Infinity, // Loop indefinitely
+                                duration: 10, // Duration of one full rotation in seconds
+                                ease: "linear", // Use linear easing for a smooth continuous rotation
+                            }}
+                            className="mr-5"
+                        >
+                            ✺
+                        </motion.span>
+                        {characters.map((char, index) => (
+                            <motion.span
+                                key={index}
+                                custom={index}
+                                initial={{ opacity: 0 }}
+                                animate={controls}
+                                className="inline-block"
+                            >
+                                {char === " " ? "\u00A0" : char}
+                            </motion.span>
+                        ))}
+                    </h2>
+                </div>
+                <div className="mt-5 flex items-center justify-between">
+                    <h4 className="text-lg tracking-tight md:text-3xl">
+                        bensoncraven@hotmail.co.uk
+                    </h4>
+
+                    <span className="fill-white pr-8">
+                        <FaArrowRightLong />
+                    </span>
+                </div>
+                <hr className="my-3 h-px border-0 bg-neutral-100/40" />
+                <div
+                    ref={ref}
+                    className="flex flex-col justify-between text-sm md:flex-row"
+                >
+                    <div className="flex space-x-5">
+                        <h4>Github</h4>
+                        <h4>Dribble</h4>
+                        <h4>Instagram</h4>
                     </div>
-                    <hr className="my-3 h-px border-0 bg-neutral-100/40" />
-                    <div className="flex flex-col justify-between text-sm md:flex-row">
-                        <div className="flex space-x-5">
-                            <h4>Github</h4>
-                            <h4>Dribble</h4>
-                            <h4>Instagram</h4>
-                        </div>
-                        <div>
-                            <p className="mt-4 text-sm md:mt-0">
-                                &copy; Code by Benson
-                            </p>
-                        </div>
+                    <div>
+                        <p className="mt-4 text-sm md:mt-0">
+                            &copy; Code by Benson
+                        </p>
                     </div>
                 </div>
-            </footer>
-        </>
+            </div>
+        </footer>
     )
 }
 

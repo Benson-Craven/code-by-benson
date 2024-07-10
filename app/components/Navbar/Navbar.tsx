@@ -27,9 +27,9 @@ const Navbar: React.FC = () => {
             setPrevScrollPos(currentScrollPos)
 
             // Debugging scroll position and top value
-            console.log(
-                "Scroll progress: " + currentScrollPos + " Top = " + top,
-            )
+            // console.log(
+            //     "Scroll progress: " + currentScrollPos + " Top = " + top,
+            // )
         }
 
         window.addEventListener("scroll", handleScroll)

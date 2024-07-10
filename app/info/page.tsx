@@ -2,6 +2,7 @@
 
 import { useScroll, motion, useTransform, MotionValue } from "framer-motion"
 import React, { useRef } from "react"
+import Process from "../components/Process"
 
 const paragraph =
     "I'm Benson Craven - a British web developer based in Melbourne, Australia. I create forward-thinking and considered designs based on a knowledge accumulated over 4+ years."
@@ -71,9 +72,12 @@ const Info: React.FC = () => {
                 </div>
             </div>
 
-            {renderParagraph(words, scrollYProgress1, container1)}
-            {renderParagraph(words, scrollYProgress2, container2)}
-            {renderParagraph(words, scrollYProgress3, container3)}
+            <div className="mb-14">
+                {renderParagraph(words, scrollYProgress1, container1)}
+                {renderParagraph(words, scrollYProgress2, container2)}
+                {renderParagraph(words, scrollYProgress3, container3)}
+            </div>
+            <Process />
         </section>
     )
 }

@@ -2,9 +2,9 @@
 
 import Image from "next/image"
 import React, { useRef } from "react"
-import Pic1 from "../../../public/images/Pic1.JPG"
-import Pic2 from "../../../public/images/Pic2.JPG"
-import Pic3 from "../../../public/images/Pic3.JPG"
+import Pic1 from "../../public/images/Pic1.JPG"
+import Pic2 from "../../public/images/Pic2.JPG"
+import Pic3 from "../../public/images/Pic3.JPG"
 import { MotionValue, motion, useScroll, useTransform } from "framer-motion"
 
 interface PhraseProps {

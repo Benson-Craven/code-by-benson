@@ -67,50 +67,48 @@ const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
     }
 
     return (
-        <motion.div
-            variants={rotateX}
-            {...mountAnim}
-            custom={index}
-            onMouseEnter={(e) => {
-                animateIn(e)
-            }}
-            onMouseLeave={(e) => {
-                animateOut(e)
-            }}
-            onClick={() => {
-                closeMenu()
-            }}
-            ref={scope}
-            className="mb-5 flex h-[9vw] w-full origin-top cursor-pointer items-center justify-center border-t-[1px] p-2 last:border-b-[1px]"
-        >
-            <Link
-                href={`/${title.toLowerCase()}`}
-                className="w-full text-[7vw]"
+        <Link href={`/${title.toLowerCase()}`}>
+            <motion.div
+                variants={rotateX}
+                {...mountAnim}
+                custom={index}
+                // onMouseEnter={(e) => {
+                //     animateIn(e)
+                // }}
+                // onMouseLeave={(e) => {
+                //     animateOut(e)
+                // }}
+                onClick={() => {
+                    closeMenu()
+                }}
+                ref={scope}
+                className="mb-5 flex h-[9vw] w-screen origin-top cursor-pointer items-center justify-center border-t-[1px] p-2 hover:bg-[#D3FD50] hover:text-black"
             >
-                {title}
-            </Link>
-            <div
-                ref={outer}
-                className="pointer-events-none absolute flex h-full w-full overflow-hidden hover:opacity-100"
-            >
-                {/* outer */}
+                <h1 className="w-full text-[7vw]">{title}</h1>
+
                 <div
-                    ref={inner}
-                    className="absolute top-full flex h-full whitespace-nowrap bg-[#D3FD50]"
+                    ref={outer}
+                    className="pointer-events-none absolute flex h-full w-full overflow-hidden hover:opacity-100"
                 >
-                    {/* inner */}
-                    {[...Array(2)].map((_, index) => {
-                        return (
-                            <SliderContent
-                                key={index}
-                                images={images}
-                                description={description}
-                            />
-                        )
-                    })}
+                    {/* outer */}
+                    <div
+                        ref={inner}
+                        className="absolute top-full flex h-full whitespace-nowrap bg-[#D3FD50]"
+                    >
+                        {/* inner */}
+                        {[...Array(2)].map((_, index) => {
+                            return (
+                                <SliderContent
+                                    key={index}
+                                    images={images}
+                                    description={description}
+                                />
+                            )
+                        })}
+                    </div>
                 </div>
-            </div>
-        </motion.div>
+            </motion.div>
+        </Link>
     )
 }
 
@@ -129,12 +127,12 @@ const SliderContent: React.FC<SliderProps> = ({ images, description }) => {
             </div>
             <p className="text-black">{description}</p>
             <div className="relative ml-[1vw] mr-[1vw] flex h-[6vw] w-[16vw] overflow-hidden rounded-[3vw]">
-                <Image
+                {/* <Image
                     src={`/images/${images[1]}`}
                     fill
                     alt="image"
                     className="object-cover"
-                />
+                /> */}
             </div>
             <p className="text-black">{description}</p>
         </div>
