@@ -9,6 +9,7 @@ interface LinkProps {
         title: string
         description: string
         images: string
+        url: string
     }
     index: number
     closeMenu: () => void
@@ -20,7 +21,7 @@ interface SliderProps {
 }
 
 const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
-    const { title, description, images } = data
+    const { title, description, images, url } = data
     const [scope, animate] = useAnimate()
     const outer = useRef(null)
     const inner = useRef(null)
@@ -67,7 +68,7 @@ const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
     }
 
     return (
-        <Link href={`/${title.toLowerCase()}`}>
+        <Link href={`${url.toLowerCase()}`}>
             <motion.div
                 variants={rotateX}
                 {...mountAnim}
@@ -96,7 +97,7 @@ const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
                         className="absolute top-full flex h-full whitespace-nowrap bg-[#D3FD50]"
                     >
                         {/* inner */}
-                        {[...Array(2)].map((_, index) => {
+                        {/* {[...Array(2)].map((_, index) => {
                             return (
                                 <SliderContent
                                     key={index}
@@ -104,7 +105,7 @@ const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
                                     description={description}
                                 />
                             )
-                        })}
+                        })} */}
                     </div>
                 </div>
             </motion.div>

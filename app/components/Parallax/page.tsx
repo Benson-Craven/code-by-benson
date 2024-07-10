@@ -37,9 +37,9 @@ const Parallax = () => {
                             style={{ opacity }}
                             className="z-3 relative block max-w-[90vw] shrink grow-0 items-end pb-6 text-center text-2xl tracking-tight md:pb-8 md:text-5xl lg:text-6xl"
                         >
-                            Helping brands to stand out in the digital era.
-                            Together we will set the new status quo. No
-                            nonsense, always on the cutting edge.
+                            Empowering businesses to thrive in the digital age.
+                            Together, we'll lead the way with straightforward,
+                            innovative solutions.
                         </motion.h2>
                     </div>
                 </div>

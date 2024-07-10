@@ -25,7 +25,7 @@ const HeroSection = () => {
     }
 
     return (
-        <section className="flex min-h-screen w-full flex-col justify-end rounded-tr-full bg-neutral-100 p-10 font-helvetica text-slate-900">
+        <section className="flex min-h-screen w-full flex-col justify-end bg-neutral-100 p-10 font-helvetica text-slate-900 md:rounded-tr-full">
             <div className="overflow-hidden">
                 <motion.h1
                     ref={body}

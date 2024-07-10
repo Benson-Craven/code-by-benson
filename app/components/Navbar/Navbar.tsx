@@ -61,8 +61,8 @@ const Navbar: React.FC = () => {
             style={{ top: `${top}px`, transition: "top 0.3s" }} // Use inline style for `top`
             className="fixed z-10 flex w-full justify-between p-10 font-helvetica text-base"
         >
-            <Link href="/" scroll={false}>
-                <div className="flex cursor-pointer">
+            <Link href="/" scroll={false} className="flex cursor-pointer">
+                <div>
                     <p className="mx-2 tracking-tight text-black hover:rotate-180">
                         &copy; Code by Benson
                     </p>

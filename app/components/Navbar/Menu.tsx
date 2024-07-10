@@ -10,6 +10,8 @@ const menu = [
         description: "To See Everything",
 
         images: "projects2.jpg",
+
+        url: "/projects",
     },
 
     {
@@ -18,6 +20,8 @@ const menu = [
         description: "To Learn Everything",
 
         images: "agence1.jpg",
+
+        url: "/info",
     },
 
     {
@@ -26,6 +30,8 @@ const menu = [
         description: "To Send a FAX",
 
         images: "contact1.jpg",
+
+        url: "mailto:bensoncraven@hotmail.co.uk",
     },
 ]
 

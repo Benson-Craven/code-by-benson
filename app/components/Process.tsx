@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from "framer-motion"
 import React, { useState } from "react"
 
 const Process = () => {
@@ -52,10 +53,9 @@ const Process = () => {
                     {/* title */}
                 </div>
                 <div className="flex p-8 md:justify-end">
-                    {" "}
                     <ul className="w-full tracking-tight mix-blend-difference md:w-2/3">
                         {items.map((item, index) => (
-                            <li
+                            <motion.li
                                 key={index}
                                 className="flex cursor-pointer items-center justify-between border-b border-gray-300 py-4"
                                 onClick={() =>
@@ -73,16 +73,30 @@ const Process = () => {
                                             {item.text}
                                         </span>
                                     </div>
-                                    {activeIndex === index && (
-                                        <div className="mt-4">
-                                            {item.content}
-                                        </div>
-                                    )}
+                                    <AnimatePresence>
+                                        {activeIndex === index && (
+                                            <motion.div
+                                                initial={{
+                                                    opacity: 0,
+                                                    height: 0,
+                                                }}
+                                                animate={{
+                                                    opacity: 1,
+                                                    height: "auto",
+                                                }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                transition={{ duration: 0.3 }}
+                                                className="mt-4"
+                                            >
+                                                {item.content}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                                 <span className="text-2xl font-light">
                                     {activeIndex === index ? "-" : "+"}
                                 </span>
-                            </li>
+                            </motion.li>
                         ))}
                     </ul>
                 </div>

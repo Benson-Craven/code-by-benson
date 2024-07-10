@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from "react"
 import { FaArrowRightLong } from "react-icons/fa6"
 import { motion, useAnimation, useInView } from "framer-motion"
+import Link from "next/link"
 
 const Footer = () => {
     const controls = useAnimation()
@@ -26,11 +27,11 @@ const Footer = () => {
         <footer className="max-w-screen relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
             <div className="flex flex-col flex-nowrap gap-6 py-6">
                 <div className="relative flex flex-wrap justify-start text-base">
-                    <h3 className="text-2xl tracking-tight text-slate-500">
+                    <h3 className="text-xl tracking-tight text-slate-400 md:text-2xl">
                         Have a project in mind?
                     </h3>
                 </div>
-                <div className="text-5xl md:text-7xl">
+                <div className="text-3xl md:text-7xl">
                     <h2 className="flex tracking-tight text-neutral-100">
                         <motion.span
                             animate={{ rotate: [0, 180] }} // Rotate from 0 to 360 degrees
@@ -57,9 +58,11 @@ const Footer = () => {
                     </h2>
                 </div>
                 <div className="mt-5 flex items-center justify-between">
-                    <h4 className="text-lg tracking-tight md:text-3xl">
-                        bensoncraven@hotmail.co.uk
-                    </h4>
+                    <Link href={"mailto:bensoncraven@hotmail.co.uk"}>
+                        <h4 className="cursor-pointer text-lg tracking-tight md:text-3xl">
+                            bensoncraven@hotmail.co.uk
+                        </h4>
+                    </Link>
 
                     <span className="fill-white pr-8">
                         <FaArrowRightLong />
@@ -72,8 +75,8 @@ const Footer = () => {
                 >
                     <div className="flex space-x-5">
                         <h4>Github</h4>
+                        <h4>LinkedIn</h4>
                         <h4>Dribble</h4>
-                        <h4>Instagram</h4>
                     </div>
                     <div>
                         <p className="mt-4 text-sm md:mt-0">

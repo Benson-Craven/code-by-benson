@@ -5,7 +5,13 @@ import React, { useRef } from "react"
 import Process from "../components/Process"
 
 const paragraph =
-    "I'm Benson Craven - a British web developer based in Melbourne, Australia. I create forward-thinking and considered designs based on a knowledge accumulated over 4+ years."
+    "I'm Benson Craven - a British web developer based in Melbourne, Australia. I create forward-thinking web applications based on a knowledge accumulated over the years."
+
+const paragraph2 =
+    "My passion lies in web development and through combining user experience, strategy, technology and motion I aspire to create work that resonates deeply with its audience. "
+
+const paragraph3 =
+    "I'm always up for discussing new collaborations so please don't hesitate to get in touch."
 
 interface WordProps {
     children: string
@@ -34,6 +40,8 @@ const Info: React.FC = () => {
     })
 
     const words = paragraph.split(" ")
+    const words2 = paragraph2.split(" ")
+    const words3 = paragraph3.split(" ")
     const aboutOpacity = useTransform(scrollYProgress1, [0, 0.6], [1, 0])
 
     const renderParagraph = (
@@ -74,8 +82,8 @@ const Info: React.FC = () => {
 
             <div className="mb-14">
                 {renderParagraph(words, scrollYProgress1, container1)}
-                {renderParagraph(words, scrollYProgress2, container2)}
-                {renderParagraph(words, scrollYProgress3, container3)}
+                {renderParagraph(words2, scrollYProgress2, container2)}
+                {renderParagraph(words3, scrollYProgress3, container3)}
             </div>
             <Process />
         </section>
