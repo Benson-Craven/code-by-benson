@@ -7,6 +7,9 @@ import {
 } from "framer-motion"
 import { useRef } from "react"
 import React from "react"
+import { MdArrowOutward } from "react-icons/md"
+
+import FlipLink from "./FlipLink"
 
 const ProjectSection: React.FC = () => {
     const targetRef = useRef<HTMLDivElement | null>(null)
@@ -24,6 +27,7 @@ const ProjectSection: React.FC = () => {
 
     return (
         <section
+            id="project-section"
             ref={targetRef}
             className="relative h-[300vh] rounded-bl-[300px] rounded-br-[300px] rounded-tl-full bg-neutral-100"
         >
@@ -66,25 +70,14 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => (
         </div>
         <div className="mt-2 text-black">
             <h3 className="mb-2 text-lg mix-blend-difference sm:text-2xl">
-                {card.title}
+                <FlipLink href="" hoverText="View project &#9757;">
+                    {card.title}
+                </FlipLink>
             </h3>
             <a
                 href="#"
                 className="inline-flex items-center text-base mix-blend-difference hover:underline sm:text-xl"
-            >
-                View project
-                <svg
-                    className="ml-1 h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                >
-                    <path
-                        fillRule="evenodd"
-                        d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                    />
-                </svg>
-            </a>
+            ></a>
         </div>
     </div>
 )

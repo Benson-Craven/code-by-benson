@@ -89,7 +89,7 @@ const HeroSection = () => {
                     </p>
                     <p>
                         Get in touch
-                        <FlipLink href="" hoverText="Say hi! ">
+                        <FlipLink href="" hoverText="Say hi! &#9996;">
                             bensoncraven@hotmail.co.uk
                         </FlipLink>
                     </p>

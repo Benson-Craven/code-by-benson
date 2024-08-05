@@ -92,13 +92,13 @@ const Info: React.FC = () => {
     }
 
     return (
-        <section className="relative rounded-bl-full rounded-tr-full bg-neutral-100">
+        <section className="relative rounded-br-full rounded-tr-full bg-neutral-100">
             <div className="relative flex h-[95vh] flex-col md:h-[100vh]">
                 <div className="absolute bottom-0 left-0 right-0 flex justify-center overflow-hidden">
                     {text.map((char, index) => (
                         <motion.span
                             key={index}
-                            className="inline-block text-[20rem] uppercase leading-none tracking-tighter mix-blend-difference"
+                            className="inline-block text-[9rem] uppercase leading-none tracking-tighter mix-blend-difference md:text-[20rem]"
                             variants={animation}
                             initial="initial"
                             animate="enter"

@@ -12,7 +12,7 @@ const menu = [
 
         images: "projects2.jpg",
 
-        url: "/projects",
+        url: "/#project-section",
     },
 
     {
