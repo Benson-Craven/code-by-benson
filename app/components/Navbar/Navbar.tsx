@@ -6,6 +6,7 @@ import Burger from "./Burger"
 import Stairs from "./Stairs"
 import Menu from "./Menu"
 import Link from "next/link"
+import FlipLink from "../FlipLink"
 
 const Navbar: React.FC = () => {
     const body = useRef<HTMLDivElement>(null)
@@ -61,10 +62,12 @@ const Navbar: React.FC = () => {
             style={{ top: `${top}px`, transition: "top 0.3s" }} // Use inline style for `top`
             className="fixed z-10 flex w-full justify-between p-10 font-helvetica text-base"
         >
-            <Link href="/" scroll={false} className="flex cursor-pointer">
-                <div>
-                    <p className="mx-2 tracking-tight text-black hover:rotate-180">
-                        &copy; Code by Benson
+            <Link href="/" scroll={false}>
+                <div className="cursor-pointer">
+                    <p className="mx-2 tracking-tight text-black">
+                        <FlipLink href="/" hoverText="&copy; Code by Benson">
+                            &copy; Code by Benson
+                        </FlipLink>
                     </p>
                 </div>
             </Link>

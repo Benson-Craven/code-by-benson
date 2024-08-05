@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { opacity, slideLeft, mountAnim } from "./anim"
 import Link from "./Link"
 import { useEffect } from "react"
+import { FaGithub, FaLinkedin, FaBehance, FaDribbble } from "react-icons/fa6"
 
 const menu = [
     {
@@ -86,23 +87,12 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
                 variants={opacity}
                 {...mountAnim}
                 custom={0.75}
-                className="flex justify-center gap-3 p-5 text-white"
+                className="flex cursor-pointer justify-center gap-4 p-5 text-[3vw] text-white md:gap-6"
             >
-                <a className="cursor-pointer rounded-3xl border-[1px] border-white px-4 py-1 text-[3vw] md:border-2 md:px-5 md:py-3">
-                    FB
-                </a>
-
-                <a className="cursor-pointer rounded-3xl border-[1px] border-white px-4 py-1 text-[3vw] md:border-2 md:px-5 md:py-3">
-                    IG
-                </a>
-
-                <a className="cursor-pointer rounded-3xl border-[1px] border-white px-4 py-1 text-[3vw] md:border-2 md:px-5 md:py-3">
-                    IN
-                </a>
-
-                <a className="cursor-pointer rounded-3xl border-[1px] border-white px-4 py-1 text-[3vw] md:border-2 md:px-5 md:py-3">
-                    BE
-                </a>
+                <FaGithub />
+                <FaLinkedin />
+                <FaBehance />
+                <FaDribbble />
             </motion.div>
         </div>
     )

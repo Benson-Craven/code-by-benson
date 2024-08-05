@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react"
 import { FaArrowRightLong } from "react-icons/fa6"
 import { motion, useAnimation, useInView } from "framer-motion"
 import Link from "next/link"
+import FlipLink from "./FlipLink"
 
 const Footer = () => {
     const controls = useAnimation()
@@ -27,17 +28,15 @@ const Footer = () => {
         <footer className="max-w-screen relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
             <div className="flex flex-col flex-nowrap gap-6 py-6">
                 <div className="relative flex flex-wrap justify-start text-base">
-                    <h3 className="text-xl tracking-tight text-slate-400 md:text-2xl">
-                        Have a project in mind?
-                    </h3>
+                    <h3 className="text-xl tracking-tight text-gray-400 md:text-2xl"></h3>
                 </div>
                 <div className="text-3xl md:text-7xl">
                     <h2 className="flex tracking-tight text-neutral-100">
                         <motion.span
-                            animate={{ rotate: [0, 180] }} // Rotate from 0 to 360 degrees
+                            animate={{ rotate: [0, 360] }} // Rotate from 0 to 360 degrees
                             transition={{
                                 repeat: Infinity, // Loop indefinitely
-                                duration: 10, // Duration of one full rotation in seconds
+                                duration: 15, // Duration of one full rotation in seconds
                                 ease: "linear", // Use linear easing for a smooth continuous rotation
                             }}
                             className="mr-5"
@@ -60,7 +59,12 @@ const Footer = () => {
                 <div className="mt-5 flex items-center justify-between">
                     <Link href={"mailto:bensoncraven@hotmail.co.uk"}>
                         <h4 className="cursor-pointer text-lg tracking-tight md:text-3xl">
-                            bensoncraven@hotmail.co.uk
+                            <FlipLink
+                                href=""
+                                hoverText="Drop a message &#9996;"
+                            >
+                                Have a project in mind?
+                            </FlipLink>
                         </h4>
                     </Link>
 

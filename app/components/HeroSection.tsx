@@ -1,15 +1,26 @@
 "use client"
 
-import React, { useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 import Link from "next/link"
+import FlipLink from "./FlipLink"
 
 const phrases = [" Freelance Front End Developer"]
 
 const HeroSection = () => {
     const body = useRef(null)
-    // const isInView = useInView(body, { once: true, margin: "-75%" })
+
+    // Melbourne
+    // const latitude = "-37.81"
+    // const longitude = "144.963058"
+
+    // const weather = await fetch(
+    //     `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=78049f6f572f9bbb3cd51e3d8faebf54`,
+    //     { cache: "no-cache" },
+    // ).then((res) => res.json())
+
+    // console.log("Weather info: " + weather)
 
     const animation = {
         initial: { y: "100%", opacity: 0 },
@@ -50,7 +61,7 @@ const HeroSection = () => {
                         </motion.span>{" "}
                     </Link>
                     developer crafting engaging, human-focused digital
-                    experiences for a range of forward-thinking brands.
+                    experiences for a range of forward-thinking brands.{" "}
                 </motion.h1>
             </div>
 
@@ -64,19 +75,23 @@ const HeroSection = () => {
                 <div>
                     <p>
                         Freelance <br />
-                        Front End Developer
+                        <FlipLink href="" hoverText="UX Designer">
+                            Front End Developer
+                        </FlipLink>
                     </p>
                 </div>
                 <div className="flex space-x-10 py-5 md:py-0">
                     <p className="md:px-10">
                         Based in <br />
-                        Melbourne
+                        <FlipLink href="" hoverText="Australia">
+                            Melbourne
+                        </FlipLink>
                     </p>
                     <p>
-                        Get in touch <br />
-                        <b className="cursor-pointer tracking-tight">
+                        Get in touch
+                        <FlipLink href="" hoverText="Say hi! ">
                             bensoncraven@hotmail.co.uk
-                        </b>
+                        </FlipLink>
                     </p>
                 </div>
             </motion.div>
