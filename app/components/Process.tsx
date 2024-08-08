@@ -8,37 +8,37 @@ const Process = () => {
             number: "01",
             text: "Understand",
             content:
-                "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quas similique sed rerum ab porro commodi illo unde sint tenetur.",
+                "We start by getting to know you and your project. I’ll ask questions and dive into your vision to make sure I understand exactly what you're looking for and what your goals are.",
         },
         {
             number: "02",
             text: "Market & User Research",
             content:
-                "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quas similique sed rerum ab porro commodi illo unde sint tenetur.",
+                "Next, I'll do some research to see what’s happening in the market and what your users need. This helps us make sure the final product is not only fresh and innovative but also really useful for your audience.",
         },
         {
             number: "03",
             text: "Strategic Ideation",
             content:
-                "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quas similique sed rerum ab porro commodi illo unde sint tenetur.",
+                "With all the information gathered, we’ll brainstorm and come up with ideas together. This is where we turn insights into actionable plans and start shaping the project into something special.",
         },
         {
             number: "04",
             text: "Design Production",
             content:
-                "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quas similique sed rerum ab porro commodi illo unde sint tenetur.",
+                "I’ll then create designs that bring our ideas to life. You’ll see wireframes, mockups, and prototypes that show exactly how the project will look and feel, ensuring everything is just right before we move forward.",
         },
         {
             number: "05",
             text: "Code Development",
             content:
-                "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quas similique sed rerum ab porro commodi illo unde sint tenetur.",
+                "Once the design is set, I’ll get to work on building the site or app. This involves coding everything so it works smoothly and looks great on all devices. My goal is to make sure everything runs perfectly and efficiently.",
         },
         {
             number: "06",
             text: "Testing & Feedback",
             content:
-                "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates, quas similique sed rerum ab porro commodi illo unde sint tenetur.",
+                "Finally, we’ll test everything to catch any issues and make sure it works as intended. I’ll gather your feedback and make any necessary tweaks so that the final product is just what you envisioned.",
         },
     ]
 

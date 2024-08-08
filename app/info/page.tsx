@@ -92,7 +92,7 @@ const Info: React.FC = () => {
     }
 
     return (
-        <section className="relative rounded-br-full rounded-tr-full bg-neutral-100">
+        <section className="relative rounded-br-full rounded-tr-full bg-neutral-100 pb-20">
             <div className="relative flex h-[95vh] flex-col md:h-[100vh]">
                 <div className="absolute bottom-0 left-0 right-0 flex justify-center overflow-hidden">
                     {text.map((char, index) => (
@@ -111,12 +111,13 @@ const Info: React.FC = () => {
                 </div>
             </div>
 
-            <div className="mb-14">
+            <div className="mb-16">
                 {renderParagraph(words, scrollYProgress1, container1)}
                 {renderParagraph(words2, scrollYProgress2, container2)}
                 {renderParagraph(words3, scrollYProgress3, container3)}
             </div>
-            <Process />
+            {/* <Process /> */}
+            {/* TODO Need to decide whether to have this at all */}
         </section>
     )
 }

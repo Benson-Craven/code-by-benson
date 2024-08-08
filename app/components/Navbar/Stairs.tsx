@@ -9,7 +9,7 @@ interface StairProps {
 
 const Stairs: React.FC = () => {
     return (
-        <div className="pointer-events-none fixed left-0 top-0 z-10 flex h-screen transition-all duration-1000">
+        <div className="pointer-events-none fixed left-0 top-0 z-20 flex h-screen transition-all duration-1000">
             {[...Array(5)].map((_, index) => (
                 <Stair key={index} index={index} />
             ))}
@@ -24,7 +24,7 @@ const Stair: React.FC<StairProps> = ({ index }) => {
             variants={height}
             {...mountAnim}
             custom={4 - index}
-            className="z-10 h-full w-[20vw] border-2 border-black bg-black"
+            className="z-20 h-full w-[20vw] border-2 border-black bg-black"
         />
     )
 }
@@ -34,7 +34,7 @@ const Background: React.FC = () => {
         <motion.div
             variants={background}
             {...mountAnim}
-            className="absolute z-10 h-full w-full bg-black"
+            className="absolute z-20 h-full w-full bg-black"
         />
     )
 }

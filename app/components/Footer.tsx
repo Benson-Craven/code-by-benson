@@ -1,7 +1,13 @@
 "use client"
 
 import React, { useEffect, useRef } from "react"
-import { FaArrowRightLong } from "react-icons/fa6"
+import {
+    FaArrowRightLong,
+    FaBehance,
+    FaDribbble,
+    FaGithub,
+    FaLinkedin,
+} from "react-icons/fa6"
 import { motion, useAnimation, useInView } from "framer-motion"
 import Link from "next/link"
 import FlipLink from "./FlipLink"
@@ -49,24 +55,20 @@ const Footer = () => {
                                 custom={index}
                                 initial={{ opacity: 0 }}
                                 animate={controls}
-                                className="inline-block"
+                                className="pointer-events-none inline-block"
                             >
                                 {char === " " ? "\u00A0" : char}
                             </motion.span>
                         ))}
                     </h2>
                 </div>
-                <div className="mt-5 flex items-center justify-between">
-                    <Link href={"mailto:bensoncraven@hotmail.co.uk"}>
-                        <h4 className="cursor-pointer text-lg tracking-tight md:text-3xl">
-                            <FlipLink
-                                href=""
-                                hoverText="Drop a message &#9996;"
-                            >
-                                Have a project in mind?
-                            </FlipLink>
-                        </h4>
-                    </Link>
+                <div className="mt-5 flex cursor-pointer items-center justify-between text-lg tracking-tight md:text-3xl">
+                    <FlipLink
+                        href={"mailto:bensoncraven@hotmail.co.uk"}
+                        hoverText="Drop a message &#9996;"
+                    >
+                        Have a project in mind?
+                    </FlipLink>
 
                     <span className="fill-white pr-8">
                         <FaArrowRightLong />
@@ -75,17 +77,20 @@ const Footer = () => {
                 <hr className="my-3 h-px border-0 bg-neutral-100/40" />
                 <div
                     ref={ref}
-                    className="flex flex-col justify-between text-sm md:flex-row"
+                    className="flex flex-col justify-between text-[2rem] md:flex-row"
                 >
                     <div className="flex space-x-5">
-                        <h4>Github</h4>
-                        <h4>LinkedIn</h4>
-                        <h4>Dribble</h4>
+                        <FaGithub className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
+                        <FaLinkedin className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
+                        <FaBehance className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
+                        <FaDribbble className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
                     </div>
                     <div>
-                        <p className="mt-4 text-sm md:mt-0">
-                            &copy; Code by Benson
-                        </p>
+                        <Link href={"/"}>
+                            <p className="mt-4 text-sm md:mt-0">
+                                &copy; Code by Benson
+                            </p>
+                        </Link>
                     </div>
                 </div>
             </div>

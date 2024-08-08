@@ -25,7 +25,7 @@ const ProgressBar = () => {
     }
     return (
         <motion.div
-            className="fixed bottom-[25px] left-0 right-0 z-10 h-[5px] bg-white mix-blend-difference"
+            className="fixed bottom-[25px] left-0 right-0 z-[9] h-[5px] bg-white mix-blend-difference"
             style={{ scaleX }}
         />
     )

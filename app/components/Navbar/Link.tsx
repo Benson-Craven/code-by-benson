@@ -27,7 +27,7 @@ const MenuLink: React.FC<LinkProps> = ({ data, index, closeMenu }) => {
                     closeMenu()
                 }}
                 ref={scope}
-                className="mb-5 flex h-[9vw] w-screen origin-top cursor-pointer items-center justify-center border-t-[1px] p-2 hover:bg-[#D3FD50] hover:text-black"
+                className="mb-5 flex h-[9vw] w-screen origin-top cursor-pointer items-center justify-center border-t-[1px] p-2 duration-300 hover:border-black hover:bg-[#D3FD50] hover:text-black"
             >
                 <h1 className="w-full text-[7vw]">{title}</h1>
             </motion.div>

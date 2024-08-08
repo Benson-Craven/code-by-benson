@@ -10,6 +10,10 @@ const phrases = [" Freelance Front End Developer"]
 
 const HeroSection = () => {
     const body = useRef(null)
+    const text = "CODE-by-Benson"
+    // console.log("text", text);
+
+    const Letter = text.split("")
 
     // Melbourne
     // const latitude = "-37.81"
@@ -73,28 +77,42 @@ const HeroSection = () => {
                 className="mb-5 flex w-full flex-col justify-between px-5 pb-5 text-sm font-light md:flex-row md:text-base"
             >
                 <div>
-                    <p>
-                        Freelance <br />
-                        <FlipLink href="" hoverText="UX Designer">
-                            Front End Developer
-                        </FlipLink>
-                    </p>
+                    Freelance <br />
+                    <FlipLink href="" hoverText="UX Designer">
+                        Front End Developer
+                    </FlipLink>
                 </div>
                 <div className="flex space-x-10 py-5 md:py-0">
-                    <p className="md:px-10">
+                    <div>
                         Based in <br />
                         <FlipLink href="" hoverText="Australia">
                             Melbourne
                         </FlipLink>
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         Get in touch
                         <FlipLink href="" hoverText="Say hi! &#9996;">
                             bensoncraven@hotmail.co.uk
                         </FlipLink>
-                    </p>
+                    </div>
                 </div>
             </motion.div>
+            {/* <div className="relative flex min-h-screen items-center justify-center bg-black">
+                <section className="animate-rotate absolute">
+                    {Letter.map((item, index) => (
+                        <span
+                            key={index}
+                            className="absolute top-[-200px] text-lg font-bold text-white"
+                            style={{
+                                transform: `rotate(${index * 14.5}deg)`,
+                                transformOrigin: "0 200px",
+                            }}
+                        >
+                            {item}
+                        </span>
+                    ))}
+                </section>
+            </div> */}
         </section>
     )
 }

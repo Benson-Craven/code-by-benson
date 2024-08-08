@@ -22,6 +22,7 @@ const config: Config = {
             animation: {
                 slide: "slide 10s linear infinite",
                 slider: "slider 12s linear infinite",
+                rotate: "rotate 17.5s linear infinite",
             },
             fontFamily: {
                 helvetica: ["Helvetica Neue", "sans-serif"],

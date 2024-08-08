@@ -60,17 +60,13 @@ const Navbar: React.FC = () => {
             initial="initial"
             animate="enter"
             style={{ top: `${top}px`, transition: "top 0.3s" }} // Use inline style for `top`
-            className="fixed z-10 flex w-full justify-between p-10 font-helvetica text-base"
+            className="fixed z-10 flex w-full justify-between p-10 font-helvetica text-base tracking-tight"
         >
-            <Link href="/" scroll={false}>
-                <div className="cursor-pointer">
-                    <p className="mx-2 tracking-tight text-black">
-                        <FlipLink href="/" hoverText="&copy; Code by Benson">
-                            &copy; Code by Benson
-                        </FlipLink>
-                    </p>
-                </div>
-            </Link>
+            <div className="text-black">
+                <FlipLink href="/" hoverText="&copy; Code by Benson">
+                    &copy; Code by Benson
+                </FlipLink>
+            </div>
 
             <Burger
                 openMenu={() => {

@@ -3,10 +3,11 @@ import "./globals.css"
 import Navbar from "./components/Navbar/Navbar"
 import Footer from "./components/Footer"
 import ProgressBar from "./components/ProgressBar"
+import { StrictMode } from "react"
 
 export const metadata: Metadata = {
     title: "Code by Benson",
-    description: "by Benson Craven",
+    description: "Created by Benson Craven",
 }
 
 export default function RootLayout({
