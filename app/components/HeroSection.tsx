@@ -40,7 +40,7 @@ const HeroSection = () => {
     }
 
     return (
-        <section className="flex min-h-screen w-full flex-col justify-end bg-neutral-100 p-10 font-helvetica text-slate-900 md:rounded-tr-full">
+        <section className="flex min-h-screen w-full flex-col justify-end bg-neutral-100 p-10 text-slate-900 md:rounded-tr-full">
             <div className="overflow-hidden">
                 <motion.h1
                     ref={body}
@@ -56,7 +56,7 @@ const HeroSection = () => {
                             whileHover={{ scale: 0.9 }}
                         >
                             <Image
-                                src={"/images/portrait-bnw.JPG"}
+                                src={"/images/portrait.avif"}
                                 alt="Portrait"
                                 width={30}
                                 height={30}
@@ -65,7 +65,7 @@ const HeroSection = () => {
                         </motion.span>{" "}
                     </Link>
                     developer crafting engaging, human-focused digital
-                    experiences for a range of forward-thinking brands.{" "}
+                    experiences for a range of forward-thinking brands
                 </motion.h1>
             </div>
 

@@ -39,7 +39,7 @@ const Parallax = () => {
                         >
                             Empowering businesses to thrive in the digital age.
                             Together, we'll lead the way with straightforward,
-                            innovative solutions.
+                            innovative solutions
                         </motion.h2>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ const Parallax = () => {
                 >
                     <div className="col-span-2 col-start-1 row-start-1 md:col-start-6">
                         <Image
-                            src={"/images/akihabara.JPG"}
+                            src={"/images/akihabara.avif"}
                             alt="Alt"
                             width={400}
                             height={400}
@@ -80,7 +80,7 @@ const Parallax = () => {
                     </div>
                     <div className="col-span-2 col-start-4 row-start-4 md:col-start-3">
                         <Image
-                            src={"/images/portrait-bnw.JPG"}
+                            src={"/images/portrait.avif"}
                             alt="Alt"
                             width={250}
                             height={250}
@@ -89,7 +89,7 @@ const Parallax = () => {
                     </div>
                     <div className="col-span-2 col-start-2 row-start-6 md:col-start-4">
                         <Image
-                            src={"/images/Pic2.JPG"}
+                            src={"/images/ueno.avif"}
                             alt="Alt"
                             width={250}
                             height={250}

@@ -70,9 +70,12 @@ const Footer = () => {
                         Have a project in mind?
                     </FlipLink>
 
-                    <span className="fill-white pr-8">
+                    <motion.span
+                        whileHover={{ rotate: 180 }}
+                        className="fill-white pr-8"
+                    >
                         <FaArrowRightLong />
-                    </span>
+                    </motion.span>
                 </div>
                 <hr className="my-3 h-px border-0 bg-neutral-100/40" />
                 <div
@@ -82,8 +85,6 @@ const Footer = () => {
                     <div className="flex space-x-5">
                         <FaGithub className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
                         <FaLinkedin className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
-                        <FaBehance className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
-                        <FaDribbble className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
                     </div>
                     <div>
                         <Link href={"/"}>

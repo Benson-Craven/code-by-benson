@@ -64,6 +64,20 @@ export const slideLeft = {
     },
 }
 
+export const slideRight = {
+    initial: {
+        x: 0,
+    },
+    enter: {
+        x: 0,
+        transition: { duration: 0.5, ease: [0.33, 1, 0.68, 1] },
+    },
+    exit: {
+        x: 300,
+        transition: { duration: 0.5, ease: [0.33, 1, 0.68, 1] },
+    },
+}
+
 export const rotateX = {
     initial: {
         rotateX: 90,

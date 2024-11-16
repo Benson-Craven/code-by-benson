@@ -20,17 +20,16 @@ const Navbar: React.FC = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollPos = window.scrollY
-            if (prevScrollPos > currentScrollPos) {
-                setTop(0) // Show navbar
-            } else {
-                setTop(-150) // Hide navbar
-            }
-            setPrevScrollPos(currentScrollPos)
 
-            // Debugging scroll position and top value
-            // console.log(
-            //     "Scroll progress: " + currentScrollPos + " Top = " + top,
-            // )
+            if (currentScrollPos === 0) {
+                setTop(0) // Always show navbar at the top
+            } else if (prevScrollPos > currentScrollPos) {
+                setTop(0) // Show navbar when scrolling up
+            } else {
+                setTop(-150) // Hide navbar when scrolling down
+            }
+
+            setPrevScrollPos(currentScrollPos)
         }
 
         window.addEventListener("scroll", handleScroll)
@@ -38,7 +37,7 @@ const Navbar: React.FC = () => {
         return () => {
             window.removeEventListener("scroll", handleScroll)
         }
-    }, [prevScrollPos, top]) // Include `top` in dependencies
+    }, [prevScrollPos]) // Include `top` in dependencies
 
     const animation = {
         initial: { y: "-50%", opacity: 0 },
@@ -60,7 +59,7 @@ const Navbar: React.FC = () => {
             initial="initial"
             animate="enter"
             style={{ top: `${top}px`, transition: "top 0.3s" }} // Use inline style for `top`
-            className="fixed z-10 flex w-full justify-between p-10 font-helvetica text-base tracking-tight"
+            className="fixed z-10 flex w-full justify-between p-10 text-base tracking-tight"
         >
             <div className="text-black">
                 <FlipLink href="/" hoverText="&copy; Code by Benson">

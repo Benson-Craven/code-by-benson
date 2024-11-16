@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { opacity, slideLeft, mountAnim } from "./anim"
+import { opacity, slideLeft, slideRight, mountAnim } from "./anim"
 import Link from "./Link"
 import { useEffect } from "react"
 import { FaGithub, FaLinkedin, FaBehance, FaDribbble } from "react-icons/fa6"
@@ -18,7 +18,7 @@ const menu = [
     {
         title: "Info",
 
-        description: "To Learn Everything",
+        description: "About Me",
 
         images: "agence1.jpg",
 
@@ -28,7 +28,7 @@ const menu = [
     {
         title: "Contact",
 
-        description: "To Send a FAX",
+        description: "Send a message",
 
         images: "contact1.jpg",
 
@@ -53,22 +53,24 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
         <div className="fixed left-0 top-0 z-20 m-0 flex h-[100vh] w-[100vw] flex-col justify-between">
             <div className="flex justify-end p-5">
                 <motion.svg
-                    width="200"
-                    height="200"
-                    viewBox="0 0 200 200"
-                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    id="Scribble-26.svg"
-                    variants={slideLeft}
-                    {...mountAnim}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     onClick={() => {
                         closeMenu()
                     }}
-                    className="h-20 w-20 cursor-pointer fill-white transition-colors duration-500 hover:fill-[#D3FD50] md:h-24 md:w-24"
+                    className="h-8 w-8 cursor-pointer transition-transform duration-300 hover:rotate-90 hover:text-[#D3FD50] md:h-10 md:w-10"
+                    variants={slideRight}
+                    {...mountAnim}
                 >
-                    <path d="M133.19 62.6005C138.683 46.6517 144.163 30.6904 149.582 14.7169C150.136 13.0543 149.262 11.0345 147.624 10.3325C146.011 9.54428 143.917 10.197 142.92 11.872C129.434 34.7052 116.318 57.822 103.891 81.3203C85.3808 116.322 69.1483 152.517 53.5443 188.812C53.1502 189.735 54.6901 190.487 55.1704 189.612C74.2966 155.054 93.9771 120.743 112.438 85.8401C124.84 62.4033 137.033 38.8681 149.287 15.4067C147.058 14.4584 144.841 13.51 142.624 12.5617C138.055 28.7938 133.572 45.0629 129.077 61.332C128.448 63.6227 132.426 64.8543 133.19 62.6005Z" />
-                    <path d="M31.1815 110.706C56.2193 96.9244 77.1806 92.3062 99.1764 91.7643C121.135 91.2347 144.19 95.0033 172.381 98.2424C174.635 98.5133 176.654 96.8631 176.925 94.6216C177.196 92.3802 175.62 90.2988 173.366 90.0279C145.434 86.5549 122.17 82.4536 99.0038 82.7615C75.8626 83.0447 52.8941 87.9341 26.5385 102.159C24.1739 103.44 23.3117 106.408 24.5925 108.76C25.8733 111.125 28.8292 111.999 31.1815 110.706Z" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                 </motion.svg>
+
                 {/* <motion.svg
                     width="200"
                     height="200"
@@ -148,8 +150,6 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
             >
                 <FaGithub className="duration-300 hover:text-[#D3FD50]" />
                 <FaLinkedin className="duration-300 hover:text-[#D3FD50]" />
-                <FaBehance className="duration-300 hover:text-[#D3FD50]" />
-                <FaDribbble className="duration-300 hover:text-[#D3FD50]" />
             </motion.div>
         </div>
     )

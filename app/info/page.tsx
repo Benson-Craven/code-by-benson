@@ -111,13 +111,43 @@ const Info: React.FC = () => {
                 </div>
             </div>
 
-            <div className="mb-16">
+            <div className="pb-16">
                 {renderParagraph(words, scrollYProgress1, container1)}
                 {renderParagraph(words2, scrollYProgress2, container2)}
                 {renderParagraph(words3, scrollYProgress3, container3)}
             </div>
             {/* <Process /> */}
             {/* TODO Need to decide whether to have this at all */}
+            <div className="flex flex-col space-y-12 px-10 py-8">
+                {/* Services Section */}
+                <div className="flex flex-col space-y-4">
+                    <div className="border-t border-gray-300 mix-blend-difference" />
+                    <div className="flex items-start justify-between">
+                        {/* Title */}
+                        <p className="text-lg font-medium text-gray-500">
+                            ↳ Services
+                        </p>
+
+                        {/* Columns */}
+                        <div className="grid grid-cols-2 gap-x-16">
+                            <div className="space-y-1">
+                                <p className="font-normal text-white mix-blend-difference">
+                                    UX/UI Design <br />
+                                    Product Design <br />
+                                    Graphic Design
+                                </p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="font-normal text-white mix-blend-difference">
+                                    E-Commerce Web Design <br />
+                                    Art Direction <br />
+                                    Brand Identity
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     )
 }

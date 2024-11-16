@@ -26,6 +26,7 @@ const config: Config = {
             },
             fontFamily: {
                 helvetica: ["Helvetica Neue", "sans-serif"],
+                satoshi: ["Satoshi", "sans-serif"],
             },
             translate: {
                 "1/3": "-33.33%",

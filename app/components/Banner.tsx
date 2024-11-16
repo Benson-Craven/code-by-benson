@@ -1,20 +1,20 @@
 "use client"
 
-import Image from "next/image"
+import Image, { StaticImageData } from "next/image"
 import React, { useRef } from "react"
-import Pic1 from "../../public/images/Pic1.JPG"
-import Pic2 from "../../public/images/Pic2.JPG"
-import Pic3 from "../../public/images/Pic3.JPG"
+import akihabara from "../../public/images/akihabara.avif"
+import shinjuku from "../../public/images/shinjuku.avif"
+import ueno from "../../public/images/ueno.avif"
 import { MotionValue, motion, useScroll, useTransform } from "framer-motion"
 
 interface PhraseProps {
     title: string
-    src: string
+    src: StaticImageData
 }
 
 interface SliderProps {
     title: string
-    src: string
+    src: StaticImageData
     left: string
     progress: MotionValue<number>
     direction: string
@@ -30,14 +30,19 @@ const Banner: React.FC = () => {
     const sliders = [
         {
             title: "Front End Developer",
-            src: Pic1,
+            src: akihabara,
             left: "-65%",
             direction: "left",
         },
-        { title: "UX Designer", src: Pic2, left: "-85%", direction: "right" },
+        {
+            title: "UX Designer",
+            src: shinjuku,
+            left: "-85%",
+            direction: "right",
+        },
         {
             title: "Front End Developer",
-            src: Pic3,
+            src: ueno,
             left: "-90%",
             direction: "left",
         },
@@ -76,7 +81,7 @@ const Slider: React.FC<SliderProps> = ({
 
     return (
         <motion.div
-            className="relative flex whitespace-nowrap font-helvetica tracking-tight"
+            className="relative flex whitespace-nowrap tracking-tight"
             style={{ left, x }}
         >
             {Array(5)
