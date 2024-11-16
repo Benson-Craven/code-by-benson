@@ -69,18 +69,18 @@ const Manifesto = () => {
             </div> */}
             <div ref={containerRef} className="relative h-screen">
                 <div className="relative mt-[20vh] flex w-full justify-center">
-                    {images.map(({ src, y, style }, i) => (
+                    {images.map(({ y, style }, i) => (
                         <motion.div
                             key={`i_${i}`}
                             style={{ y }}
                             className={`absolute ${style}`}
                         >
-                            <Image
+                            {/* <Image
                                 src={src}
                                 alt="image"
                                 fill
                                 className="object-cover"
-                            />
+                            /> */}
                         </motion.div>
                     ))}
                 </div>
