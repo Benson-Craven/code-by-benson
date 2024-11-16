@@ -5,10 +5,6 @@ import React, { useRef, useMemo } from "react"
 import Image from "next/image"
 import { slideUp } from "./animation"
 
-import Picture1 from "../../../public/images/Pic1.JPG"
-import Picture2 from "../../../public/images/Pic2.JPG"
-import Picture3 from "../../../public/images/Pic3.JPG"
-
 const Manifesto = () => {
     const phrase =
         "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge."
@@ -32,17 +28,14 @@ const Manifesto = () => {
     // Additional styles for the pictures also, causing differential spacing
     const images = [
         {
-            src: Picture1,
             y: sm,
             style: "top-[20vh]  h-[90vh] w-[100vh]",
         },
         {
-            src: Picture2,
             y: lg,
             style: "left-[80vw] top-[15vh] h-[40vh] w-[30vh]",
         },
         {
-            src: Picture3,
             y: md,
             style: "left-[17.5vw] top-[80vh] h-[25vh] w-[20vh]",
         },
