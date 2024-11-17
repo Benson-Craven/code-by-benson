@@ -51,7 +51,7 @@ const Parallax = () => {
                     style={{ opacity: opacityGrid }}
                     className="grid w-full grid-cols-6 gap-9 md:grid-cols-8"
                 >
-                    <div className="col-span-3 col-start-1 row-start-1 md:col-start-6">
+                    {/* <div className="col-span-3 col-start-1 row-start-1 md:col-start-6">
                         <Image
                             src={"/images/akihabara.avif"}
                             alt="Alt"
@@ -59,8 +59,8 @@ const Parallax = () => {
                             height={400}
                             className="rounded-xl shadow-md"
                         />
-                    </div>
-                    <div className="col-span-2 col-start-5 row-start-2 md:col-start-2">
+                    </div> */}
+                    <div className="col-span-2 col-start-4 row-start-2 md:col-start-2">
                         <Image
                             src={"/images/naoshima.avif"}
                             alt="Alt"

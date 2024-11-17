@@ -47,7 +47,7 @@ const HeroSection = () => {
                     variants={animation}
                     initial="initial"
                     animate={"enter"}
-                    className="mx-4 mb-16 w-4/5 text-xl font-light tracking-tight text-black md:w-1/2 md:text-4xl"
+                    className="mx-4 mb-16 w-4/5 text-xl font-normal tracking-tight text-black md:w-1/2 md:text-4xl"
                 >
                     Melbourne based{" "}
                     <Link href={"/info"}>
