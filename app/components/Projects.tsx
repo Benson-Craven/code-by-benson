@@ -1,6 +1,5 @@
 "use client"
-
-import { motion, useTransform, useScroll } from "framer-motion"
+import { motion, useTransform, useScroll, useInView } from "framer-motion"
 import { useRef } from "react"
 import React from "react"
 import FlipLink from "./FlipLink"
@@ -11,22 +10,32 @@ import Link from "next/link"
 const ProjectSection: React.FC = () => {
     const targetRef = useRef<HTMLDivElement | null>(null)
 
-    // Track scroll progress for animations
     const { scrollYProgress } = useScroll({
         target: targetRef,
     })
 
     const cardWidth = 100 / projects.length
 
-    // Horizontal scrolling animation
     const x = useTransform(
         scrollYProgress,
-        [0, 1], // Map scroll progress to range
+        [0, 1],
         ["0%", `-${90 - cardWidth}%`],
     )
 
-    // Opacity fade-out animation for the header
     const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0])
+
+    const containerVariants = {
+        hidden: {
+            opacity: 0,
+        },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.3, // Delay between each card
+                delayChildren: 0.2, // Initial delay before first card
+            },
+        },
+    }
 
     return (
         <section
@@ -46,10 +55,14 @@ const ProjectSection: React.FC = () => {
             <div className="sticky top-44 mt-8 flex flex-col items-start justify-center overflow-hidden">
                 <motion.div
                     style={{ x }}
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
                     className="mb-10 flex flex-row flex-nowrap gap-12 pl-5 md:pl-10"
                 >
-                    {projects.map((project) => (
-                        <Card key={project.id} card={project} />
+                    {projects.map((project, index) => (
+                        <Card key={project.id} card={project} index={index} />
                     ))}
                 </motion.div>
             </div>
@@ -57,15 +70,33 @@ const ProjectSection: React.FC = () => {
     )
 }
 
-const Card: React.FC<{ card: CardType }> = ({ card }) => {
+const Card: React.FC<{ card: CardType; index: number }> = ({ card, index }) => {
+    const cardVariants = {
+        hidden: {
+            opacity: 0,
+            y: 50,
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 1.2, // Longer duration
+                ease: [0.25, 0.1, 0.25, 1], // Custom easing curve for smoother motion
+            },
+        },
+    }
+
     return (
-        <div className="group flex min-h-max flex-col overflow-hidden">
+        <motion.div
+            variants={cardVariants}
+            className="group flex min-h-max flex-col overflow-hidden"
+        >
             {/* Image Container */}
             <Link href={card.link} passHref>
                 <div className="relative mb-2 h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px] lg:h-[450px] lg:w-[550px]">
                     {/* Placeholder Image */}
                     <Image
-                        src={card.url} // Static image URL
+                        src={card.url}
                         alt={card.title}
                         fill
                         loading="lazy"
@@ -73,7 +104,7 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => {
                     />
                     {/* Hover GIF */}
                     <Image
-                        src={card.gifUrl} // GIF URL
+                        src={card.gifUrl}
                         alt={`GIF of ${card.title}`}
                         fill
                         loading="lazy"
@@ -90,14 +121,14 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => {
                     </FlipLink>
                 </h3>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
 type CardType = {
     link: string
-    url: string // Static image URL
-    gifUrl: string // GIF URL
+    url: string
+    gifUrl: string
     title: string
     id: number
 }
