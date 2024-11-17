@@ -19,10 +19,10 @@ const ProjectSection: React.FC = () => {
     const x = useTransform(
         scrollYProgress,
         [0, 1],
-        ["0%", `-${90 - cardWidth}%`],
+        ["0%", `-${100 - (projects.length / 2) * cardWidth}%`],
     )
 
-    const opacity = useTransform(scrollYProgress, [0.9, 1], [1, 0])
+    const opacity = useTransform(scrollYProgress, [0.8, 1], [1, 0])
 
     const containerVariants = {
         hidden: {
@@ -41,18 +41,20 @@ const ProjectSection: React.FC = () => {
         <section
             id="project-section"
             ref={targetRef}
-            className="relative h-[300vh] rounded-bl-[300px] rounded-br-[300px] rounded-tr-full bg-neutral-100"
+            className="relative h-[150vh] rounded-bl-[300px] rounded-br-[300px] rounded-tr-full bg-neutral-100 md:h-[300vh]"
         >
             {/* Section Header */}
             <motion.div
                 style={{ opacity }}
-                className="sticky top-20 pl-5 mix-blend-difference md:pl-10"
+                className="sticky top-[130px] pl-5 mix-blend-difference md:pl-10"
             >
-                <h2 className="text-7xl tracking-tight">Projects</h2>
+                <h2 className="text-6xl tracking-tight md:text-7xl">
+                    Projects
+                </h2>
             </motion.div>
 
             {/* Horizontal Scrolling Section */}
-            <div className="sticky top-44 mt-8 flex flex-col items-start justify-center overflow-hidden">
+            <div className="sticky top-1/3 mt-8 flex flex-col items-start justify-center overflow-hidden md:top-44">
                 <motion.div
                     style={{ x }}
                     variants={containerVariants}

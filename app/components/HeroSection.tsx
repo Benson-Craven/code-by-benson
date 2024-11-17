@@ -40,14 +40,14 @@ const HeroSection = () => {
     }
 
     return (
-        <section className="flex min-h-screen w-full flex-col justify-end bg-neutral-100 p-10 text-slate-900 md:rounded-tr-full">
+        <section className="flex min-h-screen w-full flex-col justify-end bg-neutral-100 p-5 text-slate-900 md:rounded-tr-full md:p-10">
             <div className="overflow-hidden">
                 <motion.h1
                     ref={body}
                     variants={animation}
                     initial="initial"
                     animate={"enter"}
-                    className="mx-4 mb-16 w-2/3 text-xl tracking-tight text-black md:w-1/2 md:text-4xl"
+                    className="mx-4 mb-16 w-4/5 text-xl font-light tracking-tight text-black md:w-1/2 md:text-4xl"
                 >
                     Melbourne based{" "}
                     <Link href={"/info"}>
@@ -91,9 +91,11 @@ const HeroSection = () => {
                     </div>
                     <div>
                         Get in touch
-                        <FlipLink href="" hoverText="Say hi! &#9996;">
-                            bensoncraven@hotmail.co.uk
-                        </FlipLink>
+                        <span className="font-normal">
+                            <FlipLink href="" hoverText="Say hi! &#9996;">
+                                bensoncraven@hotmail.co.uk
+                            </FlipLink>
+                        </span>
                     </div>
                 </div>
             </motion.div>

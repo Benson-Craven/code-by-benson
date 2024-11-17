@@ -94,7 +94,7 @@ const Info: React.FC = () => {
     return (
         <section className="relative rounded-br-full rounded-tr-full bg-neutral-100 pb-20">
             <div className="relative flex h-[95vh] flex-col md:h-[100vh]">
-                <div className="absolute bottom-0 left-0 right-0 flex justify-center overflow-hidden">
+                <div className="absolute bottom-5 left-0 right-0 flex justify-center overflow-hidden">
                     {text.map((char, index) => (
                         <motion.span
                             key={index}
@@ -118,18 +118,18 @@ const Info: React.FC = () => {
             </div>
             {/* <Process /> */}
             {/* TODO Need to decide whether to have this at all */}
-            <div className="flex flex-col space-y-12 px-10 py-8">
+            <div className="flex flex-col space-y-12 px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10">
                 {/* Services Section */}
                 <div className="flex flex-col space-y-4">
                     <div className="border-t border-gray-300 mix-blend-difference" />
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-start md:space-y-0">
                         {/* Title */}
                         <p className="text-lg font-medium text-gray-500">
                             ↳ Services
                         </p>
 
                         {/* Columns */}
-                        <div className="grid grid-cols-2 gap-x-16">
+                        <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8 md:gap-x-16">
                             <div className="space-y-1">
                                 <p className="font-normal text-white mix-blend-difference">
                                     UX/UI Design <br />
