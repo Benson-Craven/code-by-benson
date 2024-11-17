@@ -117,7 +117,7 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
                 variants={opacity}
                 {...mountAnim}
                 custom={0.75}
-                className="z-20 flex cursor-pointer justify-center gap-4 p-5 text-[3vw] text-white md:gap-6"
+                className="z-20 flex cursor-pointer items-center justify-center gap-4 p-5 text-[3vw] text-white md:gap-6"
             >
                 <FaGithub className="h-10 w-10 duration-300 hover:text-[#D3FD50]" />
                 <FaLinkedin className="h-10 w-10 duration-300 hover:text-[#D3FD50]" />

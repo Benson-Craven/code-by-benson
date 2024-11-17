@@ -46,7 +46,7 @@ const ProjectSection: React.FC = () => {
             {/* Section Header */}
             <motion.div
                 style={{ opacity }}
-                className="sticky top-[130px] pl-5 mix-blend-difference md:pl-10"
+                className="sticky top-[130px] pl-5 mix-blend-difference md:top-16 md:pl-10"
             >
                 <h2 className="text-6xl tracking-tight md:text-7xl">
                     Projects
