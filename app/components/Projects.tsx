@@ -69,7 +69,7 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => {
                         alt={card.title}
                         fill
                         loading="lazy"
-                        className="absolute inset-0 cursor-pointer rounded-2xl object-cover transition-opacity duration-300 group-hover:opacity-0"
+                        className="absolute inset-0 cursor-pointer rounded-2xl object-cover transition-opacity duration-300 group-hover:scale-95 group-hover:opacity-0"
                     />
                     {/* Hover GIF */}
                     <Image
@@ -77,7 +77,7 @@ const Card: React.FC<{ card: CardType }> = ({ card }) => {
                         alt={`GIF of ${card.title}`}
                         fill
                         loading="lazy"
-                        className="absolute inset-0 cursor-pointer rounded-2xl object-scale-down opacity-0 transition-opacity duration-300 group-hover:scale-95 group-hover:opacity-100"
+                        className="absolute inset-0 cursor-pointer rounded-2xl object-scale-down opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                     />
                 </div>
             </Link>

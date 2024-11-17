@@ -31,7 +31,7 @@ const Footer = () => {
     const characters = sentence.split("")
 
     return (
-        <footer className="max-w-screen relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
+        <footer className="max-w-screen container relative mx-auto flex flex-col flex-nowrap justify-center gap-3 overflow-hidden bg-black px-6 pb-5 pt-20">
             <div className="flex flex-col flex-nowrap gap-6 py-6">
                 <div className="relative flex flex-wrap justify-start text-base">
                     <h3 className="text-xl tracking-tight text-gray-400 md:text-2xl"></h3>

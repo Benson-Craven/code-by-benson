@@ -64,8 +64,8 @@ const HeroSection = () => {
                             />
                         </motion.span>{" "}
                     </Link>
-                    developer crafting engaging, human-focused digital
-                    experiences for a range of forward-thinking brands
+                    developer crafting engaging, human-centered digital
+                    experiences for forward-thinking brands
                 </motion.h1>
             </div>
 

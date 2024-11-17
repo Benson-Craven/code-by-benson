@@ -37,9 +37,9 @@ const Parallax = () => {
                             style={{ opacity }}
                             className="z-3 relative block max-w-[90vw] shrink grow-0 items-end pb-6 text-center text-2xl tracking-tight md:pb-8 md:text-5xl lg:text-6xl"
                         >
-                            Empowering businesses to thrive in the digital age.
-                            Together, we'll lead the way with straightforward,
-                            innovative solutions
+                            Helping businesses excel in the digital age with
+                            simple, innovative solutions. Together, we&rsquo;ll
+                            pave the way forward
                         </motion.h2>
                     </div>
                 </div>
@@ -62,7 +62,7 @@ const Parallax = () => {
                     </div>
                     <div className="col-span-2 col-start-5 row-start-2 md:col-start-2">
                         <Image
-                            src={"/images/herbal.JPG"}
+                            src={"/images/naoshima.avif"}
                             alt="Alt"
                             width={400}
                             height={400}
@@ -71,7 +71,7 @@ const Parallax = () => {
                     </div>
                     <div className="col-span-2 col-start-2 row-start-3 md:col-start-5">
                         <Image
-                            src={"/images/cycling.JPG"}
+                            src={"/images/vang.avif"}
                             alt="Alt"
                             width={400}
                             height={400}

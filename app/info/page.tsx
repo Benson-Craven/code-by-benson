@@ -19,13 +19,13 @@ interface WordProps {
 const text = "About".split("")
 
 const paragraph =
-    "I'm Benson Craven - a British web developer based in Melbourne, Australia. I create forward-thinking web applications based on a knowledge accumulated over the years."
+    "I'm Benson Craven - a British web developer based in Melbourne, Australia. I create forward-thinking web applications based on a knowledge accumulated over the years"
 
 const paragraph2 =
-    "My passion lies in web development and through combining user experience, strategy, technology and motion I aspire to create work that resonates deeply with its audience. "
+    "My passion lies in web development and through combining user experience, strategy, technology and motion I aspire to create work that resonates deeply with its audience "
 
 const paragraph3 =
-    "I'm always up for discussing new collaborations, don't hesitate to get in touch."
+    "I'm always up for discussing new collaborations, don't hesitate to get in touch"
 
 const animation = {
     initial: { y: "100%", opacity: 0 },
@@ -133,15 +133,15 @@ const Info: React.FC = () => {
                             <div className="space-y-1">
                                 <p className="font-normal text-white mix-blend-difference">
                                     UX/UI Design <br />
-                                    Product Design <br />
-                                    Graphic Design
+                                    Front-End Development <br />
+                                    Graphic Design <br />
                                 </p>
                             </div>
                             <div className="space-y-1">
                                 <p className="font-normal text-white mix-blend-difference">
-                                    E-Commerce Web Design <br />
-                                    Art Direction <br />
-                                    Brand Identity
+                                    Prototyping & Wireframing <br />
+                                    Responsive Web Development <br />
+                                    Animation & Motion Graphics
                                 </p>
                             </div>
                         </div>
