@@ -18,14 +18,14 @@ interface WordProps {
 
 const text = "About".split("")
 
-const paragraph =
-    "I'm Benson Craven - a British web developer based in Melbourne, Australia. I create forward-thinking web applications based on a knowledge accumulated over the years"
+const paragraph1 =
+    "I'm Benson Craven — a British web developer based in Melbourne, Australia. I create forward-thinking web applications, drawing from years of accumulated experience."
 
 const paragraph2 =
-    "My passion lies in web development and through combining user experience, strategy, technology and motion I aspire to create work that resonates deeply with its audience "
+    "My passion lies in web development. By combining user experience, strategy, technology, and motion, I create work that resonates deeply with its audience."
 
 const paragraph3 =
-    "I'm always up for discussing new collaborations, don't hesitate to get in touch"
+    "I'm always open to new collaborations. Don't hesitate to get in touch"
 
 const animation = {
     initial: { y: "100%", opacity: 0 },
@@ -60,7 +60,7 @@ const Info: React.FC = () => {
         offset: ["start 0.5", "start 0.1"],
     })
 
-    const words = paragraph.split(" ")
+    const words = paragraph1.split(" ")
     const words2 = paragraph2.split(" ")
     const words3 = paragraph3.split(" ")
 

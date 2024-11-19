@@ -66,7 +66,7 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
             >
                 <div
                     onClick={handleClick}
-                    className="group fixed right-4 top-4 flex cursor-pointer items-center justify-center rounded-full bg-black p-3 sm:h-[100px] sm:w-[100px] md:h-[150px] md:w-[150px]"
+                    className="group fixed right-4 top-4 flex cursor-pointer items-center justify-center rounded-full bg-black p-3 sm:h-[100px] sm:w-[100px]"
                 >
                     {/* Hover Effect Background */}
                     <motion.div
@@ -82,7 +82,7 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="1"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="h-12 w-12 cursor-pointer text-white transition-transform duration-300 hover:rotate-90 hover:text-[#D3FD50] sm:h-14 sm:w-14 md:h-16 md:w-16"

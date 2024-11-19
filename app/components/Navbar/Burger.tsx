@@ -9,7 +9,7 @@ const Button: React.FC<Props> = ({ openMenu }) => {
     return (
         <div
             onClick={openMenu}
-            className="group fixed right-4 top-4 flex cursor-pointer items-center justify-center rounded-full bg-black p-3 sm:h-[100px] sm:w-[100px] md:h-[150px] md:w-[150px]"
+            className="group fixed right-4 top-4 flex cursor-pointer items-center justify-center rounded-full bg-black p-3 sm:h-[100px] sm:w-[100px]"
         >
             {/* Hover Effect Background */}
             <motion.div

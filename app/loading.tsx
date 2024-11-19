@@ -1,4 +1,5 @@
-import React, { useEffect } from "react"
+import React from "react"
+import { Ripple } from "react-css-spinners"
 
 const loading = () => {
     // useEffect(() => {
@@ -6,14 +7,8 @@ const loading = () => {
     // }, [])
 
     return (
-        <div className="z-[55] flex h-[100vh] w-screen items-center justify-center overflow-hidden bg-black text-white">
-            {/* preloader */}
-            <div className="flex h-[60px] w-[200px] items-center justify-between overflow-hidden text-2xl">
-                {/* texts-container */}
-                <span>Code</span>
-                <span>By</span>
-                <span>Benson</span>
-            </div>
+        <div className="z-[55] flex h-[100vh] items-center justify-center">
+            <Ripple color="#D3FD50" size={100} thickness={5} />
         </div>
     )
 }
