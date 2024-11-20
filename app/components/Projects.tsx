@@ -63,9 +63,17 @@ const ProjectSection: React.FC = () => {
                     viewport={{ once: true, margin: "-100px" }}
                     className="mb-10 flex flex-row flex-nowrap gap-12 pl-5 md:pl-10"
                 >
-                    {projects.map((project, index) => (
-                        <Card key={project.id} card={project} index={index} />
-                    ))}
+                    {projects.map((project, index) =>
+                        project.comingSoon ? (
+                            <ComingSoonCard key={`coming-soon-${project.id}`} />
+                        ) : (
+                            <Card
+                                key={project.id}
+                                card={project}
+                                index={index}
+                            />
+                        ),
+                    )}
                 </motion.div>
             </div>
         </section>
@@ -133,6 +141,53 @@ type CardType = {
     gifUrl: string
     title: string
     id: number
+}
+
+const ComingSoonCard = () => {
+    const cardVariants = {
+        hidden: {
+            opacity: 0,
+            y: 50,
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 1.2,
+                ease: [0.25, 0.1, 0.25, 1],
+            },
+        },
+    }
+
+    return (
+        <motion.div
+            variants={cardVariants}
+            className="group flex min-h-max flex-col overflow-hidden"
+        >
+            <div className="relative mb-2 h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px] lg:h-[450px] lg:w-[550px]">
+                <div className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-neutral-200 p-6 transition-all duration-300 group-hover:scale-95">
+                    {/* Animated dots */}
+                    <div className="flex space-x-2">
+                        <div className="h-3 w-3 animate-bounce rounded-full bg-neutral-400 [animation-delay:-0.3s]"></div>
+                        <div className="h-3 w-3 animate-bounce rounded-full bg-neutral-400 [animation-delay:-0.15s]"></div>
+                        <div className="h-3 w-3 animate-bounce rounded-full bg-neutral-400"></div>
+                    </div>
+                    <h3 className="mt-6 text-2xl font-medium text-neutral-600">
+                        Coming Soon
+                    </h3>
+                    <p className="mt-4 text-center text-neutral-500">
+                        New exciting project in development
+                    </p>
+                </div>
+            </div>
+
+            <div className="mt-2 text-black">
+                <h3 className="mb-2 text-lg mix-blend-difference sm:text-2xl">
+                    Stay Tuned
+                </h3>
+            </div>
+        </motion.div>
+    )
 }
 
 export default ProjectSection
