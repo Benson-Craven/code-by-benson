@@ -16,11 +16,7 @@ const ProjectSection: React.FC = () => {
 
     const cardWidth = 100 / projects.length
 
-    const x = useTransform(
-        scrollYProgress,
-        [0, 1],
-        ["0%", `-${100 - (projects.length / 2) * cardWidth}%`],
-    )
+    const x = useTransform(scrollYProgress, [0, 1], ["0", "-100%"])
 
     const opacity = useTransform(scrollYProgress, [0.8, 1], [1, 0])
 
@@ -176,7 +172,7 @@ const ComingSoonCard = () => {
                         Coming Soon
                     </h3>
                     <p className="mt-4 text-center text-neutral-500">
-                        New exciting project in development
+                        New projects in the works
                     </p>
                 </div>
             </div>
