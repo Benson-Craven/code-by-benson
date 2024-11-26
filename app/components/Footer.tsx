@@ -83,8 +83,14 @@ const Footer = () => {
                     className="flex flex-col justify-between text-[2rem] md:flex-row"
                 >
                     <div className="flex space-x-5">
-                        <FaGithub className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
-                        <FaLinkedin className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
+                        <Link href={"https://github.com/Benson-Craven"}>
+                            <FaGithub className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
+                        </Link>
+                        <Link
+                            href={"https://www.linkedin.com/in/benson-craven/"}
+                        >
+                            <FaLinkedin className="cursor-pointer duration-300 hover:text-[#D3FD50]" />
+                        </Link>
                     </div>
                     <div>
                         <Link href={"/"}>

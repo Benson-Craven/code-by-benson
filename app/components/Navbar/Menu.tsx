@@ -1,6 +1,7 @@
 import { motion, useAnimation } from "framer-motion"
 import { opacity, slideLeft, slideRight, mountAnim } from "./anim"
-import Link from "./Link"
+import OtherLink from "./Link"
+import Link from "next/link"
 import { useEffect } from "react"
 import { FaGithub, FaLinkedin, FaBehance, FaDribbble } from "react-icons/fa6"
 
@@ -103,7 +104,7 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
             <div className="flex h-fit w-full flex-col items-center justify-center">
                 {menu.map((el, index) => {
                     return (
-                        <Link
+                        <OtherLink
                             data={el}
                             index={index}
                             key={index}
@@ -119,8 +120,12 @@ const Menu: React.FC<Props> = ({ closeMenu }) => {
                 custom={0.75}
                 className="z-20 flex cursor-pointer items-center justify-center gap-4 p-5 text-[3vw] text-white md:gap-6"
             >
-                <FaGithub className="h-10 w-10 duration-300 hover:text-[#D3FD50]" />
-                <FaLinkedin className="h-10 w-10 duration-300 hover:text-[#D3FD50]" />
+                <Link href={"https://github.com/Benson-Craven"}>
+                    <FaGithub className="h-10 w-10 duration-300 hover:text-[#D3FD50]" />
+                </Link>
+                <Link href={"https://www.linkedin.com/in/benson-craven/"}>
+                    <FaLinkedin className="h-10 w-10 duration-300 hover:text-[#D3FD50]" />
+                </Link>
             </motion.div>
         </div>
     )
