@@ -7,7 +7,23 @@ import { StrictMode } from "react"
 
 export const metadata: Metadata = {
     title: "Code by Benson",
-    description: "Created by Benson Craven",
+    description:
+        "Full-stack developer crafting elegant web solutions with Next.js, React, and modern web technologies. Transforming innovative ideas into performant, user-centric digital experiences.",
+    keywords: [
+        "Next.js",
+        "React",
+        "Full-stack",
+        "Web Development",
+        "Frontend",
+        "JavaScript",
+        "TypeScript",
+    ],
+    openGraph: {
+        title: "Benson Craven - Web Developer",
+        description:
+            "Innovative full-stack development bringing ideas to life through cutting-edge web technologies.",
+        type: "website",
+    },
 }
 
 export default function RootLayout({
@@ -16,7 +32,7 @@ export default function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en" className="font-satoshi scroll-smooth">
+        <html lang="en" className="scroll-smooth font-satoshi">
             <body className="overflow-x-hidden">
                 <Navbar />
                 {children}
