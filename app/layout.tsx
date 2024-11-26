@@ -8,7 +8,7 @@ import { StrictMode } from "react"
 export const metadata: Metadata = {
     title: "Code by Benson",
     description:
-        "Full-stack developer crafting elegant web solutions with Next.js, React, and modern web technologies. Transforming innovative ideas into performant, user-centric digital experiences.",
+        "Developer crafting elegant web solutions with Next.js, React, and modern web technologies. Transforming innovative ideas into performant, user-centric digital experiences.",
     keywords: [
         "Next.js",
         "React",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Benson Craven - Web Developer",
         description:
-            "Innovative full-stack development bringing ideas to life through cutting-edge web technologies.",
+            "Innovative development bringing ideas to life through cutting-edge web technologies.",
         type: "website",
     },
 }
