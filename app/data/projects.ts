@@ -12,7 +12,7 @@ const projects: Project[] = [
         url: "/images/meeting2.avif",
         gifUrl: "/images/chronic-placeholder.avif",
         title: "Chronic Pain Recovery",
-        link: "http://chronicpainrecovery.netlify.app",
+        link: "http://chronicpainrecovery.ie",
         id: 1,
         comingSoon: false,
     },
