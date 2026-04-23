@@ -62,13 +62,13 @@ const Footer = () => {
                         ))}
                     </h2>
                 </div>
-                <div className="mt-5 flex cursor-pointer items-center justify-between text-lg tracking-tight md:text-3xl">
-                    <FlipLink
-                        href={"mailto:bensoncraven@hotmail.co.uk"}
-                        hoverText="Drop a message &#9996;"
+                <div className="mt-5 flex items-center justify-between text-lg tracking-tight md:text-3xl">
+                    <a
+                        href="mailto:bensoncraven@hotmail.co.uk"
+                        className="text-neutral-100 hover:text-[#D3FD50] transition-colors duration-300"
                     >
                         Have a project in mind?
-                    </FlipLink>
+                    </a>
 
                     <motion.span
                         whileHover={{ rotate: 180 }}

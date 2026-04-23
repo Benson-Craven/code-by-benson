@@ -2,7 +2,6 @@
 
 import {
     motion,
-    useMotionValueEvent,
     useScroll,
     useTransform,
 } from "framer-motion"
@@ -16,10 +15,6 @@ const Parallax = () => {
         target: ref,
         offset: ["start end", "end start"],
     })
-
-    // useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    //     console.log("Page scroll: ", latest)
-    // })
 
     const opacity = useTransform(scrollYProgress, [0.85, 0.95], [1, 0])
     const opacityGrid = useTransform(scrollYProgress, [0.75, 0.9], [1, 0])
@@ -37,29 +32,17 @@ const Parallax = () => {
                             style={{ opacity }}
                             className="z-3 relative block max-w-[90vw] shrink grow-0 items-end pb-6 text-center text-2xl tracking-tight md:pb-8 md:text-5xl lg:text-6xl"
                         >
-                            Helping businesses excel in the digital age with
-                            simple, innovative solutions. Together, we&rsquo;ll
-                            pave the way forward
+                            Turning ideas into fast, modern web experiences.
                         </motion.h2>
                     </div>
                 </div>
             </div>
             {/* Secondary Container with the images below */}
-            {/* TODO: need to change the grid formations and see how it looks on mobile */}
             <div className="relative mx-auto mt-[200px] block h-[200vh] w-[100vw] px-[30px]">
                 <motion.div
                     style={{ opacity: opacityGrid }}
                     className="grid w-full grid-cols-6 gap-9 md:grid-cols-8"
                 >
-                    {/* <div className="col-span-3 col-start-1 row-start-1 md:col-start-6">
-                        <Image
-                            src={"/images/akihabara.avif"}
-                            alt="Alt"
-                            width={400}
-                            height={400}
-                            className="rounded-xl shadow-md"
-                        />
-                    </div> */}
                     <div className="col-span-2 col-start-4 row-start-2 md:col-start-2">
                         <Image
                             src={"/images/naoshima.avif"}

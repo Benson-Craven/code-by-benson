@@ -1,8 +1,10 @@
-export const slideUp = {
+import { Variants } from "framer-motion"
+
+export const slideUp: Variants = {
     initial: {
         y: "100%",
     },
-    open: (i) => ({
+    open: (i: number) => ({
         y: "0%",
         transition: { duration: 0.5, delay: 0.02 * i },
     }),
@@ -12,7 +14,7 @@ export const slideUp = {
     },
 }
 
-export const opacity = {
+export const opacity: Variants = {
     initial: {
         opacity: 0,
     },

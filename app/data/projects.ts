@@ -1,6 +1,13 @@
-// src/data/projects.js
+export interface Project {
+    url: string
+    gifUrl: string
+    title: string
+    link: string
+    id: number
+    comingSoon: boolean
+}
 
-const projects = [
+const projects: Project[] = [
     {
         url: "/images/meeting2.avif",
         gifUrl: "/images/chronic-placeholder.avif",
@@ -31,7 +38,7 @@ const projects = [
         url: "", // Not needed for coming soon card
         gifUrl: "", // Not needed for coming soon card
         link: "#",
-        comingSoon: true, // Add this flag
+        comingSoon: true,
     },
 ]
 

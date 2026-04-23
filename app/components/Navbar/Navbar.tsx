@@ -12,24 +12,26 @@ const Navbar: React.FC = () => {
     const body = useRef<HTMLDivElement>(null)
     const [menuIsOpen, setMenuIsOpen] = useState(false)
 
-    const [prevScrollPos, setPrevScrollPos] = useState<number>(
-        typeof window !== "undefined" ? window.scrollY : 0,
-    )
     const [top, setTop] = useState<number>(0)
+    const prevScrollPos = useRef<number>(0)
 
     useEffect(() => {
+        if (typeof window === "undefined") return
+
+        prevScrollPos.current = window.scrollY
+
         const handleScroll = () => {
             const currentScrollPos = window.scrollY
 
             if (currentScrollPos === 0) {
                 setTop(0) // Always show navbar at the top
-            } else if (prevScrollPos > currentScrollPos) {
+            } else if (prevScrollPos.current > currentScrollPos) {
                 setTop(0) // Show navbar when scrolling up
             } else {
                 setTop(-150) // Hide navbar when scrolling down
             }
 
-            setPrevScrollPos(currentScrollPos)
+            prevScrollPos.current = currentScrollPos
         }
 
         window.addEventListener("scroll", handleScroll)
@@ -37,7 +39,7 @@ const Navbar: React.FC = () => {
         return () => {
             window.removeEventListener("scroll", handleScroll)
         }
-    }, [prevScrollPos]) // Include `top` in dependencies
+    }, [])
 
     const animation = {
         initial: { y: "-50%", opacity: 0 },

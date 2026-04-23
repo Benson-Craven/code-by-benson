@@ -1,10 +1,16 @@
-export const mountAnim = { initial: "initial", animate: "enter", exit: "exit" }
+import { Variants } from "framer-motion"
 
-export const height = {
+export const mountAnim = {
+    initial: "initial",
+    animate: "enter",
+    exit: "exit",
+}
+
+export const height: Variants = {
     initial: {
         height: 0,
     },
-    enter: (i) => ({
+    enter: (i: number) => ({
         height: "100%",
         transition: {
             duration: 0.5,
@@ -12,7 +18,7 @@ export const height = {
             ease: [0.33, 1, 0.68, 1],
         },
     }),
-    exit: (i) => ({
+    exit: (i: number) => ({
         height: 0,
         transition: {
             duration: 0.3,
@@ -22,7 +28,7 @@ export const height = {
     }),
 }
 
-export const background = {
+export const background: Variants = {
     initial: {
         opacity: 0,
     },
@@ -36,11 +42,11 @@ export const background = {
     },
 }
 
-export const opacity = {
+export const opacity: Variants = {
     initial: {
         opacity: 0,
     },
-    enter: (i) => ({
+    enter: (i: number) => ({
         opacity: 1,
         transition: { duration: 0.5, ease: [0.33, 1, 0.68, 1], delay: i },
     }),
@@ -50,7 +56,7 @@ export const opacity = {
     },
 }
 
-export const slideLeft = {
+export const slideLeft: Variants = {
     initial: {
         x: 150,
     },
@@ -64,7 +70,7 @@ export const slideLeft = {
     },
 }
 
-export const slideRight = {
+export const slideRight: Variants = {
     initial: {
         x: 0,
     },
@@ -78,12 +84,12 @@ export const slideRight = {
     },
 }
 
-export const rotateX = {
+export const rotateX: Variants = {
     initial: {
         rotateX: 90,
         opacity: 0,
     },
-    enter: (i) => ({
+    enter: (i: number) => ({
         rotateX: 0,
         opacity: 1,
         transition: {

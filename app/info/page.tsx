@@ -116,8 +116,6 @@ const Info: React.FC = () => {
                 {renderParagraph(words2, scrollYProgress2, container2)}
                 {renderParagraph(words3, scrollYProgress3, container3)}
             </div>
-            {/* <Process /> */}
-            {/* TODO Need to decide whether to have this at all */}
             <div className="flex flex-col space-y-12 px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10">
                 {/* Services Section */}
                 <div className="flex flex-col space-y-4">

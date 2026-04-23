@@ -7,7 +7,7 @@ import { slideUp } from "./animation"
 
 const Manifesto = () => {
     const phrase =
-        "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge."
+        "Turning ideas into fast, modern web experiences."
     const descriptionRef = useRef(null)
     const isInView = useInView(descriptionRef, { once: true })
 
@@ -43,30 +43,6 @@ const Manifesto = () => {
 
     return (
         <>
-            {/* <div className="flex h-[100vh] items-end justify-center rounded-br-full bg-neutral-100 font-helvetica text-black">
-                <div
-                    ref={descriptionRef}
-                    className="w-2/3 -translate-y-1/2 mix-blend-difference"
-                >
-                    <p className="text-center text-xl tracking-tight md:text-6xl">
-                        {words.map((word, i) => (
-                            <span
-                                key={word + i}
-                                className="relative inline-flex"
-                            >
-                                <motion.span
-                                    variants={slideUp}
-                                    custom={i}
-                                    animate={isInView ? "open" : "closed"}
-                                >
-                                    {word}
-                                </motion.span>
-                                &nbsp;
-                            </span>
-                        ))}
-                    </p>
-                </div>
-            </div> */}
             <div ref={containerRef} className="relative h-screen">
                 <div className="relative mt-[20vh] flex w-full justify-center">
                     {images.map(({ y, style }, i) => (
@@ -75,22 +51,9 @@ const Manifesto = () => {
                             style={{ y }}
                             className={`absolute ${style}`}
                         >
-                            {/* <Image
-                                src={src}
-                                alt="image"
-                                fill
-                                className="object-cover"
-                            /> */}
                         </motion.div>
                     ))}
                 </div>
-
-                {/* <div className="absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center text-white mix-blend-darken">
-                    <h1 className="w-2/3 bg-black bg-clip-text p-10 text-center text-8xl tracking-tight">
-                        Melbourne based developer working with clients from all
-                        over the world.
-                    </h1>
-                </div> */}
             </div>
         </>
     )

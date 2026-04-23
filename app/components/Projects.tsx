@@ -1,9 +1,9 @@
 "use client"
-import { motion, useTransform, useScroll, useInView } from "framer-motion"
+import { motion, useTransform, useScroll } from "framer-motion"
 import { useRef } from "react"
 import React from "react"
 import FlipLink from "./FlipLink"
-import projects from "../data/projects"
+import projects, { Project } from "../data/projects"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -13,8 +13,6 @@ const ProjectSection: React.FC = () => {
     const { scrollYProgress } = useScroll({
         target: targetRef,
     })
-
-    const cardWidth = 100 / projects.length
 
     const x = useTransform(scrollYProgress, [0, 1], ["0", "-100%"])
 
@@ -76,7 +74,7 @@ const ProjectSection: React.FC = () => {
     )
 }
 
-const Card: React.FC<{ card: CardType; index: number }> = ({ card, index }) => {
+const Card: React.FC<{ card: Project; index: number }> = ({ card, index }) => {
     const cardVariants = {
         hidden: {
             opacity: 0,
@@ -129,14 +127,6 @@ const Card: React.FC<{ card: CardType; index: number }> = ({ card, index }) => {
             </div>
         </motion.div>
     )
-}
-
-type CardType = {
-    link: string
-    url: string
-    gifUrl: string
-    title: string
-    id: number
 }
 
 const ComingSoonCard = () => {
