@@ -7,8 +7,7 @@ import {
     MotionValue,
     easeOut,
 } from "framer-motion"
-import React, { useRef } from "react"
-import Process from "../components/Process"
+import React, { useRef, useMemo } from "react"
 
 interface WordProps {
     children: string
@@ -19,10 +18,10 @@ interface WordProps {
 const text = "About".split("")
 
 const paragraph1 =
-    "I'm Benson Craven — a British web developer based in Melbourne, Australia. I create forward-thinking web applications, drawing from years of accumulated experience."
+    "I'm Benson Craven — a British front & full-stack developer, recently returned to Europe after three years in Melbourne. Now based in Cork, building fast, forward-thinking web experiences."
 
 const paragraph2 =
-    "My passion lies in web development. By combining user experience, strategy, technology, and motion, I create work that resonates deeply with its audience."
+    "My passion lies in web development. By combining user experience, strategy, technology, and motion."
 
 const paragraph3 =
     "I'm always open to new collaborations. Don't hesitate to get in touch"
@@ -35,54 +34,40 @@ const animation = {
         transition: {
             duration: 1,
             ease: [0.5, 0.75, 0.9, 1],
-            delay: 0.5 + i * 0.1, // Add a stagger effect
+            delay: 0.5 + i * 0.1,
         },
     }),
 }
 
 const Info: React.FC = () => {
-    const container1 = useRef<HTMLParagraphElement>(null)
-    const container2 = useRef<HTMLParagraphElement>(null)
-    const container3 = useRef<HTMLParagraphElement>(null)
-
-    const { scrollYProgress: scrollYProgress1 } = useScroll({
-        target: container1,
-        offset: ["start 0.7", "start 0.25"],
+    const mainContainer = useRef<HTMLDivElement>(null)
+    const { scrollYProgress } = useScroll({
+        target: mainContainer,
+        offset: ["start 0.8", "end 0.6"],
     })
 
-    const { scrollYProgress: scrollYProgress2 } = useScroll({
-        target: container2,
-        offset: ["start 0.6", "start 0.1"],
-    })
+    const words1 = useMemo(() => paragraph1.split(" "), [])
+    const words2 = useMemo(() => paragraph2.split(" "), [])
+    const words3 = useMemo(() => paragraph3.split(" "), [])
+    const totalWords = words1.length + words2.length + words3.length
 
-    const { scrollYProgress: scrollYProgress3 } = useScroll({
-        target: container3,
-        offset: ["start 0.5", "start 0.1"],
-    })
-
-    const words = paragraph1.split(" ")
-    const words2 = paragraph2.split(" ")
-    const words3 = paragraph3.split(" ")
-
-    const aboutOpacity = useTransform(scrollYProgress1, [0, 0.55], [1, 0], {
+    const aboutOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0], {
         ease: easeOut,
     })
 
-    const renderParagraph = (
-        words: string[],
-        progress: MotionValue<number>,
-        container: React.RefObject<HTMLParagraphElement>,
-    ) => {
+    const renderParagraph = (words: string[], startIndex: number) => {
         return (
-            <p
-                ref={container}
-                className="mb-10 ml-10 mt-10 flex w-10/12 flex-wrap text-4xl tracking-tight mix-blend-difference md:text-6xl"
-            >
+            <p className="mb-10 ml-10 mt-10 flex w-10/12 flex-wrap text-4xl tracking-tight mix-blend-difference md:text-6xl">
                 {words.map((word, i) => {
-                    const start = i / words.length
-                    const end = start + 1 / words.length
+                    const globalIndex = startIndex + i
+                    const start = globalIndex / totalWords
+                    const end = start + 1 / totalWords
                     return (
-                        <Word key={i} progress={progress} range={[start, end]}>
+                        <Word
+                            key={i}
+                            progress={scrollYProgress}
+                            range={[start, end]}
+                        >
                             {word}
                         </Word>
                     )
@@ -111,22 +96,19 @@ const Info: React.FC = () => {
                 </div>
             </div>
 
-            <div className="pb-16">
-                {renderParagraph(words, scrollYProgress1, container1)}
-                {renderParagraph(words2, scrollYProgress2, container2)}
-                {renderParagraph(words3, scrollYProgress3, container3)}
+            <div ref={mainContainer} className="pb-16">
+                {renderParagraph(words1, 0)}
+                {renderParagraph(words2, words1.length)}
+                {renderParagraph(words3, words1.length + words2.length)}
             </div>
+
             <div className="flex flex-col space-y-12 px-6 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10">
-                {/* Services Section */}
                 <div className="flex flex-col space-y-4">
                     <div className="border-t border-gray-300 mix-blend-difference" />
                     <div className="flex flex-col justify-between space-y-4 md:flex-row md:items-start md:space-y-0">
-                        {/* Title */}
                         <p className="text-lg font-medium text-gray-500">
                             ↳ Services
                         </p>
-
-                        {/* Columns */}
                         <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8 md:gap-x-16">
                             <div className="space-y-1">
                                 <p className="font-normal text-white mix-blend-difference">
@@ -154,9 +136,7 @@ const Word: React.FC<WordProps> = ({ children, progress, range }) => {
     const opacity = useTransform(progress, range, [0.25, 1])
     return (
         <motion.span style={{ opacity }}>
-            {children.split("").map((char, i) => (
-                <span key={i}>{char}</span>
-            ))}
+            {children}
             <span>&nbsp;</span>
         </motion.span>
     )
