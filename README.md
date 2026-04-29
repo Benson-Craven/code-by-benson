@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Benson Craven Portfolio
+
+Personal portfolio for [benson.codes](https://benson.codes), built with Next.js, TypeScript, Tailwind CSS, and Framer Motion.
+
+The site presents Benson Craven's front-end and full-stack work through a motion-led homepage, project showcase, about page, custom local fonts, and production SEO metadata.
+
+## Stack
+
+- Next.js 14 App Router
+- React 18
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Local Satoshi font files
+- Dynamic sitemap, robots, Open Graph, and JSON-LD metadata
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/
+  components/        Shared page sections, navigation, motion, SEO helpers
+  data/projects.ts   Portfolio project data
+  info/              About page route
+  layout.tsx         Global layout and metadata
+  page.tsx           Homepage route
+public/
+  fonts/             Local Satoshi font files
+  images/            Portfolio and page imagery
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content Updates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Update featured work in `app/data/projects.ts`.
+- Update global metadata in `app/layout.tsx`.
+- Update the about page copy and services in `app/info/InfoClient.tsx`.
+- Add or replace static assets in `public/images`.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The app is ready for deployment on Vercel or any platform that supports Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+For production:
+
+```bash
+npm run build
+npm run start
+```
