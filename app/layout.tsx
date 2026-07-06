@@ -1,26 +1,22 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import Navbar from "./components/Navbar/Navbar"
-import Footer from "./components/Footer"
-import ProgressBar from "./components/ProgressBar"
 import JsonLd from "./components/JsonLd"
 
 export const metadata: Metadata = {
     title: {
-        default: "Benson Craven — Front & Full-Stack Developer",
+        default: "Benson Craven — Frontend Engineer",
         template: "%s | Benson Craven",
     },
     description:
-        "British developer based in Cork, building fast, forward-thinking web experiences. Specialising in Next.js, React, and motion-rich interfaces.",
+        "Frontend-focused engineer building polished React and TypeScript products, production web platforms and real-time interfaces.",
     keywords: [
         "Next.js",
         "React",
-        "Full-Stack",
-        "Front-End",
-        "Web Developer",
+        "Frontend Engineer",
+        "Product Engineer",
         "Cork",
         "TypeScript",
-        "Framer Motion",
+        "Real-time Interfaces",
     ],
     authors: [{ name: "Benson Craven" }],
     creator: "Benson Craven",
@@ -29,19 +25,28 @@ export const metadata: Metadata = {
         canonical: "https://benson.codes",
     },
     openGraph: {
-        title: "Benson Craven — Front & Full-Stack Developer",
+        title: "Benson Craven — Frontend Engineer",
         description:
-            "British developer based in Cork, building fast, forward-thinking web experiences.",
+            "Frontend-focused engineer building polished React and TypeScript products, production web platforms and real-time interfaces.",
         type: "website",
         locale: "en_IE",
         url: "https://benson.codes",
+        siteName: "Benson Craven",
+        images: [
+            {
+                url: "/opengraph-image",
+                width: 1200,
+                height: 630,
+                alt: "Benson Craven — Frontend Engineer",
+            },
+        ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Benson Craven — Front & Full-Stack Developer",
+        title: "Benson Craven — Frontend Engineer",
         description:
-            "British developer based in Cork, building fast, forward-thinking web experiences.",
-        images: ["/images/portrait-bnw.JPG"],
+            "Frontend-focused engineer building polished React and TypeScript products, production web platforms and real-time interfaces.",
+        images: ["/opengraph-image"],
     },
     robots: { index: true, follow: true },
     verification: {
@@ -54,12 +59,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className="scroll-smooth font-satoshi">
-            <body className="overflow-x-hidden">
+            <body className="overflow-x-hidden bg-paper text-ink antialiased">
                 <JsonLd />
-                <Navbar />
                 {children}
-                <ProgressBar />
-                <Footer />
             </body>
         </html>
     )

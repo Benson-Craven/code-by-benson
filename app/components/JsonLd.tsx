@@ -8,8 +8,20 @@ export default function JsonLd() {
                     "@type": "Person",
                     name: "Benson Craven",
                     url: "https://benson.codes",
-                    jobTitle: "Front & Full-Stack Developer",
-                    address: { "@type": "PostalAddress", addressLocality: "Cork", addressCountry: "IE" },
+                    jobTitle: "Frontend Engineer",
+                    knowsAbout: [
+                        "React",
+                        "Next.js",
+                        "TypeScript",
+                        "Frontend engineering",
+                        "Real-time interfaces",
+                        "SEO",
+                    ],
+                    address: {
+                        "@type": "PostalAddress",
+                        addressLocality: "Cork",
+                        addressCountry: "IE",
+                    },
                 }),
             }}
         />

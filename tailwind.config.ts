@@ -9,6 +9,13 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            colors: {
+                paper: "#F2EFE8",
+                ink: "#171714",
+                signal: "#FF5722",
+                "signal-dark": "#B92E12",
+                muted: "#D8D2C8",
+            },
             keyframes: {
                 slide: {
                     "0%": { transform: "translateX(0)" },
