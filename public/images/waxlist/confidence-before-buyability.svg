@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">Waxlist confidence-first discovery pipeline</title>
+  <desc id="description">Diagram showing Spotify album signals normalized and deduplicated before Discogs candidates are scored. Candidates at or above 75 confidence can be ranked, while lower-confidence matches remain review evidence. Price and availability are secondary.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f08a4b"/>
+    </marker>
+    <style>
+      .eyebrow { font: 700 16px Arial, sans-serif; letter-spacing: 3px; fill: #f08a4b; }
+      .title { font: 700 52px Arial, sans-serif; letter-spacing: -2px; fill: #fff4e8; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #bfb3bd; }
+      .box-title { font: 700 23px Arial, sans-serif; fill: #fff4e8; }
+      .body { font: 400 18px Arial, sans-serif; fill: #bfb3bd; }
+      .small { font: 700 14px Arial, sans-serif; letter-spacing: 1.6px; fill: #f08a4b; }
+      .box { fill: #100b14; stroke: #4d3d50; stroke-width: 2; }
+      .accent { fill: #29132e; stroke: #d34278; stroke-width: 2; }
+      .good { fill: #102218; stroke: #1db954; stroke-width: 2; }
+      .line { stroke: #f08a4b; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="900" fill="#05030a"/>
+  <circle cx="1230" cy="40" r="420" fill="#d34278" opacity="0.12"/>
+  <text x="80" y="70" class="eyebrow">REPOSITORY EVIDENCE · EXPLAINABLE MATCHING</text>
+  <text x="80" y="140" class="title">Confidence gates recommendation.</text>
+  <text x="80" y="182" class="subtitle">Taste starts the search; a reliable album-level match decides what can be recommended.</text>
+  <line x1="80" y1="222" x2="1360" y2="222" stroke="#4d3d50" stroke-width="2"/>
+
+  <rect x="80" y="292" width="260" height="210" rx="10" class="box"/>
+  <text x="110" y="334" class="small">SPOTIFY SIGNAL</text>
+  <text x="110" y="378" class="box-title">Explicit taste</text>
+  <text x="110" y="416" class="body">Saved album</text>
+  <text x="110" y="448" class="body">Chosen playlist tracks</text>
+  <text x="110" y="480" class="body">Source context retained</text>
+
+  <path d="M 340 397 L 425 397" class="line"/>
+  <rect x="445" y="292" width="290" height="210" rx="10" class="accent"/>
+  <text x="475" y="334" class="small">SEARCH UNIT</text>
+  <text x="475" y="378" class="box-title">Normalize + dedupe</text>
+  <text x="475" y="416" class="body">Artist and album identity</text>
+  <text x="475" y="448" class="body">One Discogs query per unit</text>
+  <text x="475" y="480" class="body">Explainable source tracks</text>
+
+  <path d="M 735 397 L 820 397" class="line"/>
+  <rect x="840" y="292" width="260" height="210" rx="10" class="box"/>
+  <text x="870" y="334" class="small">DISCOGS CANDIDATES</text>
+  <text x="870" y="378" class="box-title">Score the match</text>
+  <text x="870" y="416" class="body">Artist + title alignment</text>
+  <text x="870" y="448" class="body">Vinyl format evidence</text>
+  <text x="870" y="480" class="body">Bounded 0–100 confidence</text>
+
+  <path d="M 1100 397 L 1185 397" class="line"/>
+  <rect x="1205" y="292" width="155" height="210" rx="10" class="good"/>
+  <text x="1230" y="334" class="small" fill="#8ee8ad">RELIABLE</text>
+  <text x="1230" y="392" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#fff4e8">≥75</text>
+  <text x="1230" y="438" class="body">Ranked</text>
+  <text x="1230" y="470" class="body">candidate</text>
+
+  <rect x="80" y="570" width="610" height="190" rx="10" class="box"/>
+  <text x="110" y="612" class="small">BELOW THE GATE</text>
+  <text x="110" y="654" class="box-title">Possible and weak matches stay reviewable.</text>
+  <text x="110" y="692" class="body">Uncertainty is visible; a low-confidence result is not</text>
+  <text x="110" y="722" class="body">promoted as a guaranteed record recommendation.</text>
+
+  <rect x="730" y="570" width="630" height="190" rx="10" class="accent"/>
+  <text x="760" y="612" class="small">AFTER MATCH CONFIDENCE</text>
+  <text x="760" y="654" class="box-title">Buyability sorts; it does not rescue.</text>
+  <text x="760" y="692" class="body">Availability and defensible price evidence can reorder</text>
+  <text x="760" y="722" class="body">strong matches, but cannot turn a weak identity into a fit.</text>
+
+  <text x="80" y="825" font-family="Arial, sans-serif" font-size="16" fill="#8d808b">Grounded in lib/matching/match-discogs-release.ts and the Dashboard discovery model.</text>
+</svg>

@@ -1,46 +1,30 @@
 export type ExperienceEntry = {
     title: string
     company: string
+    period: string
     summary: string
-    points: string[]
 }
 
 export const experience: ExperienceEntry[] = [
     {
-        title: "Web Developer",
-        company: "First Page",
+        title: "Frontend Developer",
+        company: "First Page Australia",
+        period: "Dec 2024 - July 2026",
         summary:
-            "Delivering production web changes across React-based applications, WordPress, Shopify, Webflow and other client platforms in a high-throughput agency environment.",
-        points: [
-            "Ship and QA production content, UI and technical SEO changes across diverse client stacks.",
-            "Implement structured data, semantic content architecture and performance-conscious frontend changes.",
-            "Work independently across unfamiliar codebases and CMS environments under daily delivery targets.",
-        ],
+            "Build and improve more than 100 client and company-owned websites, covering custom frontend work, integrations, technical SEO and structured data. I joined the Melbourne team in person, and then worked with them as a contractor.",
     },
     {
-        title: "Earlier systems experience",
-        company: "CGI",
+        title: "Freelance Full Stack Developer",
+        company: "Self-Employed",
+        period: "Jan 2023 - Dec 2024",
         summary:
-            "Systems-oriented software work in established codebases, with emphasis on testing, technical documentation and engineering discipline.",
-        points: [
-            "Worked within structured engineering processes across mature software environments.",
-            "Contributed to testing and documentation practices for maintainable delivery.",
-            "Built habits around clarity, traceability and careful changes in existing systems.",
-        ],
-    },
-]
-
-export const depthItems = [
-    {
-        title: "Real-time interfaces",
-        copy: "WebSocket subscriptions, stale-state handling, derived data and resilient connection states.",
+            "Built client applications with Next.js, TypeScript and Tailwind CSS, from requirements and acceptance criteria through deployment.",
     },
     {
-        title: "Production delivery",
-        copy: "Deployment, analytics, structured data, SEO and ongoing maintenance.",
-    },
-    {
-        title: "Product-minded frontend",
-        copy: "Component boundaries, interaction details, responsive behaviour and accessible UI states.",
+        title: "Technical Consultant",
+        company: "CGI UK Ltd",
+        period: "July 2020 - Aug 2021",
+        summary:
+            "Worked on testing, automation and prototypes for safety-critical navigation systems using C, Python, Bash and Java.",
     },
 ]

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">Waxlist persistent collector workspace</title>
+  <desc id="description">Diagram showing Spotify and Discogs data entering a persistent app shell. Collection, Wantlist, Digging, Shelf, and Health all share one selected-record inspector.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f08a4b"/>
+    </marker>
+    <style>
+      .eyebrow { font: 700 16px Arial, sans-serif; letter-spacing: 3px; fill: #f08a4b; }
+      .title { font: 700 52px Arial, sans-serif; letter-spacing: -2px; fill: #fff4e8; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #bfb3bd; }
+      .box-title { font: 700 23px Arial, sans-serif; fill: #fff4e8; }
+      .body { font: 400 18px Arial, sans-serif; fill: #bfb3bd; }
+      .small { font: 700 14px Arial, sans-serif; letter-spacing: 1.6px; fill: #f08a4b; }
+      .box { fill: #100b14; stroke: #4d3d50; stroke-width: 2; }
+      .accent { fill: #29132e; stroke: #d34278; stroke-width: 2; }
+      .line { stroke: #f08a4b; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="900" fill="#05030a"/>
+  <circle cx="1160" cy="40" r="430" fill="#6d2aa8" opacity="0.12"/>
+  <circle cx="360" cy="930" r="420" fill="#d34278" opacity="0.08"/>
+  <text x="80" y="70" class="eyebrow">REPOSITORY EVIDENCE · PRODUCT ARCHITECTURE</text>
+  <text x="80" y="140" class="title">One selected record, every workflow.</text>
+  <text x="80" y="182" class="subtitle">The app shell keeps navigation and record context durable across collector tasks.</text>
+  <line x1="80" y1="222" x2="1360" y2="222" stroke="#4d3d50" stroke-width="2"/>
+
+  <rect x="80" y="286" width="260" height="172" rx="10" class="box"/>
+  <text x="110" y="328" class="small">AUTHORISED INPUTS</text>
+  <text x="110" y="370" class="box-title">Spotify taste</text>
+  <text x="110" y="403" class="body">Saved albums</text>
+  <text x="110" y="432" class="body">Chosen playlists</text>
+
+  <rect x="80" y="490" width="260" height="172" rx="10" class="box"/>
+  <text x="110" y="532" class="small">OFFICIAL API INPUT</text>
+  <text x="110" y="574" class="box-title">Discogs data</text>
+  <text x="110" y="607" class="body">Collection + wantlist</text>
+  <text x="110" y="636" class="body">Release evidence</text>
+
+  <path d="M 340 372 L 445 372" class="line"/>
+  <path d="M 340 576 L 445 576" class="line"/>
+
+  <rect x="465" y="286" width="540" height="376" rx="12" class="accent"/>
+  <text x="500" y="328" class="small">PERSISTENT APP SHELL</text>
+  <text x="500" y="372" class="box-title">Collector cockpit</text>
+  <text x="500" y="408" class="body">Durable navigation · global search · sync state</text>
+  <line x1="500" y1="440" x2="970" y2="440" stroke="#684063" stroke-width="2"/>
+
+  <rect x="500" y="476" width="138" height="68" rx="8" class="box"/>
+  <text x="519" y="516" class="box-title" font-size="20">Collection</text>
+  <rect x="655" y="476" width="138" height="68" rx="8" class="box"/>
+  <text x="680" y="516" class="box-title" font-size="20">Wantlist</text>
+  <rect x="810" y="476" width="160" height="68" rx="8" class="box"/>
+  <text x="844" y="516" class="box-title" font-size="20">Digging</text>
+  <rect x="500" y="563" width="218" height="68" rx="8" class="box"/>
+  <text x="574" y="603" class="box-title" font-size="20">Shelf</text>
+  <rect x="738" y="563" width="232" height="68" rx="8" class="box"/>
+  <text x="816" y="603" class="box-title" font-size="20">Health</text>
+
+  <path d="M 1005 474 L 1080 474" class="line"/>
+  <rect x="1100" y="286" width="260" height="376" rx="12" class="box"/>
+  <text x="1130" y="328" class="small">SHARED STATE</text>
+  <text x="1130" y="372" class="box-title">Record inspector</text>
+  <text x="1130" y="414" class="body">Ownership + want state</text>
+  <text x="1130" y="448" class="body">Condition + evidence</text>
+  <text x="1130" y="482" class="body">Shelf location</text>
+  <text x="1130" y="516" class="body">Tags + notes</text>
+  <line x1="1130" y1="548" x2="1330" y2="548" stroke="#4d3d50" stroke-width="2"/>
+  <text x="1130" y="590" class="small">ONE SELECTION MODEL</text>
+  <text x="1130" y="624" class="body">No workflow reset</text>
+
+  <rect x="80" y="728" width="1280" height="110" rx="10" fill="#fff4e8"/>
+  <text x="110" y="772" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.5" fill="#a52e12">IMPLEMENTED SEAM</text>
+  <text x="110" y="811" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#171217">Selected-record state lives in AppShell and is passed to Collection, Wantlist, Digging, Shelf, Health, and one inspector.</text>
+</svg>

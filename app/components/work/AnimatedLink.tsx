@@ -5,6 +5,7 @@ type AnimatedLinkProps = {
     href: string
     children: ReactNode
     external?: boolean
+    emphasis?: "lead" | "supporting"
     className?: string
 }
 
@@ -12,17 +13,29 @@ export default function AnimatedLink({
     href,
     children,
     external,
+    emphasis = "supporting",
     className = "",
 }: AnimatedLinkProps) {
+    const opensNewTab = external && href.startsWith("http")
+    const emphasisClass =
+        emphasis === "lead"
+            ? "text-lg font-medium tracking-tight sm:text-xl"
+            : "text-sm font-medium"
+    const arrowMotionClass = opensNewTab
+        ? "group-hover:translate-x-1 group-hover:-translate-y-1 group-focus-visible:translate-x-1 group-focus-visible:-translate-y-1"
+        : "group-hover:translate-x-1 group-focus-visible:translate-x-1"
     const content = (
-        <span className="group/link inline-flex items-center gap-1.5 text-[0.82rem] font-medium uppercase tracking-[0.12em] text-ink transition-colors duration-300 hover:text-signal focus-visible:text-signal">
-            <span className="animated-link-label">{children}</span>
+        <span className={`inline-flex items-center gap-2 ${emphasisClass}`}>
+            <span>{children}</span>
             <span
                 aria-hidden="true"
-                className="transition-transform duration-300 group-hover/link:translate-x-1"
+                className={`inline-block transition-transform duration-200 ease-out motion-reduce:transform-none motion-reduce:transition-none ${arrowMotionClass}`}
             >
-                {external ? "↗" : "→"}
+                {opensNewTab ? "↗" : "→"}
             </span>
+            {opensNewTab ? (
+                <span className="sr-only"> (opens in a new tab)</span>
+            ) : null}
         </span>
     )
 
@@ -30,9 +43,9 @@ export default function AnimatedLink({
         return (
             <a
                 href={href}
-                target="_blank"
-                rel="noreferrer"
-                className={`focus-ring ${className}`}
+                target={opensNewTab ? "_blank" : undefined}
+                rel={opensNewTab ? "noreferrer" : undefined}
+                className={`focus-ring group text-ink transition-colors duration-200 hover:text-signal-dark focus-visible:text-signal-dark ${className}`}
             >
                 {content}
             </a>
@@ -40,7 +53,10 @@ export default function AnimatedLink({
     }
 
     return (
-        <Link href={href} className={`focus-ring ${className}`}>
+        <Link
+            href={href}
+            className={`focus-ring group text-ink transition-colors duration-200 hover:text-signal-dark focus-visible:text-signal-dark ${className}`}
+        >
             {content}
         </Link>
     )

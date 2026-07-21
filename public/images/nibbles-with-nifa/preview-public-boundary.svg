@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">Nibbles public and preview trust boundary</title>
+  <desc id="description">Two-lane diagram contrasting published, cacheable, indexable public routes with signed, authenticated, no-store and no-index draft preview routes using the same page layouts.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c63b18"/>
+    </marker>
+    <style>
+      .eyebrow { font: 700 16px Arial, sans-serif; letter-spacing: 3px; fill: #a52e12; }
+      .title { font: 700 52px Arial, sans-serif; letter-spacing: -2px; fill: #171714; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #625e56; }
+      .lane { font: 700 15px Arial, sans-serif; letter-spacing: 2px; fill: #a52e12; }
+      .box-title { font: 700 23px Arial, sans-serif; fill: #171714; }
+      .body { font: 400 17px Arial, sans-serif; fill: #625e56; }
+      .box { fill: #fbf8f0; stroke: #b8b0a2; stroke-width: 2; }
+      .accent { fill: #f4d7c9; stroke: #c63b18; stroke-width: 2; }
+      .line { stroke: #c63b18; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="900" fill="#f3efe5"/>
+  <text x="80" y="70" class="eyebrow">REPOSITORY EVIDENCE · TRUST BOUNDARY</text>
+  <text x="80" y="140" class="title">Preview and public are separate lanes.</text>
+  <text x="80" y="182" class="subtitle">The layout is shared. Visibility, caching, and search behaviour are not.</text>
+  <line x1="80" y1="222" x2="1360" y2="222" stroke="#b8b0a2" stroke-width="2"/>
+
+  <text x="80" y="284" class="lane">PUBLIC READER</text>
+  <rect x="80" y="310" width="280" height="164" rx="6" class="box"/>
+  <text x="110" y="354" class="box-title">Sanity fetch</text>
+  <text x="110" y="392" class="body">Published perspective</text>
+  <text x="110" y="424" class="body">Draft IDs excluded</text>
+  <path d="M 360 392 L 430 392" class="line"/>
+  <rect x="450" y="310" width="300" height="164" rx="6" class="box"/>
+  <text x="480" y="354" class="box-title">Public content store</text>
+  <text x="480" y="392" class="body">Internal fields omitted</text>
+  <text x="480" y="424" class="body">Revalidated cache</text>
+  <path d="M 750 392 L 820 392" class="line"/>
+  <rect x="840" y="310" width="520" height="164" rx="6" class="accent"/>
+  <text x="870" y="354" class="box-title">Indexable public page</text>
+  <text x="870" y="392" class="body">Only intentionally published content</text>
+  <text x="870" y="424" class="body">Reader-facing metadata and share image</text>
+
+  <line x1="80" y1="522" x2="1360" y2="522" stroke="#b8b0a2" stroke-width="2" stroke-dasharray="10 10"/>
+
+  <text x="80" y="584" class="lane">AUTHENTICATED EDITOR PREVIEW</text>
+  <rect x="80" y="610" width="280" height="164" rx="6" class="box"/>
+  <text x="110" y="654" class="box-title">Signed handshake</text>
+  <text x="110" y="692" class="body">Preview URL validated</text>
+  <text x="110" y="724" class="body">Sharing disabled</text>
+  <path d="M 360 692 L 430 692" class="line"/>
+  <rect x="450" y="610" width="300" height="164" rx="6" class="box"/>
+  <text x="480" y="654" class="box-title">Preview fetch</text>
+  <text x="480" y="692" class="body">Drafts perspective</text>
+  <text x="480" y="724" class="body">No-store response</text>
+  <path d="M 750 692 L 820 692" class="line"/>
+  <rect x="840" y="610" width="520" height="164" rx="6" class="accent"/>
+  <text x="870" y="654" class="box-title">Visibly marked preview page</text>
+  <text x="870" y="692" class="body">Same recipe and article layouts</text>
+  <text x="870" y="724" class="body">Generic no-index metadata</text>
+
+  <text x="1360" y="842" text-anchor="end" font-family="Arial, sans-serif" font-size="16" fill="#625e56">Derived from content-store, preview, metadata, and route-test seams</text>
+</svg>

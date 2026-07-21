@@ -13,8 +13,9 @@ export default function JsonLd() {
                         "React",
                         "Next.js",
                         "TypeScript",
-                        "Frontend engineering",
-                        "Real-time interfaces",
+                        "Accessible frontend engineering",
+                        "Product interfaces",
+                        "Content architecture",
                         "SEO",
                     ],
                     address: {

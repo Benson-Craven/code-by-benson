@@ -5,26 +5,32 @@ export default function SiteFooter() {
         <footer className="bg-ink px-4 py-28 text-paper sm:px-6 md:py-40 lg:px-10 lg:py-44">
             <div className="mx-auto grid max-w-[1500px] gap-12 md:grid-cols-[1fr_0.55fr]">
                 <div>
-                    <p className="mb-5 text-xs font-medium uppercase tracking-[0.22em] text-signal">
-                        Next
-                    </p>
-                    <h2 className="max-w-4xl text-[clamp(3.5rem,9vw,9rem)] font-medium leading-[0.85] tracking-[-0.06em]">
-                        Let’s build something worth using.
+                    <h2 className="max-w-4xl text-[clamp(3.5rem,9vw,8rem)] font-medium leading-[0.85] tracking-[-0.06em]">
+                        Contact
                     </h2>
                 </div>
                 <div className="flex flex-col justify-end gap-8">
-                    <p className="text-xl leading-relaxed text-paper/68">
-                        I’m interested in frontend and product engineering
-                        opportunities, particularly teams working on ambitious,
-                        technically interesting products.
+                    <p className="text-paper-muted text-xl leading-relaxed">
+                        I’m looking for a Frontend Engineer role on a product
+                        team that cares about accessibility, clear states and
+                        what ships to users.
                     </p>
-                    <div className="flex flex-wrap gap-x-7 gap-y-3">
+                    <div>
                         <AnimatedLink
                             href="mailto:bensoncraven@hotmail.co.uk"
                             external
+                            emphasis="lead"
                             className="footer-link"
                         >
-                            Email
+                            bensoncraven@hotmail.co.uk
+                        </AnimatedLink>
+                    </div>
+                    <div className="flex flex-wrap gap-x-7 gap-y-3">
+                        <AnimatedLink
+                            href="/benson-craven-resume.pdf"
+                            className="footer-link"
+                        >
+                            Resume
                         </AnimatedLink>
                         <AnimatedLink
                             href="https://www.linkedin.com/in/benson-craven/"

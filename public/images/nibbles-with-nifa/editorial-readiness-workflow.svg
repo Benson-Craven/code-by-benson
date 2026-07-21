@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">Nibbles editorial readiness workflow</title>
+  <desc id="description">Diagram showing one Sanity recipe moving from a sparse idea through a cooked draft and a validation-backed ready state before native publication makes it eligible for a public route.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c63b18"/>
+    </marker>
+    <style>
+      .eyebrow { font: 700 16px Arial, sans-serif; letter-spacing: 3px; fill: #a52e12; }
+      .title { font: 700 52px Arial, sans-serif; letter-spacing: -2px; fill: #171714; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #625e56; }
+      .stage { font: 700 14px Arial, sans-serif; letter-spacing: 1.5px; fill: #a52e12; }
+      .box-title { font: 700 27px Arial, sans-serif; fill: #171714; }
+      .body { font: 400 18px Arial, sans-serif; fill: #625e56; }
+      .card { fill: #fbf8f0; stroke: #b8b0a2; stroke-width: 2; }
+      .ready { fill: #f4d7c9; stroke: #c63b18; stroke-width: 2; }
+      .line { stroke: #c63b18; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="900" fill="#f3efe5"/>
+  <text x="80" y="70" class="eyebrow">REPOSITORY EVIDENCE · SANITY WORKFLOW</text>
+  <text x="80" y="140" class="title">Separate readiness from publication.</text>
+  <text x="80" y="182" class="subtitle">One document stays forgiving during capture and strict at the public gate.</text>
+  <line x1="80" y1="222" x2="1360" y2="222" stroke="#b8b0a2" stroke-width="2"/>
+
+  <rect x="80" y="292" width="276" height="252" rx="6" class="card"/>
+  <text x="110" y="334" class="stage">01 · IDEA</text>
+  <text x="110" y="382" class="box-title">Capture quickly</text>
+  <text x="110" y="426" class="body">Sparse fields allowed</text>
+  <text x="110" y="458" class="body">No fabricated fallback copy</text>
+  <text x="110" y="490" class="body">Same recipe document</text>
+
+  <path d="M 356 418 L 396 418" class="line"/>
+
+  <rect x="416" y="292" width="276" height="252" rx="6" class="card"/>
+  <text x="446" y="334" class="stage">02 · COOKED DRAFT</text>
+  <text x="446" y="382" class="box-title">Test and revise</text>
+  <text x="446" y="426" class="body">Correct quantities</text>
+  <text x="446" y="458" class="body">Refine timing and steps</text>
+  <text x="446" y="490" class="body">Keep checks internal</text>
+
+  <path d="M 692 418 L 732 418" class="line"/>
+
+  <rect x="752" y="292" width="276" height="252" rx="6" class="ready"/>
+  <text x="782" y="334" class="stage">03 · READY GATE</text>
+  <text x="782" y="382" class="box-title">Validate the entry</text>
+  <text x="782" y="426" class="body">Required recipe structure</text>
+  <text x="782" y="458" class="body">Authored media alternatives</text>
+  <text x="782" y="490" class="body">Completed-cook confirmation</text>
+
+  <path d="M 1028 418 L 1068 418" class="line"/>
+
+  <rect x="1088" y="292" width="272" height="252" rx="6" class="card"/>
+  <text x="1118" y="334" class="stage">04 · PUBLISH</text>
+  <text x="1118" y="382" class="box-title">Make it public</text>
+  <text x="1118" y="426" class="body">Sanity native publish</text>
+  <text x="1118" y="458" class="body">Published document ID</text>
+  <text x="1118" y="490" class="body">Eligible for public query</text>
+
+  <rect x="80" y="614" width="1280" height="162" rx="6" fill="#171714"/>
+  <text x="110" y="658" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.5" fill="#f28b61">PUBLIC ELIGIBILITY</text>
+  <text x="110" y="710" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#f3efe5">Published document</text>
+  <text x="451" y="710" font-family="Arial, sans-serif" font-size="28" fill="#f28b61">+</text>
+  <text x="500" y="710" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#f3efe5">editorialStage == ready</text>
+  <path d="M 870 699 L 1015 699" class="line"/>
+  <text x="1050" y="710" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#f3efe5">Public recipe route</text>
+  <text x="110" y="750" font-family="Arial, sans-serif" font-size="17" fill="#d7d0c4">Routine publishing remains self-service; the guardrail becomes strict only at readiness.</text>
+</svg>

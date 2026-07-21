@@ -1,5 +1,4 @@
 import About from "./components/about/About"
-import EngineeringApproach from "./components/approach/EngineeringApproach"
 import Experience from "./components/experience/Experience"
 import SiteFooter from "./components/footer/SiteFooter"
 import Hero from "./components/hero/Hero"
@@ -10,10 +9,9 @@ export default function Home() {
     return (
         <>
             <SiteHeader />
-            <main>
+            <main id="main-content" tabIndex={-1}>
                 <Hero />
                 <SelectedWork />
-                <EngineeringApproach />
                 <Experience />
                 <About />
             </main>

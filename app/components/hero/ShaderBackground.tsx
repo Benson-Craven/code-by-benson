@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { getShaderRenderingMode } from "./shaderMotion"
 
 const vertexShader = `
 attribute vec2 position;
@@ -72,20 +73,22 @@ void main() {
     float lines = smoothstep(0.74, 0.96, abs(cross + terrain * 0.42));
     float contour = smoothstep(0.028, 0.0, abs(fract(terrain * 7.0 + q.x * 0.55 + t) - 0.5) - 0.42);
 
-    float rightMask = smoothstep(-0.08, 0.52, uv.x);
+    float rightMask = smoothstep(0.08, 0.62, uv.x);
     float verticalBreak = 0.72 + 0.18 * sin(uv.y * 13.0 + terrain * 4.0);
     float fieldShape = exp(-dot(q, q * vec2(0.92, 1.75)) * 1.05);
     float asymmetry = smoothstep(0.12, 0.95, fieldShape * rightMask * verticalBreak);
+    float headlineBand = smoothstep(0.58, 0.92, uv.y);
+    float headlineSafe = mix(1.0, smoothstep(0.52, 0.9, uv.x), headlineBand);
 
-    float signal = (lines * 0.55 + contour * 0.45 + terrain * 0.16) * asymmetry;
+    float signal = (lines * 0.72 + contour * 0.58 + terrain * 0.22) * asymmetry;
     signal += pointerField * 0.12 * asymmetry;
-    signal *= intensity;
+    signal *= intensity * headlineSafe;
 
     float paperGrain = (noise(uv * resolution.xy * 0.34) - 0.5) * 0.018;
     vec3 base = colorBackground + paperGrain;
     vec3 warmSignal = mix(colorDarkSignal, colorSignal, smoothstep(0.18, 0.92, signal));
-    vec3 color = mix(base, warmSignal, clamp(signal * 0.7, 0.0, 0.5));
-    color -= smoothstep(0.0, 0.55, uv.x) * signal * 0.05;
+    vec3 color = mix(base, warmSignal, clamp(signal * 0.95, 0.0, 0.68));
+    color -= smoothstep(0.0, 0.55, uv.x) * signal * 0.04;
 
     gl_FragColor = vec4(color, 1.0);
 }
@@ -101,11 +104,23 @@ type UniformLocations = {
     colorDarkSignal: WebGLUniformLocation
 }
 
-function createShader(
-    gl: WebGLRenderingContext,
-    type: number,
-    source: string,
+function readColorChannels(
+    styles: CSSStyleDeclaration,
+    property: string,
+    fallback: [number, number, number],
 ) {
+    const channels = styles
+        .getPropertyValue(property)
+        .trim()
+        .split(/\s+/)
+        .map((channel) => Number(channel) / 255)
+
+    return channels.length === 3 && channels.every(Number.isFinite)
+        ? (channels as [number, number, number])
+        : fallback
+}
+
+function createShader(gl: WebGLRenderingContext, type: number, source: string) {
     const shader = gl.createShader(type)
 
     if (!shader) {
@@ -187,12 +202,14 @@ function getUniforms(
 }
 
 export default function ShaderBackground() {
+    const shellRef = useRef<HTMLDivElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
+        const shell = shellRef.current
         const canvas = canvasRef.current
 
-        if (!canvas) {
+        if (!shell || !canvas) {
             return
         }
 
@@ -241,6 +258,7 @@ export default function ShaderBackground() {
         let width = 0
         let height = 0
         let animationFrame = 0
+        let isIntersecting = true
 
         gl.useProgram(program)
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
@@ -251,9 +269,29 @@ export default function ShaderBackground() {
         )
         gl.enableVertexAttribArray(positionLocation)
         gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
-        gl.uniform3f(uniforms.colorBackground, 0.949, 0.937, 0.91)
-        gl.uniform3f(uniforms.colorSignal, 1, 0.341, 0.133)
-        gl.uniform3f(uniforms.colorDarkSignal, 0.725, 0.18, 0.071)
+
+        const syncThemeColors = () => {
+            const styles = window.getComputedStyle(shell)
+            const background = readColorChannels(
+                styles,
+                "--paper-rgb",
+                [0.949, 0.937, 0.91],
+            )
+            const signal = readColorChannels(
+                styles,
+                "--signal-dark-rgb",
+                [1, 0.341, 0.133],
+            )
+            const darkSignal = readColorChannels(
+                styles,
+                "--signal-rgb",
+                [0.725, 0.18, 0.071],
+            )
+
+            gl.uniform3f(uniforms.colorBackground, ...background)
+            gl.uniform3f(uniforms.colorSignal, ...signal)
+            gl.uniform3f(uniforms.colorDarkSignal, ...darkSignal)
+        }
 
         const resize = () => {
             const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
@@ -280,11 +318,25 @@ export default function ShaderBackground() {
 
         const updatePointer = (event: PointerEvent) => {
             const rect = canvas.getBoundingClientRect()
+
+            if (rect.width === 0 || rect.height === 0) {
+                return
+            }
+
             targetPointer.x = (event.clientX - rect.left) / rect.width
             targetPointer.y = 1 - (event.clientY - rect.top) / rect.height
         }
 
-        const render = (now: number) => {
+        const getRenderingMode = () =>
+            getShaderRenderingMode({
+                reduceMotion: reduceMotion.matches,
+                isIntersecting,
+                documentVisibility: document.visibilityState,
+            })
+
+        const canAnimate = () => getRenderingMode() === "animated"
+
+        const drawFrame = (now: number) => {
             resize()
             pointer.x += (targetPointer.x - pointer.x) * 0.045
             pointer.y += (targetPointer.y - pointer.y) * 0.045
@@ -299,36 +351,111 @@ export default function ShaderBackground() {
                 scrollIntensity.value * motionIntensity,
             )
             gl.drawArrays(gl.TRIANGLES, 0, 6)
+        }
 
-            if (!reduceMotion.matches) {
+        const render = (now: number) => {
+            animationFrame = 0
+            drawFrame(now)
+
+            if (canAnimate()) {
                 animationFrame = window.requestAnimationFrame(render)
             }
         }
 
-        resize()
-        updateScrollIntensity()
-        render(performance.now())
+        const stopRendering = () => {
+            if (animationFrame !== 0) {
+                window.cancelAnimationFrame(animationFrame)
+                animationFrame = 0
+            }
+        }
 
-        window.addEventListener("resize", resize, { passive: true })
+        const syncRendering = () => {
+            if (canAnimate()) {
+                if (animationFrame === 0) {
+                    animationFrame = window.requestAnimationFrame(render)
+                }
+
+                return
+            }
+
+            stopRendering()
+
+            if (getRenderingMode() === "static") {
+                drawFrame(performance.now())
+            }
+        }
+
+        const handleResize = () => {
+            resize()
+
+            if (getRenderingMode() === "static") {
+                drawFrame(performance.now())
+            }
+        }
+
+        const handleVisibilityChange = () => syncRendering()
+        const handleReducedMotionChange = () => syncRendering()
+        const handleThemeChange = () => {
+            syncThemeColors()
+
+            if (getRenderingMode() === "static") {
+                drawFrame(performance.now())
+            }
+        }
+        const intersectionObserver = new IntersectionObserver(
+            ([entry]) => {
+                isIntersecting = entry.isIntersecting
+                syncRendering()
+            },
+            { threshold: 0 },
+        )
+        const themeObserver = new MutationObserver(handleThemeChange)
+
+        syncThemeColors()
+        updateScrollIntensity()
+        intersectionObserver.observe(shell)
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        })
+        syncRendering()
+
+        window.addEventListener("resize", handleResize, { passive: true })
         window.addEventListener("scroll", updateScrollIntensity, {
             passive: true,
         })
         window.addEventListener("pointermove", updatePointer, {
             passive: true,
         })
+        document.addEventListener("visibilitychange", handleVisibilityChange)
+        reduceMotion.addEventListener("change", handleReducedMotionChange)
 
         return () => {
-            window.cancelAnimationFrame(animationFrame)
-            window.removeEventListener("resize", resize)
+            stopRendering()
+            intersectionObserver.disconnect()
+            themeObserver.disconnect()
+            window.removeEventListener("resize", handleResize)
             window.removeEventListener("scroll", updateScrollIntensity)
             window.removeEventListener("pointermove", updatePointer)
+            document.removeEventListener(
+                "visibilitychange",
+                handleVisibilityChange,
+            )
+            reduceMotion.removeEventListener(
+                "change",
+                handleReducedMotionChange,
+            )
             gl.deleteBuffer(buffer)
             gl.deleteProgram(program)
         }
     }, [])
 
     return (
-        <div aria-hidden="true" className="shader-shell pointer-events-none">
+        <div
+            ref={shellRef}
+            aria-hidden="true"
+            className="shader-shell pointer-events-none"
+        >
             <canvas ref={canvasRef} className="h-full w-full" />
         </div>
     )

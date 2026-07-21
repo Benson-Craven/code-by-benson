@@ -4,10 +4,52 @@
 
 :root {
     --paper: #f2efe8;
+    --paper-rgb: 242 239 232;
+    --paper-alt: #e7e1d6;
+    --paper-alt-rgb: 231 225 214;
     --ink: #171714;
+    --ink-rgb: 23 23 20;
     --signal: #ff5722;
+    --signal-rgb: 255 87 34;
     --signal-dark: #b92e12;
+    --signal-dark-rgb: 185 46 18;
     --muted: #d8d2c8;
+    --muted-rgb: 216 210 200;
+    --focus-ring-color: var(--signal-dark);
+    --ink-secondary: rgba(23, 23, 20, 0.78);
+    --ink-muted: rgba(23, 23, 20, 0.7);
+    --paper-secondary: rgba(242, 239, 232, 0.78);
+    --paper-muted: rgba(242, 239, 232, 0.68);
+    --border-ink-subtle: rgba(23, 23, 20, 0.16);
+    --border-ink-faint: rgba(23, 23, 20, 0.12);
+    --border-paper-subtle: rgba(242, 239, 232, 0.18);
+    --border-paper-faint: rgba(242, 239, 232, 0.14);
+    color-scheme: light;
+}
+
+:root.dark {
+    --paper: #171714;
+    --paper-rgb: 23 23 20;
+    --paper-alt: #201f1b;
+    --paper-alt-rgb: 32 31 27;
+    --ink: #f2efe8;
+    --ink-rgb: 242 239 232;
+    --signal: #b92e12;
+    --signal-rgb: 185 46 18;
+    --signal-dark: #ff7043;
+    --signal-dark-rgb: 255 112 67;
+    --muted: #34332f;
+    --muted-rgb: 52 51 47;
+    --focus-ring-color: var(--signal-dark);
+    --ink-secondary: rgba(242, 239, 232, 0.8);
+    --ink-muted: rgba(242, 239, 232, 0.72);
+    --paper-secondary: rgba(23, 23, 20, 0.8);
+    --paper-muted: rgba(23, 23, 20, 0.72);
+    --border-ink-subtle: rgba(242, 239, 232, 0.2);
+    --border-ink-faint: rgba(242, 239, 232, 0.14);
+    --border-paper-subtle: rgba(23, 23, 20, 0.2);
+    --border-paper-faint: rgba(23, 23, 20, 0.14);
+    color-scheme: dark;
 }
 @font-face {
     font-family: "Satoshi";
@@ -54,6 +96,17 @@ body {
 
 html {
     background: var(--paper);
+    scroll-behavior: smooth;
+}
+
+.bg-paper,
+.bg-paper-alt,
+.bg-paper-translucent {
+    --focus-ring-color: var(--signal-dark);
+}
+
+.bg-ink {
+    --focus-ring-color: var(--signal);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -64,6 +117,11 @@ html {
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
+    }
+
+    .scroll-progress {
+        display: none !important;
+        animation: none !important;
     }
 }
 
@@ -77,35 +135,87 @@ html {
     }
 
     .focus-ring {
-        outline: 2px solid transparent;
+        outline: 3px solid transparent;
         outline-offset: 4px;
     }
 
     .focus-ring:focus-visible {
-        outline-color: var(--signal);
+        outline-color: var(--focus-ring-color);
+    }
+
+    .bg-paper-translucent {
+        background-color: rgb(var(--paper-rgb) / 0.88);
+    }
+
+    .text-ink-secondary {
+        color: var(--ink-secondary);
+    }
+
+    .text-ink-muted {
+        color: var(--ink-muted);
+    }
+
+    .text-paper-secondary {
+        color: var(--paper-secondary);
+    }
+
+    .text-paper-muted {
+        color: var(--paper-muted);
+    }
+
+    .border-ink-subtle {
+        border-color: var(--border-ink-subtle);
+    }
+
+    .border-ink-faint {
+        border-color: var(--border-ink-faint);
+    }
+
+    .border-paper-subtle {
+        border-color: var(--border-paper-subtle);
+    }
+
+    .border-paper-faint {
+        border-color: var(--border-paper-faint);
     }
 }
 
-.animated-link-label {
-    background-image: linear-gradient(var(--signal), var(--signal));
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 0 1px;
-    transition: background-size 300ms ease;
-}
-
-.group\/link:hover .animated-link-label,
-.group\/link:focus-visible .animated-link-label {
-    background-size: 100% 1px;
-}
-
-.footer-link .group\/link {
+.footer-link {
     color: var(--paper);
 }
 
-.footer-link .group\/link:hover,
-.footer-link .group\/link:focus-visible {
+.footer-link:hover,
+.footer-link:focus-visible {
     color: var(--signal);
+}
+
+.project-floating-preview {
+    display: none;
+}
+
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+    .project-floating-preview {
+        display: block;
+    }
+}
+
+.scroll-progress {
+    display: none;
+    scale: 0 1;
+}
+
+@supports (animation-timeline: scroll()) {
+    .scroll-progress {
+        display: block;
+        animation: scroll-progress linear both;
+        animation-timeline: scroll(root block);
+    }
+}
+
+@keyframes scroll-progress {
+    to {
+        scale: 1 1;
+    }
 }
 
 .shader-shell {
@@ -115,10 +225,14 @@ html {
     background:
         radial-gradient(
             circle at 76% 42%,
-            rgba(255, 87, 34, 0.19),
-            transparent 31%
+            rgb(var(--signal-dark-rgb) / 0.16),
+            transparent 34%
         ),
-        linear-gradient(90deg, var(--paper) 0%, rgba(242, 239, 232, 0.72) 100%);
+        linear-gradient(
+            90deg,
+            var(--paper) 0%,
+            rgb(var(--paper-rgb) / 0.54) 100%
+        );
 }
 
 .shader-shell::after {
@@ -128,48 +242,18 @@ html {
     background:
         linear-gradient(
             90deg,
-            rgba(242, 239, 232, 0.96) 0%,
-            rgba(242, 239, 232, 0.74) 42%,
-            rgba(242, 239, 232, 0.04) 100%
+            rgb(var(--paper-rgb) / 0.94) 0%,
+            rgb(var(--paper-rgb) / 0.62) 40%,
+            rgb(var(--paper-rgb) / 0.02) 100%
         ),
         linear-gradient(
             0deg,
-            rgba(242, 239, 232, 0.9) 0%,
-            rgba(242, 239, 232, 0) 26%,
-            rgba(242, 239, 232, 0.78) 100%
+            rgb(var(--paper-rgb) / 0.72) 0%,
+            rgb(var(--paper-rgb) / 0) 22%,
+            rgb(var(--paper-rgb) / 0.64) 100%
         );
 }
 
 .shader-shell canvas[data-webgl="unsupported"] {
     display: none;
-}
-
-.project-visual {
-    box-shadow: inset 0 0 0 1px rgba(23, 23, 20, 0.08);
-}
-
-.market-line {
-    background:
-        linear-gradient(135deg, transparent 10%, var(--signal) 11%, transparent 13%),
-        linear-gradient(165deg, transparent 22%, rgba(255, 87, 34, 0.8) 23%, transparent 25%),
-        linear-gradient(148deg, transparent 42%, rgba(242, 239, 232, 0.55) 43%, transparent 45%),
-        linear-gradient(154deg, transparent 60%, var(--signal) 61%, transparent 63%);
-    background-size: 100% 100%;
-}
-
-.approach-ticker {
-    animation: ticker-pulse 4.8s ease-in-out infinite;
-}
-
-@keyframes ticker-pulse {
-    0%,
-    100% {
-        opacity: 0.52;
-        transform: translateX(0);
-    }
-
-    45% {
-        opacity: 1;
-        transform: translateX(8px);
-    }
 }

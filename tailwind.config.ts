@@ -10,11 +10,12 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                paper: "#F2EFE8",
-                ink: "#171714",
-                signal: "#FF5722",
-                "signal-dark": "#B92E12",
-                muted: "#D8D2C8",
+                paper: "rgb(var(--paper-rgb) / <alpha-value>)",
+                "paper-alt": "rgb(var(--paper-alt-rgb) / <alpha-value>)",
+                ink: "rgb(var(--ink-rgb) / <alpha-value>)",
+                signal: "rgb(var(--signal-rgb) / <alpha-value>)",
+                "signal-dark": "rgb(var(--signal-dark-rgb) / <alpha-value>)",
+                muted: "rgb(var(--muted-rgb) / <alpha-value>)",
             },
             keyframes: {
                 slide: {

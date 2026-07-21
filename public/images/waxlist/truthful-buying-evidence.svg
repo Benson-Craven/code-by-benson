@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title description">
+  <title id="title">Waxlist truthful buying evidence model</title>
+  <desc id="description">Diagram showing known item-price evidence combined with unknown shipping. Waxlist withholds an estimated delivered total, groups exact wanted releases by seller evidence, and leaves final checkout truth to Discogs.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f08a4b"/>
+    </marker>
+    <style>
+      .eyebrow { font: 700 16px Arial, sans-serif; letter-spacing: 3px; fill: #f08a4b; }
+      .title { font: 700 52px Arial, sans-serif; letter-spacing: -2px; fill: #fff4e8; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #bfb3bd; }
+      .box-title { font: 700 23px Arial, sans-serif; fill: #fff4e8; }
+      .body { font: 400 18px Arial, sans-serif; fill: #bfb3bd; }
+      .small { font: 700 14px Arial, sans-serif; letter-spacing: 1.6px; fill: #f08a4b; }
+      .box { fill: #100b14; stroke: #4d3d50; stroke-width: 2; }
+      .accent { fill: #29132e; stroke: #d34278; stroke-width: 2; }
+      .warn { fill: #281b10; stroke: #f08a4b; stroke-width: 2; }
+      .line { stroke: #f08a4b; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="900" fill="#05030a"/>
+  <circle cx="1040" cy="20" r="430" fill="#6d2aa8" opacity="0.13"/>
+  <text x="80" y="70" class="eyebrow">REPOSITORY EVIDENCE · BUYING TRUTH</text>
+  <text x="80" y="140" class="title">Unknown shipping never becomes zero.</text>
+  <text x="80" y="182" class="subtitle">Waxlist reports the evidence it has and refuses to manufacture a delivered total.</text>
+  <line x1="80" y1="222" x2="1360" y2="222" stroke="#4d3d50" stroke-width="2"/>
+
+  <rect x="80" y="282" width="340" height="190" rx="10" class="box"/>
+  <text x="110" y="324" class="small">ITEM PRICE</text>
+  <text x="110" y="368" class="box-title">Known evidence</text>
+  <text x="110" y="406" class="body">Source + checked time</text>
+  <text x="110" y="438" class="body">Freshness is explicit</text>
+
+  <text x="452" y="392" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f08a4b">+</text>
+
+  <rect x="510" y="282" width="340" height="190" rx="10" class="warn"/>
+  <text x="540" y="324" class="small">SHIPPING</text>
+  <text x="540" y="368" class="box-title">Unknown evidence</text>
+  <text x="540" y="406" class="body">No defensible source</text>
+  <text x="540" y="438" class="body">Never coerced to €0</text>
+
+  <path d="M 850 377 L 950 377" class="line"/>
+  <rect x="970" y="282" width="390" height="190" rx="10" class="accent"/>
+  <text x="1000" y="324" class="small">DELIVERED COST</text>
+  <text x="1000" y="368" class="box-title">Total withheld</text>
+  <text x="1000" y="406" class="body">“Not available because</text>
+  <text x="1000" y="438" class="body">shipping is unknown”</text>
+
+  <rect x="80" y="550" width="390" height="200" rx="10" class="box"/>
+  <text x="110" y="592" class="small">SELLER SCOUT INPUT</text>
+  <text x="110" y="636" class="box-title">Exact wanted releases</text>
+  <text x="110" y="674" class="body">Bounded listing lookup</text>
+  <text x="110" y="706" class="body">No acceptable-version expansion</text>
+
+  <path d="M 470 650 L 565 650" class="line"/>
+  <rect x="585" y="550" width="360" height="200" rx="10" class="accent"/>
+  <text x="615" y="592" class="small">EVIDENCE GROUPING</text>
+  <text x="615" y="636" class="box-title">Sellers with multiple wants</text>
+  <text x="615" y="674" class="body">Listing and condition evidence</text>
+  <text x="615" y="706" class="body">Shipping state stays per listing</text>
+
+  <path d="M 945 650 L 1040 650" class="line"/>
+  <rect x="1060" y="550" width="300" height="200" rx="10" class="box"/>
+  <text x="1090" y="592" class="small">FINAL AUTHORITY</text>
+  <text x="1090" y="636" class="box-title">Discogs checkout</text>
+  <text x="1090" y="674" class="body">Shipping + handling</text>
+  <text x="1090" y="706" class="body">Tax + final total</text>
+
+  <text x="80" y="825" font-family="Arial, sans-serif" font-size="16" fill="#8d808b">Grounded in lib/wishlist/record.ts, lib/wishlist/seller-scout.ts, and their regression tests.</text>
+</svg>
