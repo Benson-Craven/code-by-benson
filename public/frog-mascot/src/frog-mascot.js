@@ -218,6 +218,7 @@ export class FrogMascot {
     this.sleeping = false;
     this.idle = false;
     this.happyUntil = 0;
+    this.pageSmiling = false;
     this.badgeOn = !!this.opts.badge;
     this.bubbleTimer = 0;
     this.stretch = 0;
@@ -450,7 +451,7 @@ export class FrogMascot {
       this.canvas.style.cursor = isOver && this.opts.draggable ? 'grab' : 'default';
     }
 
-    const happyNow = this.hover.over && now < this.happyUntil;
+    const happyNow = this.pageSmiling || (this.hover.over && now < this.happyUntil);
     if (happyNow !== this.hover.happy) {
       this.hover.happy = happyNow;
       this.character.api.setHappy(happyNow);
@@ -536,7 +537,7 @@ export class FrogMascot {
     const bubbleY = Math.max(12, Math.round(head.y - gap - bh));
     this.bubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
 
-    const showEmote = this.hover.happy && !this.bubble.classList.contains('is-visible') && !this.badgeOn;
+    const showEmote = this.hover.happy && !this.pageSmiling && !this.bubble.classList.contains('is-visible') && !this.badgeOn;
     this.emote.classList.toggle('is-on', showEmote);
     if (showEmote) {
       const ex = Math.max(12, Math.min(this.width - 70, Math.round(head.x + this.layout.radius * 0.82)));
@@ -614,6 +615,19 @@ export class FrogMascot {
   setAttention(x, y = 0) {
     this.attention = x === null ? null : { x, y };
     if (this.attention) this.noteActivity();
+    return this;
+  }
+
+  /** Hold a smile while the page owns the expression. */
+  setSmiling(on) {
+    this.pageSmiling = on;
+    if (on) {
+      this.noteActivity();
+      this.character.api.talk(0);
+    }
+    this.hover.happy = on;
+    this.character.api.setHappy(on);
+    this.character.api.setRestMouth(on ? 'smile' : 'flat');
     return this;
   }
 

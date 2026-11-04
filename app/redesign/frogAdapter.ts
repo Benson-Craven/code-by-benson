@@ -5,6 +5,7 @@ export interface FrogInstance {
     mouthScreenPos(): { x: number; y: number }
     wake(): void
     talk(duration?: number): void
+    setSmiling(on: boolean): void
     setAttention(x: number | null, y?: number): void
     destroy(): void
 }

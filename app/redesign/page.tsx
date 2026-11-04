@@ -24,7 +24,16 @@ function FrogSlot({ trick = false }: { trick?: boolean }) {
                 width={320}
                 height={336}
             />
-            {trick && <FrogTrickArtwork />}
+            {trick && (
+                <>
+                    <p
+                        className={styles.footerDialogue}
+                        data-frog-dialogue
+                        hidden
+                    />
+                    <FrogTrickArtwork />
+                </>
+            )}
         </div>
     )
 }
@@ -84,7 +93,7 @@ export default function Redesign() {
                         className={styles.sayHi}
                         href="mailto:bensoncraven@hotmail.co.uk"
                     >
-                        Say hi <span aria-hidden="true">↗</span>
+                        Say hi
                     </a>
                 </div>
                 <div className={styles.footerBottom}>
@@ -95,7 +104,7 @@ export default function Redesign() {
                         <a href="https://github.com/Benson-Craven">GitHub</a>
                         <Link href="/">Benson Codes</Link>
                         <button type="button" data-frog-trick>
-                            Do a trick <span aria-hidden="true">↗</span>
+                            Do a trick
                         </button>
                         <span
                             data-frog-trick-status

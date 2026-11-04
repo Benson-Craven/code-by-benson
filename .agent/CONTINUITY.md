@@ -2,6 +2,12 @@
 
 ## [PLANS]
 
+- 2026-11-04: The About frog now matches the hero size below 1024px and carries a planted Irish flag. Local verification is complete; real-device review, commit and deployment remain outstanding.
+
+- 2026-11-04: Larger mobile project frogs and the sequential phone flip are implemented and locally verified. Real-device touch testing and initial WebGL creation failure remain unverified. No commit or deployment.
+
+- 2026-11-04: Responsive slides and corner frog browser checks were extended during the larger-frog implementation below. Temporary project media remains unchanged.
+
 - 2026-11-03: The isolated `/redesign` baseline and project sequence are implemented. Genuine replacement screenshots remain deferred. The user requested fewer verification runs to conserve credits; do not repeat passing suites without a relevant change.
 
 - 2026-07-14: Use `docs/specs/portfolio-v2.md` and `docs/roadmap.md` as the implementation source for Portfolio v2.
@@ -11,6 +17,18 @@
 - 2026-07-16: Implement the accepted site-wide presentation refinement against `SLOP.md` without changing the Portfolio v2 identity, routes, project set, or release boundary.
 
 ## [DECISIONS]
+
+- 2026-11-04: Below 1024px the About frog uses the hero size and full-body crop and is centred above the viewport bottom; the in-flow slot follows so static fallbacks agree. A decorative Irish tricolour is planted at its right side, fades with the corner speech and appears only while About owns the corner. The wave pauses when hidden and stops under reduced motion. ADR 0013 records the change.
+
+- 2026-11-04: Below 768px the hero greeting is a wide bubble above the frog with a downward tail aimed at its head. Below 360px it scales down so the 320px title keeps a gap. The footer dialogue rises to the frog's face only from 360px wide and 790px tall, where the links leave room; smaller phones keep the bottom-left bubble. ADR 0013 records both.
+
+- 2026-11-04: Below 768px the hero title is uniform 700 weight with -0.02em tracking and no lighter italic word, matching the supplied reference. Below 360px the size drops to clamp(47px, 14.7vw, 53px) so the title keeps two lines at 320px. Desktop and 768px+ keep the existing light italic emphasis.
+
+- 2026-11-04: Below 768px the footer ends with the viewport. The corner frog and dialogue are fixed, so the in-flow footer frog slot collapses and its gap closes once the renderer is ready, and the copy top-aligns. Reduced motion, disabled JavaScript and WebGL failure keep the slot. ADR 0013 records the change.
+
+- 2026-11-04: Figma Mobile View 122:51 and Mobile View 2 122:63 supply project frog proportions of 273:291. Below 1024px, use clamp(220px, 68vw, 300px), show the full body, and interpolate crop height during section travel. Keep speech above the shoulder at 80% of frog container height after browser review found overlap at 65%. The fourth beat ends with a 0-to-180-degree phone rotation; wrapper opacity handles entry and exit. ADR 0013 records the change.
+
+- 2026-11-04: Extended ADR 0013 with five responsive beats, 80% holds and 20% fades, measured sticky fit, sequential speech and reversible bottom-corner travel. Keep desktop sequencing and existing dialogue/trick work. No new dependencies or replacement screenshots.
 
 - 2026-11-03: ADR 0013 records the three project presentations after About, Figma frame `71:39`, local typed media and copy, desktop sticky holds, live frog slot measurement and normal-flow fallbacks. Temporary covers and phone crops stay labelled. Keep coverage in the existing `tests/redesign.test.ts`; the user requested fewer test files.
 
@@ -42,6 +60,18 @@
 - Light and dark appearance uses persisted root theme tokens, restores a saved preference before page content renders, defaults first-time visitors to dark, and keeps the hero shader on the same palette without bypassing its motion gate. The decision is recorded in `docs/decisions/0011-use-persisted-root-theme-tokens.md`.
 
 ## [PROGRESS]
+
+- 2026-11-04: Updated `frogPlacement`, `FrogPresentation`, the scoped preview CSS and the existing redesign tests, and added `FrogFlag`. The About frog now matches the hero and is centred; the flag is About-only, pauses when hidden and stops under reduced motion. Hero, project, footer and desktop placement are unchanged.
+
+- 2026-11-04: Repositioned the mobile corner speech in `redesign.module.css`. The hero greeting sits above the frog with a downward tail; the footer dialogue rises to face level on viewports that fit. No JS, markup or dialogue copy changes.
+
+- 2026-11-04: Restyled the mobile hero title in `redesign.module.css`; weight 700, -0.02em tracking, normal-style emphasis and a 359px size adjustment. No markup, copy or desktop changes.
+
+- 2026-11-04: Collapsed the mobile footer frog slot and its gap in `redesign.module.css`, so the footer is 838px at 400x838 instead of 1116px while the heading, copy and links keep their positions. No component, data or test changes.
+
+- 2026-11-04: Updated ProjectPresentations, projectPresentationData, frogPlacement, scoped CSS, existing redesign tests and ADR 0013. Sticky fit reserves the larger of the full frog height and actual bubble top. Responsive cleanup clears phone rotation and wrapper opacity. Existing desktop timing, project copy, images, colours and unrelated working-tree changes remain intact.
+
+- 2026-11-04: Extended project and frog controllers, progress/placement helpers, scoped CSS and the existing redesign tests. Responsive screens use native scrolling; short screens use flow fades; reduced motion and disabled JavaScript retain all images and text. Phone grid dimensions are constrained after a 425px browser measurement exposed intrinsic-image expansion.
 
 - 2026-11-03: Added `ProjectPresentations.tsx` and `projectPresentationData.ts`, extended preview CSS and the sole frog positioning controller. Shared portfolio content and destinations remain unchanged. Browser review corrected screenshot sizing and caption overlap; bubble fades now avoid overlapping text.
 
@@ -103,6 +133,42 @@
 - The in-app browser controller was not exposed during the 2026-07-16 refinement. Chrome responsive mode confirmed no horizontal overflow and hero wrapping of 4, 3, 2, and 2 lines at 320, 390, 768, and 1440 CSS pixels. The shared case-study layout also had no overflow at 1024 pixels. A physical 200% page-zoom pass preserved reflow, skip-link focus, mobile-menu focus entry, and Escape focus restoration.
 
 ## [OUTCOMES]
+
+- 2026-11-04: About now matches the hero frog and carries a planted Irish flag. Browser measurements at 320, 360, 390, 402, 768, 1023, 1024 and 1440 widths showed the intro frog at the hero size (265x283 at 390) and centred, with no horizontal overflow. The flag faded out during corner travel, stayed hidden on the hero, projects and desktop, ran only while visible, and paused under reduced motion; the static fallback kept the centred, hero-sized frog. Scoped Prettier, lint, typecheck, 21 focused tests, the 77-test suite and an isolated production build at `/private/tmp/benson-intro-build.15350` passed. No commit or deployment.
+
+- 2026-11-04: Mobile corner speech now matches the references. The hero bubble sits above the frog's head with a 36px gap and a downward tail over the head centre, and 20px of title clearance at 320px. The footer bubble sits at face level on 360-767px wide, 790px+ tall viewports with the side tail unchanged. Measured and captured at 320, 360, 375, 390, 400, 414 and 767 widths; the raised footer bubble clears the link text. Reduced-motion and in-flow fallbacks are unchanged. Scoped Prettier, lint, typecheck, 75 tests and an isolated production build passed. No commit or deployment.
+
+- 2026-11-04: Mobile hero title now matches the supplied reference: uniform 700 weight, normal-style emphasis and -0.02em tracking. Measured two-line composition at 320, 360, 400 and 767 widths with all lines inside the content box; the 359px size adjustment keeps 320px at two lines. Desktop 1440x1000 and tablet 768x1024 captures retain the light italic word. Scoped Prettier, lint, typecheck, 75 tests and an isolated production build passed. No commit or deployment.
+
+- 2026-11-04: Mobile footer height now matches one viewport: 838px at 400x838, content-limited on shorter screens. Headless measurements at 320, 360, 375, 390, 400, 402, 425 and 767 widths confirmed the footer end, link positions and fixed frog placement. A 400x838 capture matches the supplied footer capture within a 2-4px capture offset, and a forced dialogue bubble stays visible and unclipped inside the collapsed slot. Reduced motion keeps the 1116px footer with the static frog. Scoped Prettier, lint, typecheck, 75 tests and an isolated production build at `/private/tmp/benson-footer-build` passed. Desktop and 768-1023px layouts are unchanged. No commit or deployment.
+
+- 2026-11-04: Larger project frog and phone flip passed 19 focused tests, scoped Prettier, lint, typecheck, diff whitespace and the final isolated production build at /private/tmp/benson-mobile-build.8aFpEi. Native Chrome visual review covered desktop and phone stages at 402x874, including the mirrored Nibbles layout. DOM geometry checks found no horizontal overflow at widths 320, 390, 402, 425, 768 and 1023; 874x390 selected normal flow. Mobile rotation reached approximately 90 degrees at the midpoint and 180 degrees at the end, stayed opaque, and reversed. Desktop 1440x1000 retained its three screen positions and phone flip. Live reduced-motion switching removed inline phone transforms and wrapper opacity; both faces and static frogs remained visible. A script-disabled 402x874 iframe retained both unrotated faces and matching frog dimensions. Missing media retained alt text and frame height. Forced WebGL context loss restored all three loaded static project frogs. Keyboard Tab and Enter opened the Chronic Pain Recovery case study. Temporary test frames and media changes were removed; motion emulation was restored. No commit or deployment.
+
+- 2026-11-04: Responsive slide/corner-frog automated verification passed: 18 focused tests, lint, typecheck, scoped Prettier, diff whitespace and isolated production build at `/private/tmp/benson-redesign-build-tgl3hhrx`. Initial build staging omitted `utils`; copying that existing directory resolved the staging-only failure. Native Chrome showed the cropped frog and inward bubbles at 425px. The final phone-grid correction and complete viewport/fallback matrix remain unverified visually. Preserved pre-existing changes; no commit, push or deployment.
+
+- 2026-11-04: Footer dialogue now fades out and moves down 14px over 0.35 seconds with GSAP power2.in after its 5.5-second display. The next random delay starts on exit completion. Existing clearDialogue cancels the tween immediately for tricks, offscreen/hidden states, reduced motion, failure and unmount. Changed FrogPresentation only. Fifteen focused tests, lint, typecheck, scoped formatting, diff whitespace and isolated production build passed. Browser visual checks were not rerun; browser access was unavailable earlier in this session.
+
+- 2026-11-04: Footer speech bubbles now fade from opacity 0 and rise 14px over 0.35 seconds with GSAP power2.out in FrogPresentation. clearDialogue kills the tween on dismissal, offscreen/hidden states, reduced motion, renderer failure and cleanup. Existing dialogue timing remains unchanged. Fifteen focused tests, lint, typecheck, scoped formatting, diff whitespace and isolated production build passed. Browser visual checks were not rerun because the browser access host was unavailable in this session.
+
+- 2026-11-04: Added eight random footer frog lines in frogDialogue.ts, a decorative speech bubble in page.tsx and scoped CSS, and timer handling in FrogPresentation. Lines show for 5.5 seconds with random 4–12 second gaps and no consecutive repeats. Hidden tabs, offscreen slots, reduced motion, renderer failure and unmount clear dialogue; tricks dismiss it and busy tricks defer speech. Fifteen focused tests, lint, typecheck, scoped Prettier, diff whitespace and an isolated temporary-copy production build passed. Browser access host unavailable, so desktop/mobile placement, live timing, keyboard and reduced-motion browser checks remain unverified.
+
+- 2026-11-04: Updated `/redesign` project backgrounds to CPRIE #08D9D6, Nibbles #FF2E63 and Waxlist #EAEAEA in scoped CSS. Section text now uses the existing black token for contrast. Preserved grid styling. Scoped Prettier, 14 redesign tests and diff whitespace passed. Browser checks, lint, typecheck and production build were not rerun for this CSS-only change.
+
+- 2026-11-04: Project titles in `/redesign` now rise letter by letter on section entry using the existing GSAP media context, 0.6-second duration and 35ms stagger. Updated ProjectPresentations and scoped CSS. Word wrappers preserve wrapping; screen readers receive the intact title; reduced motion and no-JavaScript rendering remain static. Fourteen focused tests, lint, typecheck, scoped formatting and diff whitespace passed. Initial build attempts were stopped or failed with a missing pages manifest; a fresh temporary-copy production build passed. Browser host unavailable, so visual timing, mobile layout and live reduced-motion checks remain unverified.
+
+- 2026-11-04: About now smiles for two seconds after its 2.2-second speech. The shared About GSAP timeline retains two hops, sets the smile at 2.2 seconds and releases it at 4.2 seconds. Added setSmiling to the renderer and adapter; page smile overrides hover and clears residual speech so the mouth visibly smiles. Section exit, preference changes and renderer failure clear it. Fourteen redesign tests, scoped TS/TSX formatting, renderer syntax, lint, typecheck and diff whitespace passed. Browser checks and production build were not rerun.
+
+- 2026-11-04: About entry now starts two 64px GSAP hops with a 0.2-second pause, alongside its existing speech and gaze. FrogPresentation owns a separate About timeline, pauses it when rendering stops, resets it on section exit, preference changes or renderer failure, and kills it on unmount. Thirteen redesign tests, scoped Prettier, lint, typecheck and diff whitespace passed. Browser animation checks and production build were not rerun.
+
+- 2026-11-04: About now selects an `about` speech beat in FrogPresentation, triggering the existing 2.2-second talk animation once per entry while preserving text-directed gaze and motion gates. Thirteen redesign tests, scoped Prettier, lint, typecheck and diff whitespace passed. Browser checks and production build were not rerun for this one-line adjustment.
+
+- 2026-11-04: About now directs the frog gaze toward the paragraph centre using live element bounds while the section crosses 35% of the viewport. Reuses setAttention and existing scroll/resize updates; project gaze and static reduced-motion fallback remain unchanged. Updated FrogPresentation only. Thirteen redesign tests, scoped Prettier, lint, typecheck and diff whitespace passed. Chrome scroll failed with noWindowsAvailable, so desktop/mobile gaze and live accessibility checks remain unverified. Production build was not rerun for this focused gaze adjustment.
+
+- 2026-11-04: Extended the hero's faint 80px grid to every `/redesign` section and the footer in `redesign.module.css`. About uses dark lines at the same opacity; dark sections use the existing pale lines. Scoped Prettier, 13 redesign tests and diff whitespace passed. Browser checks, lint, typecheck and production build were not rerun for this CSS-only change.
+
+- 2026-11-04: Slowed footer firefly flight and replaced straight segments with randomized quadratic curves in FrogPresentation. Segment duration is 3.5 seconds plus distance/30 plus up to 1.5 seconds, with sine easing for gentle turns. Existing range, pause gates and catch position tracking remain in place. Formatting, 13 redesign tests, lint, typecheck and diff whitespace passed. Browser motion review and production build were not rerun.
+
+- 2026-11-04: Footer firefly now uses smooth circles with a 2-unit bright core, down from a 3-unit square, and smaller glow shapes. Expanded the previous flight span by 50% on both axes to -47.5..147.5 horizontally, constrained by viewport edges, and -55..125 vertically. SVG overflow remains visible. Flight timing and catch behavior remain unchanged. Scoped formatting, 13 redesign tests, lint, typecheck and diff whitespace passed. Browser checks and production build were not rerun for these visual adjustments.
 
 - 2026-11-04: Footer firefly appears on first viewport entry as a small glowing green 2D square, flickers and flies between random positions within 8–92% horizontal and 8–80 SVG units vertical. Flight segments take 1–2.3 seconds. First accepted trick click stops flight and catches it with a tongue anchored to the rig mouth; clicks 2–4 hop; later clicks show "Sighs...". Count lasts for the mounted page; busy clicks are ignored. Hidden/offscreen motion pauses, reduced motion keeps the fly static and reports resting, and cleanup kills timelines. Added FrogTrickArtwork, updated presentation, page, adapter, scoped CSS, treatment helper, public renderer mouth-position API and existing tests. Thirteen focused tests, lint, typecheck and isolated build passed before the final square/size/range/timing refinement; final scoped formatting and whitespace checks passed. Chrome showed the footer and completed catch status, but flight/catch animation, mobile and live reduced-motion behavior were not visually verified. No commit or deployment.
 

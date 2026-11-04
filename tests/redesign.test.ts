@@ -283,3 +283,246 @@ test("tongue origin follows the animated mouth in host coordinates", async () =>
     assert.notEqual(turned.x, moved.x)
     assert.ok(Number.isFinite(turned.y))
 })
+
+test("page smile ends speech and releases to a neutral expression", async () => {
+    const modulePath = "../public/frog-mascot/src/frog-mascot.js"
+    const characterPath = "../public/frog-mascot/src/character.js"
+    const { FrogMascot } = await import(modulePath)
+    const { buildCharacter, PALETTE } = await import(characterPath)
+    const character = buildCharacter({ kind: "frog", colors: PALETTE })
+    const frog = {
+        character,
+        pageSmiling: false,
+        hover: { happy: false },
+        noteActivity() {},
+    }
+    character.api.talk(2.2)
+    FrogMascot.prototype.setSmiling.call(frog, true)
+    assert.equal(frog.pageSmiling, true)
+    assert.equal(character.api.state.happy, true)
+    assert.equal(character.api.state.talk, 0)
+    const smile = character.look.mouthState.smile
+    FrogMascot.prototype.setSmiling.call(frog, false)
+    assert.equal(frog.pageSmiling, false)
+    assert.equal(character.api.state.happy, false)
+    assert.ok(character.look.mouthState.smile < smile)
+})
+
+test("footer dialogue can select every line without consecutive repeats", async () => {
+    const { footerDialogue, pickFooterDialogue } =
+        await import("../app/redesign/frogDialogue")
+    assert.equal(new Set(footerDialogue).size, footerDialogue.length)
+    assert.deepEqual(
+        footerDialogue.map((_, index) =>
+            pickFooterDialogue("", index / footerDialogue.length),
+        ),
+        footerDialogue,
+    )
+    for (const previous of footerDialogue) {
+        for (const random of [0, 0.25, 0.5, 0.75, 0.999, 1]) {
+            const next = pickFooterDialogue(previous, random)
+            assert.notEqual(next, previous)
+            assert.ok(footerDialogue.includes(next))
+        }
+    }
+})
+
+test("responsive slides hold for 80 percent of each beat and crossfade in order", async () => {
+    const { responsivePresentationProgress: progress } =
+        await import("../app/redesign/projectPresentationData")
+    for (let index = 0; index < 5; index++) {
+        for (const fraction of [0, 0.4, 0.8]) {
+            const state = progress((index + fraction) / 5)
+            assert.ok(Math.abs(state.slides[index] - 1) < 1e-10)
+            assert.equal(
+                state.slides.filter((value) => value > 1e-10).length,
+                1,
+            )
+        }
+        const fade = progress((index + 0.9) / 5)
+        assert.ok(Math.abs(fade.slides[index] - 0.5) < 1e-10)
+        if (index < 4) assert.ok(Math.abs(fade.slides[index + 1] - 0.5) < 1e-10)
+    }
+    assert.deepEqual(progress(1).slides, [0, 0, 0, 0, 0])
+    assert.deepEqual(progress(-1), progress(0))
+    assert.deepEqual(progress(2), progress(1))
+    const samples = Array.from({ length: 501 }, (_, index) => index / 500)
+    const forward = samples.map(progress)
+    assert.deepEqual(samples.reverse().map(progress).reverse(), forward)
+    for (const state of forward) {
+        assert.ok(state.bubbles.filter((value) => value > 1e-10).length <= 1)
+        assert.ok(
+            [...state.slides, ...state.bubbles].every(
+                (value) => value >= 0 && value <= 1,
+            ),
+        )
+    }
+    for (const value of [0.4, 0.6, 0.8, 0.96])
+        assert.ok(Math.abs(progress(value).bubbles[2] - 1) < 1e-10)
+    assert.deepEqual(progress(1).bubbles, [0, 0, 0])
+})
+
+test("corner travel finishes at 75 percent viewport height and reverses", async () => {
+    const { cornerFrogPlacement: place, responsiveFrogSides } =
+        await import("../app/redesign/frogPlacement")
+    const tops = [0, 1000, 2000, 8000, 14000, 20000]
+    const sides = ["right", "center", "left", "right", "left", "right"] as const
+    assert.deepEqual(responsiveFrogSides, sides)
+    for (const width of [320, 390, 402, 425, 768, 1023]) {
+        const first = place(tops, 0, width, 800)
+        assert.equal(first.x + first.width, width)
+        const project = place(tops, tops[2], width, 800)
+        assert.equal(first.width, project.width)
+        assert.equal(first.height, project.height)
+        assert.equal(first.cropHeight, project.cropHeight)
+        const middle = place(tops, 300, width, 800)
+        assert.ok(middle.x > 0 && middle.x < first.x)
+        assert.equal(middle.speech, 0)
+        assert.equal(place(tops, 225, width, 800).speech, 0.5)
+        assert.equal(place(tops, 375, width, 800).speech, 0.5)
+        const arrived = place(tops, 400, width, 800)
+        assert.equal(arrived.x, (width - arrived.width) / 2)
+        assert.equal(arrived.speech, 1)
+        assert.equal(arrived.index, 1)
+        assert.ok(Math.abs(arrived.y + arrived.cropHeight - 800) < 1e-10)
+        for (let index = 1; index < tops.length; index++) {
+            const state = place(tops, tops[index] - 600, width, 800)
+            const frogSide = sides[index]
+            assert.equal(
+                state.x,
+                frogSide === "left"
+                    ? 0
+                    : frogSide === "center"
+                      ? (width - state.width) / 2
+                      : width - state.width,
+            )
+            assert.equal(state.index, index)
+            if (index >= 1 && index <= 4) {
+                const expectedWidth = Math.max(220, Math.min(300, width * 0.68))
+                assert.equal(state.width, expectedWidth)
+                assert.equal(state.height, expectedWidth * (291 / 273))
+                assert.equal(state.cropHeight, state.height)
+                assert.equal(state.y + state.height, 800)
+            }
+            if (index === 5) {
+                assert.equal(state.width, project.width)
+                assert.equal(state.height, project.height)
+                assert.equal(state.cropHeight, project.cropHeight)
+            }
+        }
+        const samples = [0, 200, 300, 400, 1500, 7500, 14000, 20000]
+        assert.deepEqual(
+            samples.map((scroll) => place(tops, scroll, width, 800)),
+            samples
+                .reverse()
+                .map((scroll) => place(tops, scroll, width, 800))
+                .reverse(),
+        )
+    }
+})
+
+test("intro frog matches the hero size and sits centred at the bottom", async () => {
+    const { cornerFrogPlacement: place } =
+        await import("../app/redesign/frogPlacement")
+    const tops = [0, 1000, 2000, 3000, 4000, 5000]
+    for (const width of [320, 360, 390, 402, 425, 600, 768, 1023]) {
+        const height = 844
+        const hero = place(tops, 0, width, height)
+        const intro = place(tops, tops[1], width, height)
+        assert.deepEqual(
+            {
+                width: intro.width,
+                height: intro.height,
+                cropHeight: intro.cropHeight,
+            },
+            {
+                width: hero.width,
+                height: hero.height,
+                cropHeight: hero.cropHeight,
+            },
+        )
+        assert.equal(intro.x, (width - intro.width) / 2)
+        assert.ok(Math.abs(intro.y + intro.height - height) < 1e-10)
+        assert.equal(intro.index, 1)
+        assert.equal(intro.speech, 1)
+    }
+})
+
+test("irish flag keeps the tricolour, ripples and honours reduced motion", async () => {
+    const flag = await readFile(
+        new URL("../app/redesign/FrogFlag.tsx", import.meta.url),
+        "utf8",
+    )
+    const colours = flag.match(/#169b62|#ffffff|#ff883e/g) ?? []
+    assert.deepEqual(colours, [
+        "#169b62",
+        "#169b62",
+        "#ffffff",
+        "#ffffff",
+        "#ff883e",
+        "#ff883e",
+    ])
+    assert.match(flag, /data-frog-flag/)
+    const presentation = await readFile(
+        new URL("../app/redesign/FrogPresentation.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(
+        presentation,
+        /const flagOpacity =\s*cornerActive && corner\.index === 1 && aboutActive/,
+    )
+    assert.match(presentation, /flag\.style\.opacity = String\(flagOpacity\)/)
+    assert.match(
+        presentation,
+        /flag\.dataset\.visible = String\(flagOpacity > 0\)/,
+    )
+    const css = await readFile(
+        new URL("../app/redesign/redesign.module.css", import.meta.url),
+        "utf8",
+    )
+    assert.match(css, /\.flagColumn\s*\{[^}]*animation: flagWave/)
+    assert.match(css, /\.flagColumn\s*\{[^}]*animation-play-state: paused/)
+    assert.match(
+        css,
+        /\.frogFlag\[data-visible="true"\] \.flagColumn\s*\{\s*animation-play-state: running/,
+    )
+    const reduced = css.slice(css.indexOf("@keyframes flagWave"))
+    assert.match(
+        reduced,
+        /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.frogFlag\s*\{[^}]*\}\s*\.flagColumn\s*\{\s*animation: none;/,
+    )
+})
+
+test("responsive sticky stages require room for the heading, device and narration", async () => {
+    const { responsiveStageFits: fits } =
+        await import("../app/redesign/projectPresentationData")
+    assert.equal(fits(777, 120, 264, 200), true)
+    assert.equal(fits(390, 120, 220, 200), false)
+    assert.equal(fits(600, 100, 220, 200), true)
+    assert.equal(fits(600, 101, 220, 200), false)
+})
+
+test("responsive phone flips solid faces in the final fifth of beat four", async () => {
+    const { responsivePresentationProgress: progress } =
+        await import("../app/redesign/projectPresentationData")
+    for (const value of [0, 0.2, 0.4, 0.56]) {
+        assert.ok(Math.abs(progress(value).phoneOpacity) < 1e-10)
+        assert.equal(progress(value).phoneRotation, 0)
+    }
+    assert.ok(Math.abs(progress(0.58).phoneOpacity - 0.5) < 1e-10)
+    for (const [value, rotation] of [
+        [0.6, 0],
+        [0.76, 0],
+        [0.78, 90],
+        [0.8, 180],
+        [0.96, 180],
+    ]) {
+        const state = progress(value)
+        assert.ok(Math.abs(state.phoneRotation - rotation) < 1e-10)
+        assert.equal(state.phoneOpacity, 1)
+        assert.deepEqual(state.slides.slice(0, 3), [0, 0, 0])
+    }
+    assert.ok(Math.abs(progress(0.98).phoneOpacity - 0.5) < 1e-10)
+    assert.equal(progress(1).phoneOpacity, 0)
+    assert.equal(progress(1).phoneRotation, 180)
+})

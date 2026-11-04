@@ -23,30 +23,13 @@ export default function FrogTrickArtwork() {
                 strokeWidth="1.6"
             />
             <g data-firefly opacity="0">
-                <g className={styles.fireflyGlow}>
-                    <rect
-                        x="-4"
-                        y="-4"
-                        width="8"
-                        height="8"
-                        fill="#65ff57"
-                        opacity="0.12"
-                    />
-                    <rect
-                        x="-2.5"
-                        y="-2.5"
-                        width="5"
-                        height="5"
-                        fill="#65ff57"
-                        opacity="0.25"
-                    />
-                    <rect
-                        x="-1.5"
-                        y="-1.5"
-                        width="3"
-                        height="3"
-                        fill="#85ff70"
-                    />
+                <g
+                    className={styles.fireflyGlow}
+                    shapeRendering="geometricPrecision"
+                >
+                    <circle r="2.5" fill="#65ff57" opacity="0.12" />
+                    <circle r="1.6" fill="#65ff57" opacity="0.25" />
+                    <circle r="1" fill="#85ff70" />
                 </g>
             </g>
         </svg>

@@ -7,16 +7,20 @@ import "lenis/dist/lenis.css"
 import { createFrog, loadFrog, type FrogInstance } from "./frogAdapter"
 import {
     frogPlacement,
+    cornerFrogPlacement,
     shouldRenderFrog,
     type FrogAnchor,
 } from "./frogPlacement"
 import {
     heldPresentationQuery,
     presentationProgress,
+    responsivePresentationProgress,
 } from "./projectPresentationData"
 import styles from "./redesign.module.css"
 import { foodTreatment, heartTreatment, frogTrick } from "./frogTreatment"
 import FrogFood from "./FrogFood"
+import FrogFlag from "./FrogFlag"
+import { pickFooterDialogue } from "./frogDialogue"
 
 export default function FrogPresentation() {
     const layerRef = useRef<HTMLDivElement>(null)
@@ -54,6 +58,76 @@ export default function FrogPresentation() {
         const setMessage = (text: string) => {
             status.textContent = text
         }
+        const dialogue = root.querySelector<HTMLElement>(
+            "[data-frog-dialogue]",
+        )!
+        let dialogueTimer: ReturnType<typeof setTimeout> | undefined
+        let dialogueActive = false
+        let previousDialogue = ""
+        function clearDialogue() {
+            clearTimeout(dialogueTimer)
+            gsap.killTweensOf(dialogue)
+            dialogueTimer = undefined
+            dialogue.textContent = ""
+            dialogue.hidden = true
+        }
+        function scheduleDialogue() {
+            if (!dialogueActive || dialogueTimer !== undefined) return
+            dialogueTimer = setTimeout(
+                () => {
+                    dialogueTimer = undefined
+                    if (!dialogueActive) return
+                    if (busy) {
+                        scheduleDialogue()
+                        return
+                    }
+                    previousDialogue = pickFooterDialogue(previousDialogue)
+                    dialogue.textContent = previousDialogue
+                    dialogue.hidden = false
+                    gsap.fromTo(
+                        dialogue,
+                        { opacity: 0, y: 14 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.35,
+                            ease: "power2.out",
+                            overwrite: true,
+                        },
+                    )
+                    frog?.talk(2.2)
+                    dialogueTimer = setTimeout(() => {
+                        gsap.to(dialogue, {
+                            opacity: 0,
+                            y: 14,
+                            duration: 0.35,
+                            ease: "power2.in",
+                            overwrite: true,
+                            onComplete: () => {
+                                clearDialogue()
+                                scheduleDialogue()
+                            },
+                        })
+                    }, 5500)
+                },
+                4000 + Math.random() * 8000,
+            )
+        }
+        function updateDialogue(running: boolean) {
+            const rect = slots[slots.length - 1].getBoundingClientRect()
+            dialogueActive = Boolean(
+                running &&
+                frog &&
+                !failed &&
+                !reduced.matches &&
+                !document.hidden &&
+                (narrow.matches
+                    ? footer.getBoundingClientRect().top <= innerHeight * 0.75
+                    : rect.top >= 80 && rect.top < innerHeight * 0.8),
+            )
+            if (dialogueActive) scheduleDialogue()
+            else clearDialogue()
+        }
         let footerSeen = false
         let clicks = 0
         let busy = false
@@ -62,12 +136,13 @@ export default function FrogPresentation() {
         const flight = { x: 78, y: 23 }
         let flightTween: gsap.core.Tween | undefined
         const reduced = matchMedia("(prefers-reduced-motion: reduce)")
-        const desktop = matchMedia("(min-width: 768px) and (pointer: fine)")
-        const narrow = matchMedia("(max-width: 767px)")
+        const desktop = matchMedia("(min-width: 1024px) and (pointer: fine)")
+        const narrow = matchMedia("(max-width: 1023px)")
         const held = matchMedia(heldPresentationQuery)
         const greeting = root.querySelector<HTMLElement>(
             "[data-frog-greeting]",
         )!
+        const flag = root.querySelector<HTMLElement>("[data-frog-flag]")!
         let leftTop = false
         let returned = false
         let spokenBeat = ""
@@ -78,6 +153,7 @@ export default function FrogPresentation() {
         let failed = false
         let loading = false
         let hop: gsap.core.Timeline | undefined
+        let aboutAnimation: gsap.core.Timeline | undefined
         const originalScrollBehavior =
             document.documentElement.style.scrollBehavior
         document.documentElement.style.scrollBehavior = "auto"
@@ -97,7 +173,11 @@ export default function FrogPresentation() {
                 gsap.ticker.add(tick)
             }
         }
-        function reactToScroll(running: boolean) {
+        function reactToScroll(
+            running: boolean,
+            corner: ReturnType<typeof cornerFrogPlacement>,
+            cornerActive: boolean,
+        ) {
             if (window.scrollY > sections[0].offsetHeight * 0.6) leftTop = true
             if (leftTop && window.scrollY <= 40 && !returned) {
                 returned = true
@@ -159,7 +239,10 @@ export default function FrogPresentation() {
                     project.querySelectorAll<HTMLElement>("[data-bubble]"),
                 )
                 let index = 0
-                if (held.matches && project.dataset.held === "true") {
+                if (
+                    (held.matches && project.dataset.held === "true") ||
+                    project.dataset.responsive === "held"
+                ) {
                     const progress = Math.max(
                         0,
                         Math.min(
@@ -168,7 +251,11 @@ export default function FrogPresentation() {
                                 Math.max(1, project.offsetHeight - innerHeight),
                         ),
                     )
-                    const opacities = presentationProgress(progress).bubbles
+                    const opacities = (
+                        narrow.matches
+                            ? responsivePresentationProgress(progress)
+                            : presentationProgress(progress)
+                    ).bubbles
                     index = opacities.findIndex((opacity) => opacity > 0.5)
                 } else {
                     index = bubbles.reduce(
@@ -187,9 +274,27 @@ export default function FrogPresentation() {
                     )
                 }
                 if (index >= 0) beat = `${project.dataset.project}-${index}`
-                const target = project
-                    .querySelector<HTMLElement>("[data-screen-strip]")!
-                    .getBoundingClientRect()
+            }
+            const intro = root.querySelector<HTMLElement>("#intro")!
+            const introRect = intro.getBoundingClientRect()
+            const aboutActive =
+                introRect.top <= innerHeight * 0.35 &&
+                introRect.bottom > innerHeight * 0.35
+            // Keep the planted flag with the intro only, never across travel.
+            const flagOpacity =
+                cornerActive && corner.index === 1 && aboutActive
+                    ? corner.speech
+                    : 0
+            flag.style.opacity = String(flagOpacity)
+            flag.dataset.visible = String(flagOpacity > 0)
+            if (aboutActive && !project) beat = "about"
+            const gazeTarget = project
+                ? project.querySelector<HTMLElement>("[data-screen-strip]")
+                : aboutActive
+                  ? intro.querySelector<HTMLElement>("p")
+                  : null
+            if (gazeTarget) {
+                const target = gazeTarget.getBoundingClientRect()
                 const face = host.getBoundingClientRect()
                 frog?.setAttention(
                     Math.max(
@@ -203,17 +308,63 @@ export default function FrogPresentation() {
                                 Math.max(face.width, 1),
                         ),
                     ),
-                    -0.25,
+                    project
+                        ? -0.25
+                        : Math.max(
+                              -1,
+                              Math.min(
+                                  1,
+                                  (target.top +
+                                      target.height / 2 -
+                                      face.top -
+                                      face.height / 2) /
+                                      Math.max(face.height, 1),
+                              ),
+                          ),
                 )
             } else {
                 frog?.setAttention(null)
             }
+            if (beat !== "about" || reduced.matches || failed) {
+                resetAboutAnimation()
+            } else if (aboutAnimation) {
+                if (running) aboutAnimation.resume()
+                else aboutAnimation.pause()
+            }
             // A beat fires once, even when many scroll events arrive during a hold.
             if (running && frog && beat && beat !== spokenBeat) {
                 frog.talk(2.2)
+                if (beat === "about") {
+                    resetAboutAnimation()
+                    aboutAnimation = gsap
+                        .timeline()
+                        .add(
+                            gsap
+                                .timeline({ repeat: 1, repeatDelay: 0.2 })
+                                .to(host, {
+                                    y: -64,
+                                    duration: 0.26,
+                                    ease: "power2.out",
+                                })
+                                .to(host, {
+                                    y: 0,
+                                    duration: 0.32,
+                                    ease: "power2.in",
+                                }),
+                        )
+                        .call(() => frog?.setSmiling(true), [], 2.2)
+                        .call(() => frog?.setSmiling(false), [], 4.2)
+                }
                 spokenBeat = beat
             }
             if (!beat && !project) spokenBeat = ""
+        }
+        function resetAboutAnimation() {
+            if (!aboutAnimation) return
+            aboutAnimation.kill()
+            aboutAnimation = undefined
+            frog?.setSmiling(false)
+            gsap.set(host, { y: 0 })
         }
         function drawCatch() {
             if (!frog) return
@@ -247,16 +398,55 @@ export default function FrogPresentation() {
         }
         function fly() {
             if (disposed || caught) return
-            flightTween = gsap.to(flight, {
-                x: 8 + Math.random() * 84,
-                y: 8 + Math.random() * 72,
-                duration: 1 + Math.random() * 1.3,
+            const rect = artwork.getBoundingClientRect()
+            const minX = Math.max(-47.5, ((8 - rect.left) / rect.width) * 100)
+            const maxX = Math.min(
+                147.5,
+                ((innerWidth - 8 - rect.left) / rect.width) * 100,
+            )
+            const start = { ...flight }
+            const end = {
+                x: minX + Math.random() * (maxX - minX),
+                y: narrow.matches
+                    ? -45 + Math.random() * 90
+                    : -55 + Math.random() * 180,
+            }
+            const control = {
+                x: gsap.utils.clamp(
+                    minX,
+                    maxX,
+                    (start.x + end.x) / 2 + (Math.random() - 0.5) * 60,
+                ),
+                y: gsap.utils.clamp(
+                    -55,
+                    125,
+                    (start.y + end.y) / 2 + (Math.random() - 0.5) * 60,
+                ),
+            }
+            const progress = { value: 0 }
+            flightTween = gsap.to(progress, {
+                value: 1,
+                duration:
+                    3.5 +
+                    Math.hypot(end.x - start.x, end.y - start.y) / 30 +
+                    Math.random() * 1.5,
                 ease: "sine.inOut",
-                onUpdate: () =>
+                onUpdate: () => {
+                    const t = progress.value
+                    const remaining = 1 - t
+                    flight.x =
+                        remaining ** 2 * start.x +
+                        2 * remaining * t * control.x +
+                        t ** 2 * end.x
+                    flight.y =
+                        remaining ** 2 * start.y +
+                        2 * remaining * t * control.y +
+                        t ** 2 * end.y
                     firefly.setAttribute(
                         "transform",
                         `translate(${flight.x} ${flight.y})`,
-                    ),
+                    )
+                },
                 onComplete: fly,
             })
         }
@@ -287,18 +477,56 @@ export default function FrogPresentation() {
         function position() {
             if (disposed || anchors.length === 0) return
             readAnchors()
-            const placement = frogPlacement(
-                anchors,
-                window.scrollY,
-                narrow.matches || !held.matches,
+            const corner = cornerFrogPlacement(
+                sections.map(
+                    (section) => section.getBoundingClientRect().top + scrollY,
+                ),
+                scrollY,
+                innerWidth,
+                innerHeight,
             )
+            const responsive = narrow.matches && !reduced.matches
+            root.dataset.cornerFrog = String(responsive)
+            const placement = responsive
+                ? corner
+                : frogPlacement(anchors, window.scrollY, !held.matches)
+            root.style.setProperty("--active-corner-size", `${corner.width}px`)
+            root.style.setProperty(
+                "--active-corner-height",
+                `${corner.height}px`,
+            )
+            root.style.setProperty(
+                "--active-corner-crop",
+                `${corner.cropHeight}px`,
+            )
+            root.style.setProperty("--corner-x", `${corner.x}px`)
+            artwork.style.opacity = responsive
+                ? String(
+                      corner.index === sections.length - 1 ? corner.speech : 0,
+                  )
+                : ""
+            greeting.style.opacity = responsive
+                ? String(corner.index === 0 ? corner.speech : 0)
+                : ""
+            sections.forEach((section, index) => {
+                const narration = section.querySelector<HTMLElement>(
+                    `.${styles.bubbles}`,
+                )
+                if (narration)
+                    narration.style.opacity =
+                        responsive && section.dataset.responsive === "held"
+                            ? String(corner.index === index ? corner.speech : 0)
+                            : ""
+            })
             gsap.set(layer, {
                 x: placement.x,
                 y: placement.y,
                 width: placement.width,
                 height: placement.height,
             })
-            const top = root.getBoundingClientRect().top + placement.y
+            const top = responsive
+                ? placement.y
+                : root.getBoundingClientRect().top + placement.y
             const running = shouldRenderFrog(
                 document.hidden,
                 reduced.matches,
@@ -307,8 +535,9 @@ export default function FrogPresentation() {
                 window.innerHeight,
             )
             updateFirefly(running)
+            updateDialogue(running)
             frog?.setPaused(!running)
-            reactToScroll(running)
+            reactToScroll(running, corner, responsive)
             layer.style.visibility =
                 frog && !failed && !reduced.matches ? "visible" : "hidden"
         }
@@ -349,6 +578,9 @@ export default function FrogPresentation() {
         }
         function fail() {
             failed = true
+            dialogueActive = false
+            clearDialogue()
+            resetAboutAnimation()
             delete root.dataset.frogReady
             frog?.canvas.removeEventListener("webglcontextlost", fail)
             frog?.destroy()
@@ -375,6 +607,7 @@ export default function FrogPresentation() {
             }
         }
         function preferences() {
+            resetAboutAnimation()
             resetTrick()
             if (reduced.matches) {
                 frog?.canvas.removeEventListener("webglcontextlost", fail)
@@ -394,6 +627,8 @@ export default function FrogPresentation() {
         }
         function trick() {
             if (busy) return
+            clearDialogue()
+            scheduleDialogue()
             if (clicks >= 4) {
                 setMessage("Sighs...")
                 return
@@ -469,6 +704,8 @@ export default function FrogPresentation() {
         preferences()
         return () => {
             disposed = true
+            dialogueActive = false
+            clearDialogue()
             observer.disconnect()
             window.removeEventListener("scroll", position)
             window.removeEventListener("resize", measure)
@@ -481,6 +718,7 @@ export default function FrogPresentation() {
             gsap.ticker.remove(tick)
             lenis?.destroy()
             hop?.kill()
+            aboutAnimation?.kill()
             flightTween?.kill()
             gsap.killTweensOf([
                 layer,
@@ -495,6 +733,21 @@ export default function FrogPresentation() {
             frog?.canvas.removeEventListener("webglcontextlost", fail)
             frog?.destroy()
             delete root.dataset.frogReady
+            delete root.dataset.cornerFrog
+            root.style.removeProperty("--active-corner-size")
+            root.style.removeProperty("--active-corner-height")
+            root.style.removeProperty("--active-corner-crop")
+            root.style.removeProperty("--corner-x")
+            artwork.style.opacity = ""
+            greeting.style.opacity = ""
+            flag.style.opacity = ""
+            delete flag.dataset.visible
+            sections.forEach((section) => {
+                const narration = section.querySelector<HTMLElement>(
+                    `.${styles.bubbles}`,
+                )
+                if (narration) narration.style.opacity = ""
+            })
             document.documentElement.style.scrollBehavior =
                 originalScrollBehavior
             gsap.ticker.lagSmoothing(500, 33)
@@ -506,6 +759,7 @@ export default function FrogPresentation() {
             <div ref={layerRef} className={styles.frogLayer} aria-hidden="true">
                 <div ref={hostRef} className={styles.frogHost} />
                 <FrogFood />
+                <FrogFlag />
                 <div className={styles.frogHearts}>
                     {[0, 1, 2].map((index) => (
                         <svg

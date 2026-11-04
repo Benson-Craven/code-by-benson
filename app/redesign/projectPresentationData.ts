@@ -97,3 +97,34 @@ export function presentationProgress(progress: number) {
         ],
     }
 }
+
+// Five equal scroll beats: laptop views first, then the two phone faces.
+export function responsivePresentationProgress(progress: number) {
+    const beat = Math.max(0, Math.min(5, progress * 5))
+    const slides = Array.from(
+        { length: 5 },
+        (_, index) =>
+            (index === 0 ? 1 : ramp(beat, index - 0.2, index)) *
+            (1 - ramp(beat, index + 0.8, index + 1)),
+    )
+    const bubbles = [
+        1 - ramp(beat, 0.8, 0.9),
+        ramp(beat, 0.9, 1) * (1 - ramp(beat, 1.8, 1.9)),
+        ramp(beat, 1.9, 2) * (1 - ramp(beat, 4.8, 5)),
+    ]
+    return {
+        slides,
+        bubbles,
+        phoneOpacity: ramp(beat, 2.8, 3) * (1 - ramp(beat, 4.8, 5)),
+        phoneRotation: ramp(beat, 3.8, 4) * 180,
+    }
+}
+
+export function responsiveStageFits(
+    viewport: number,
+    heading: number,
+    device: number,
+    narration: number,
+) {
+    return heading + device + narration + 80 <= viewport
+}
