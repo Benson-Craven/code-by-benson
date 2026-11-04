@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Frog static asset capture</title></head><body>
+<div id="frog" style="width:320px;height:336px"></div>
+<button id="save">Save rendered frog PNG</button>
+<script type="module">
+import { FrogMascot } from './src/frog-mascot.js';
+const frog = new FrogMascot(document.querySelector('#frog'), { mode: 'pixel', fit: 'container', follow: false, hover: false, idle: false, autoSleep: false });
+document.querySelector('#save').onclick = () => {
+ const link = document.createElement('a');
+ link.href = frog.snapshot(); link.download = 'frog-static.png'; link.click();
+};
+</script></body></html>

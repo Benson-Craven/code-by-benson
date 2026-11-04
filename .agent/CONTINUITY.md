@@ -2,6 +2,8 @@
 
 ## [PLANS]
 
+- 2026-11-03: The isolated `/redesign` baseline and project sequence are implemented. Genuine replacement screenshots remain deferred. The user requested fewer verification runs to conserve credits; do not repeat passing suites without a relevant change.
+
 - 2026-07-14: Use `docs/specs/portfolio-v2.md` and `docs/roadmap.md` as the implementation source for Portfolio v2.
 - Work one roadmap ticket at a time. Do not deploy, publish, commit, or push without a separate explicit request.
 - The user approved `https://nibbles-with-nifa.vercel.app/` for public portfolio use on 2026-07-16. Do not change or publish the Nibbles product from this repository.
@@ -9,6 +11,10 @@
 - 2026-07-16: Implement the accepted site-wide presentation refinement against `SLOP.md` without changing the Portfolio v2 identity, routes, project set, or release boundary.
 
 ## [DECISIONS]
+
+- 2026-11-03: ADR 0013 records the three project presentations after About, Figma frame `71:39`, local typed media and copy, desktop sticky holds, live frog slot measurement and normal-flow fallbacks. Temporary covers and phone crops stay labelled. Keep coverage in the existing `tests/redesign.test.ts`; the user requested fewer test files.
+
+- 2026-11-03: ADR 0012 records the isolated preview, self-hosted Funnel Sans, fixed palette, one procedural frog, native mobile scrolling and static fallbacks. The copied frog adds container sizing, pause and snapshot APIs and full postprocessing disposal. Existing homepage, case-study and theme sources are unchanged.
 
 - The primary audience is product-team hiring managers. Position Benson as a credible mid-level Frontend Engineer.
 - Preserve the paper, ink, and orange identity and the hero line: “I build interfaces that make complex systems feel simple.”
@@ -36,6 +42,8 @@
 - Light and dark appearance uses persisted root theme tokens, restores a saved preference before page content renders, defaults first-time visitors to dark, and keeps the hero shader on the same palette without bypassing its motion gate. The decision is recorded in `docs/decisions/0011-use-persisted-root-theme-tokens.md`.
 
 ## [PROGRESS]
+
+- 2026-11-03: Added `ProjectPresentations.tsx` and `projectPresentationData.ts`, extended preview CSS and the sole frog positioning controller. Shared portfolio content and destinations remain unchanged. Browser review corrected screenshot sizing and caption overlap; bubble fades now avoid overlapping text.
 
 - 2026-07-21: Removed the superseded homepage/navigation component tree, unreferenced legacy and duplicate public media, the unused variable font, starter SVGs, and three unused packages before release. Retained all currently referenced project evidence, the portrait, résumé, favicon, and loaded font files.
 - 2026-07-21: Changed the first-visit theme fallback from the operating-system preference to dark while preserving explicit saved light and dark choices.
@@ -70,6 +78,8 @@
 
 ## [DISCOVERIES]
 
+- 2026-11-03: Retrieved high-fidelity Figma context and screenshots for Landing `3:13`, intro `33:11` and Footer `36:23`. The approved plan replaces their stock frog placeholder with the local procedural frog and uses dark `#0B0B0C`. Source package found at `/Users/bensoncraven/Documents/deepseek-harness/default-workspace/frog-mascot`.
+
 - The current 56-test suite passes. Experience fixtures use ASCII hyphens and the current Self-Employed chronology; Nibbles local-capture disclosure is asserted at `caseStudy.proof`; Waxlist's approved availability label is `Development phase`.
 - The supplied showcase concept improves homepage scanning, but its invented projects, placeholder links, third-party hotlinks and continuously rerendering cursor loop were not suitable for Portfolio v2. The retained interaction uses the validated local project data and an imperative requestAnimationFrame preview that stops once settled.
 - The selected-work focused test, TypeScript, lint and production build pass. The earlier experience-period test mismatch has been resolved against the current hyphenated July 2026 chronology.
@@ -93,6 +103,28 @@
 - The in-app browser controller was not exposed during the 2026-07-16 refinement. Chrome responsive mode confirmed no horizontal overflow and hero wrapping of 4, 3, 2, and 2 lines at 320, 390, 768, and 1440 CSS pixels. The shared case-study layout also had no overflow at 1024 pixels. A physical 200% page-zoom pass preserved reflow, skip-link focus, mobile-menu focus entry, and Escape focus restoration.
 
 ## [OUTCOMES]
+
+- 2026-11-04: Footer firefly appears on first viewport entry as a small glowing green 2D square, flickers and flies between random positions within 8–92% horizontal and 8–80 SVG units vertical. Flight segments take 1–2.3 seconds. First accepted trick click stops flight and catches it with a tongue anchored to the rig mouth; clicks 2–4 hop; later clicks show "Sighs...". Count lasts for the mounted page; busy clicks are ignored. Hidden/offscreen motion pauses, reduced motion keeps the fly static and reports resting, and cleanup kills timelines. Added FrogTrickArtwork, updated presentation, page, adapter, scoped CSS, treatment helper, public renderer mouth-position API and existing tests. Thirteen focused tests, lint, typecheck and isolated build passed before the final square/size/range/timing refinement; final scoped formatting and whitespace checks passed. Chrome showed the footer and completed catch status, but flight/catch animation, mobile and live reduced-motion behavior were not visually verified. No commit or deployment.
+
+- 2026-11-04: Added pixel burger, shake and sushi icons at the frog's body for Nibbles with Nifa. FrogFood renders decorative SVGs; FrogPresentation uses foodTreatment to stagger their reveal after the first bubble at held progress 0.325, hold through 0.55 and fade by 0.65. Normal-flow timing follows the first bubble's viewport position. Reuses existing motion/fallback gates and cleanup. Eleven redesign tests, lint, typecheck, changed-file Prettier, whitespace checks and isolated production build passed. Chrome control timed out; visual placement, mobile, keyboard and live reduced-motion checks remain unverified. The prior heart refinement now uses six cycles per section, halving each cycle's scroll distance. No commit or deployment.
+
+- 2026-11-04: Added three decorative pixel hearts to the shared `/redesign` frog layer during Chronic Pain Recovery. Scroll progress controls staggered rise, scale and fade, with reverse scrolling and section-boundary fades. Uses existing GSAP updates, no new dependency or autonomous animation loop. Hidden/offscreen and reduced-motion policies gate the treatment; renderer failure hides the whole layer. Changed FrogPresentation, scoped CSS, new frogTreatment helper and the existing redesign tests. Ten focused tests, lint, typecheck, scoped Prettier, diff whitespace and isolated production build passed. Native Chrome scroll failed with `noWindowsAvailable`; visual desktop/mobile, keyboard and live reduced-motion checks remain unverified. No commit or deployment.
+
+- 2026-11-03: Adjusted `/redesign` hero and footer desktop sizing at 768px and above. Both use a 100svh minimum with viewport-scaled spacing and frog sizes; content can grow to avoid clipping on short screens. Mobile rules remain unchanged. Scoped Prettier, nine redesign tests and diff whitespace passed. Browser layout verification was not run for this CSS change.
+
+- 2026-11-03: Fixed the frog renderer's blank canvas after resize by repainting synchronously. Added a regression in `tests/redesign.test.ts` that failed before the fix and passed after it. Enlarged project slots from 96px normal-flow and 140–200px held to 200–300px normal-flow and 240–340px held, bounded by column width. Eight focused tests, lint, typecheck, CSS/test formatting and isolated production build passed. Reviewed the changed renderer, CSS and test. Chrome reloaded the restarted port 3012 preview, but native scroll control failed with `noWindowsAvailable`; updated visual transitions, mobile, keyboard and reduced-motion browser checks remain unverified. No commit or deployment.
+
+- 2026-11-03: Project sequence checks passed: seven tests in the existing redesign test file, lint, typecheck, scoped formatting and isolated production build. Chrome review covered desktop holds and reverse scrolling, readable phone faces, mirrored Nibbles, Waxlist and footer placement, 375px layout without horizontal overflow, all nine normal-flow screenshots and bubbles, 96px mobile frog slots, live reduced-motion switching, synthetic WebGL context-loss fallback, missing-image alt text with reserved frame height, case-study navigation and preview DOM removal, and JavaScript-disabled keyboard focus. Initial WebGL creation failure and exhaustive listener/GPU leak instrumentation were not tested. Mobile phone previews use normal flow to keep captions unobscured. Genuine replacement media remains deferred. No dependencies, commits or deployment added.
+
+- 2026-11-03: Enlarged the redesign frog using 40% hero/footer columns, a 36% intro slot and a 640px desktop cap. Mobile slots scale with 70vw between 240px and 420px, bounded by available width. Only sizing CSS changed. Chrome visually checked desktop hero/intro and the 375px mobile hero/footer. Scoped Prettier, lint, typecheck, five redesign tests, diff whitespace and an isolated production build passed. Live reduced-motion and keyboard interaction were not rechecked.
+
+- 2026-11-03: Refined the intro reveal to fade one word at a time with no overlap, lowered starting opacity to 0.1, and removed the gray override from "thoughtful design." Blue emphasis remains unchanged.
+
+- 2026-11-03: Added `IntroParagraph.tsx` with GSAP ScrollTrigger word opacity from 0.25 to 1, reversible scroll progress, font-load refresh and media-query cleanup. Server-rendered text stays fully visible without JavaScript or with reduced motion. Preserved blue emphasis and the gray closing phrase by narrowing the span colour selector. Passed scoped formatting, lint, typecheck, five redesign tests, diff whitespace and an isolated production build. Chrome showed progressive and completed reveal states. Mobile and live reduced-motion switching were not verified for this change.
+
+- 2026-11-03: `/redesign` now contains the Figma hero, intro and contact sections, scoped styling, GSAP/Lenis integration, keyboard hop and actual-rig PNG fallback. Added five focused tests. Passed 61 tests, lint, typecheck, scoped Prettier, diff whitespace and an isolated production build at `/private/tmp/benson-redesign-build`. No commit or deployment.
+- 2026-11-03: Chrome verified desktop sections, contact destinations, keyboard hop and its status announcement, no overflow at 1011px, noindex metadata, and zero hidden-tab WebGL draws. Forced WebGL context loss showed all loaded static fallback images. A temporary 390px iframe verified the mobile hero, no horizontal overflow and no Lenis instance; removed it by reloading afterwards. HTTP sitemap contains only the homepage and three case studies.
+- 2026-11-03: Reduced-motion and offscreen policies have unit coverage. Live reduced-motion switching, initial WebGL creation failure, complete mobile intro/footer review, route-exit resource instrumentation and saved-theme browser regressions remain unverified. Existing homepage/case-study/theme automated tests passed. The local preview server was started on port 3012.
 
 - The Portfolio v2 release branch cleanup is complete locally. Current app routes no longer carry the superseded component implementation or unreferenced legacy media, and `react-icons`, `simplex-noise`, and `@types/matter-js` are no longer installed.
 - Dark mode is now the first-visit default. Saved theme choices still persist and apply before page content renders. No deployment, commit or push was performed.

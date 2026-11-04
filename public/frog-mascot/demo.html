@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>frog-mascot — demo</title>
+<style>
+  :root {
+    --ink: #10141a;
+    --paper: #f4f1e8;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+
+  /* The frog fills the page and lets clicks through everywhere it is not drawn,
+     so the controls below stay usable. */
+  #pet {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    --frog-paper: #fffdf6;
+    --frog-ink: #10141a;
+    --frog-shadow: #c9c2ad;
+  }
+
+  .panel {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: clamp(1rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .panel > * { pointer-events: auto; }
+
+  h1 { font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 0.2em; letter-spacing: -0.02em; }
+  p { margin: 0; max-width: 34ch; opacity: 0.72; }
+  code { background: rgba(0,0,0,0.06); padding: 0.1em 0.35em; border-radius: 4px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+  button {
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.5rem 0.95rem;
+    border-radius: 999px;
+    border: 1.5px solid rgba(16,20,26,0.25);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+</style>
+</head>
+<body>
+
+<frog-mascot id="pet" mode="dither"></frog-mascot>
+
+<div class="panel">
+  <div>
+    <h1>frog-mascot</h1>
+    <p>
+      One custom element. No build step, no framework. It sizes itself to the box
+      you give it and draws on a transparent canvas, so any background shows
+      through.
+    </p>
+  </div>
+
+  <div>
+    <div class="controls">
+      <button data-do="say">say()</button>
+      <button data-do="blink">blink()</button>
+      <button data-do="badge">setBadge()</button>
+      <button data-do="mode">setMode()</button>
+      <button data-do="sleep">sleep()</button>
+      <button data-do="wake">wake()</button>
+    </div>
+    <p style="margin-top:1rem; font-size:0.82rem;">
+      Or call the element directly: <code>document.querySelector('#pet').say('Hi')</code>
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  import './src/frog-mascot.js';
+
+  const el = document.querySelector('#pet');
+  const frog = el.frog;
+
+  let badge = false;
+  let mode = 'dither';
+
+  document.querySelectorAll('[data-do]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const what = btn.dataset.do;
+      if (what === 'say') frog.say('Hello from a reusable component.');
+      if (what === 'blink') frog.blink();
+      if (what === 'badge') { badge = !badge; frog.setBadge(badge); }
+      if (what === 'mode') { mode = mode === 'dither' ? 'pixel' : 'dither'; frog.setMode(mode); }
+      if (what === 'sleep') frog.sleep();
+      if (what === 'wake') frog.wake();
+    });
+  });
+
+  el.addEventListener('frog:click', () => frog.say('You clicked me.'));
+
+  setTimeout(() => frog.say('Click the frog, or use the buttons.'), 1400);
+</script>
+</body>
+</html>

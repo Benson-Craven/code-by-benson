@@ -1,0 +1,709 @@
+@font-face {
+    font-family: "Funnel Sans Preview";
+    src: url("/fonts/FunnelSans/FunnelSans.ttf") format("truetype");
+    font-weight: 300 800;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Funnel Sans Preview";
+    src: url("/fonts/FunnelSans/FunnelSans-Italic.ttf") format("truetype");
+    font-weight: 300 800;
+    font-style: italic;
+    font-display: swap;
+}
+.preview {
+    --blue: #3a5de3;
+    --white: #fbfbf8;
+    --black: #0b0b0c;
+    position: relative;
+    isolation: isolate;
+    color-scheme: light;
+    background: var(--white);
+    color: var(--black);
+    font-family: "Funnel Sans Preview", sans-serif;
+    font-synthesis: none;
+    letter-spacing: -0.03em;
+}
+.preview ::selection {
+    background: var(--black);
+    color: var(--white);
+}
+.preview a,
+.preview button {
+    touch-action: manipulation;
+}
+.preview a:focus-visible,
+.preview button:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 7px;
+}
+.preview a:hover,
+.preview button:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+.skip {
+    position: absolute;
+    top: 16px;
+    left: 24px;
+    z-index: 10;
+    transform: translateY(-200%);
+    padding: 12px;
+    background: var(--white);
+    color: var(--black);
+}
+.skip:focus {
+    transform: none;
+}
+.hero,
+.intro,
+.contact {
+    min-height: max(720px, 100svh);
+    padding: 46px max(4.72vw, 24px) 74px;
+}
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--blue);
+    color: var(--white);
+    background-image:
+        linear-gradient(#fbfbf80a 1px, transparent 1px),
+        linear-gradient(90deg, #fbfbf80a 1px, transparent 1px);
+    background-size: 80px 80px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 24px;
+    font-size: 22px;
+    line-height: 1.1;
+}
+.identity {
+    display: flex;
+    flex-direction: column;
+}
+.identity strong {
+    font-weight: 700;
+}
+.header nav {
+    display: flex;
+    gap: 32px;
+    font-size: 18px;
+}
+.header nav a {
+    padding-block: 10px;
+}
+.heroBottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40%;
+    align-items: end;
+    gap: 12px;
+    padding-top: 160px;
+}
+.hero h1 {
+    font-size: clamp(64px, 9.93vw, 180px);
+    line-height: 0.8;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+    letter-spacing: -0.35rem;
+}
+.hero h1 em {
+    font-weight: 400;
+}
+.frogSlot {
+    width: 100%;
+    max-width: 640px;
+    justify-self: end;
+    aspect-ratio: 320 / 336;
+    position: relative;
+}
+.frogSlot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+.preview[data-frog-ready="true"] .frogSlot img {
+    visibility: hidden;
+}
+.intro {
+    position: relative;
+    display: grid;
+    grid-template-columns: 36% 1fr;
+    column-gap: 5%;
+    align-items: center;
+}
+.intro p {
+    grid-column: 2;
+    font-size: clamp(30px, 3.33vw, 60px);
+    font-weight: 500;
+    line-height: 1.25;
+    max-width: 800px;
+    padding-block: 100px;
+    letter-spacing: -0.1rem;
+}
+.intro p em {
+    font-style: normal;
+    font-weight: 300;
+    color: var(--blue);
+}
+.intro .frogSlot {
+    position: absolute;
+    bottom: 24px;
+    left: 2%;
+    width: 36%;
+}
+.contact {
+    background: var(--black);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: clamp(96px, 13.9vw, 200px);
+}
+.contact h2 {
+    font-size: clamp(64px, 9.93vw, 180px);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.3rem;
+}
+.contactCopy > p {
+    font-size: clamp(28px, 3.47vw, 58px);
+    margin-top: 36px;
+}
+.sayHi {
+    display: inline-block;
+    font-size: clamp(52px, 5.55vw, 90px);
+    margin-top: 68px;
+}
+.sayHi span {
+    font-size: 0.65em;
+}
+.footerBottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40%;
+    gap: 36px;
+    align-items: end;
+    margin-top: 72px;
+}
+.footerLinks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px 32px;
+    max-width: 690px;
+    align-items: center;
+}
+.footerLinks a:nth-child(-n + 2) {
+    font-size: clamp(28px, 2.78vw, 48px);
+    font-weight: 700;
+}
+.footerLinks a,
+.footerLinks button {
+    width: fit-content;
+    font-size: 25px;
+    min-height: 44px;
+    text-align: left;
+}
+@media (min-width: 768px) {
+    .hero,
+    .contact {
+        min-height: 100svh;
+        padding-block: clamp(24px, 5svh, 46px);
+    }
+    .heroBottom {
+        padding-top: clamp(24px, 5svh, 64px);
+    }
+    .heroGuide .frogSlot {
+        width: min(100%, 48svh);
+        margin-left: auto;
+    }
+    .contact h2 {
+        font-size: clamp(54px, min(9.93vw, 12svh), 180px);
+    }
+    .contactCopy > p {
+        margin-top: clamp(16px, 3svh, 36px);
+    }
+    .sayHi {
+        margin-top: clamp(20px, 4svh, 48px);
+    }
+    .footerBottom {
+        margin-top: 24px;
+    }
+    .footerBottom .frogSlot {
+        width: min(100%, 48svh);
+    }
+    .footerLinks {
+        row-gap: clamp(24px, 5svh, 64px);
+    }
+}
+.frogLayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    pointer-events: none;
+    width: 320px;
+    height: 336px;
+    visibility: hidden;
+}
+.frogHost {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.frogHearts {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.frogFood {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.frogFood svg {
+    position: absolute;
+    top: 57%;
+    left: 18%;
+    width: 20%;
+    height: auto;
+    opacity: 0;
+    transform-origin: center;
+}
+
+.frogFood svg:nth-child(2) {
+    top: 62%;
+    left: 42%;
+    width: 17%;
+}
+
+.frogFood svg:nth-child(3) {
+    top: 56%;
+    left: 64%;
+    width: 20%;
+}
+
+.frogHearts svg {
+    position: absolute;
+    top: 24%;
+    left: 22%;
+    width: 12%;
+    height: auto;
+    opacity: 0;
+    transform-origin: center;
+}
+
+.frogHearts svg:nth-child(2) {
+    top: 18%;
+    left: 44%;
+    width: 14%;
+}
+
+.frogHearts svg:nth-child(3) {
+    left: 68%;
+    width: 10%;
+}
+@media (max-width: 767px) {
+    .hero,
+    .intro,
+    .contact {
+        padding: 28px 24px 36px;
+        min-height: 100svh;
+    }
+    .header {
+        font-size: 18px;
+    }
+    .header nav {
+        font-size: 16px;
+        gap: 12px;
+    }
+    .header nav a:first-child {
+        display: none;
+    }
+    .heroBottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 120px;
+        gap: 36px;
+    }
+    .hero h1 {
+        width: 100%;
+        font-size: clamp(53px, 10.8vw, 82px);
+        line-height: 0.9;
+        margin: 0;
+    }
+    .frogSlot {
+        width: min(100%, clamp(240px, 70vw, 420px));
+        max-width: 100%;
+    }
+    .intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 40px;
+        padding-top: 80px;
+    }
+    .intro p {
+        padding: 0;
+        font-size: clamp(29px, 5.5vw, 40px);
+    }
+    .intro .frogSlot {
+        position: relative;
+        inset: auto;
+        width: min(100%, clamp(240px, 70vw, 420px));
+        flex-shrink: 0;
+    }
+    .contact {
+        padding-top: 88px;
+    }
+    .contact h2 {
+        font-size: clamp(54px, 10.8vw, 82px);
+    }
+    .sayHi {
+        margin-top: 40px;
+    }
+    .footerBottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        margin-top: 60px;
+    }
+    .footerLinks {
+        width: 100%;
+        gap: 28px 20px;
+    }
+    .footerLinks a,
+    .footerLinks button {
+        font-size: 21px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .preview[data-frog-ready="true"] .frogSlot img {
+        visibility: visible;
+    }
+    .frogLayer {
+        display: none;
+    }
+}
+
+.project {
+    background: #00324b;
+    color: var(--white);
+    padding: 64px max(4.72vw, 24px);
+}
+.projectStage {
+    max-width: 1600px;
+    margin-inline: auto;
+}
+.projectHeading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+.projectHeading h2 {
+    font-size: clamp(36px, 4.4vw, 80px);
+    font-weight: 500;
+    line-height: 1.05;
+    max-width: 900px;
+    letter-spacing: -0.1rem;
+}
+.projectHeading a {
+    font-size: clamp(20px, 2vw, 30px);
+    padding-block: 10px;
+    flex-shrink: 0;
+}
+.projectDevices {
+    position: relative;
+    padding-bottom: 48px;
+}
+.browserFrame {
+    border: 2px solid #1e1e1e;
+    border-radius: 12px;
+    background: var(--white);
+    color: #1e1e1e;
+    overflow: hidden;
+}
+.browserBar {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 12px;
+    letter-spacing: 0;
+}
+.browserBar span:first-child {
+    color: #777;
+    letter-spacing: 4px;
+}
+.desktopView {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 1440 / 900;
+    background: #e6e6e0;
+}
+.desktopView img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.desktopView figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 6px 12px;
+    background: var(--white);
+    color: #1e1e1e;
+    font-size: 14px;
+    letter-spacing: 0;
+}
+.phonePerspective {
+    position: relative;
+    margin: 24px 0 0 auto;
+    width: clamp(100px, 16vw, 190px);
+    aspect-ratio: 9 / 18;
+    perspective: 1000px;
+}
+.phone {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+.phoneFace {
+    position: absolute;
+    inset: 0;
+    border: 7px solid #0b0b0c;
+    border-radius: 26px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    background: var(--white);
+}
+.phoneFace::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 32%;
+    width: 36%;
+    height: 10px;
+    background: #0b0b0c;
+    border-radius: 12px;
+}
+.phoneFace[data-face="back"] {
+    transform: rotateY(180deg);
+}
+.phoneFace img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.phoneFace span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px;
+    background: var(--white);
+    color: #1e1e1e;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0;
+}
+.projectNarrator {
+    margin-top: 36px;
+}
+.bubbles {
+    display: grid;
+    gap: 16px;
+}
+.bubbles p {
+    background: var(--white);
+    color: #1e1e1e;
+    padding: 24px;
+    border-radius: 20px;
+    font-size: clamp(20px, 2vw, 30px);
+    font-weight: 600;
+    line-height: 1.25;
+}
+.projectFrog {
+    width: min(100%, clamp(200px, 55vw, 300px));
+    margin-top: 24px;
+    justify-self: start;
+}
+.project[data-side="right"] .projectFrog {
+    margin-left: auto;
+}
+@media (min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .project[data-held="true"] {
+        height: 350svh;
+        padding-block: 0;
+    }
+    .project[data-held="true"] .projectStage {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        display: grid;
+        grid-template-columns: minmax(240px, 28%) minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        gap: 24px 4%;
+        padding-block: 40px 24px;
+    }
+    .project[data-held="true"] .projectHeading {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+    }
+    .project[data-held="true"] .projectDevices {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: center;
+        width: min(100%, calc((100svh - 240px) * 1.6));
+        justify-self: end;
+        padding-bottom: 36px;
+        padding-left: 32px;
+    }
+    .project[data-held="true"] .desktopScreen {
+        aspect-ratio: 1440 / 900;
+        overflow: hidden;
+    }
+    .project[data-held="true"] .screenStrip {
+        will-change: transform;
+    }
+    .project[data-held="true"] .phonePerspective {
+        position: absolute;
+        margin: 0;
+        bottom: 0;
+        right: auto;
+        left: 0;
+        width: clamp(110px, 13vw, 190px);
+    }
+    .project[data-held="true"] .projectNarrator {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: end;
+        margin-top: 0;
+    }
+    .project[data-held="true"] .bubbles {
+        display: grid;
+    }
+    .project[data-held="true"] .bubbles p {
+        grid-area: 1 / 1;
+        align-self: end;
+        font-size: clamp(20px, 1.9vw, 30px);
+        padding: 22px;
+    }
+    .project[data-held="true"] .projectFrog {
+        width: min(100%, clamp(240px, 23vw, 340px));
+    }
+    .project[data-held="true"][data-side="right"] .projectStage {
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 28%);
+    }
+    .project[data-held="true"][data-side="right"] .projectDevices {
+        grid-column: 1;
+        padding-left: 0;
+        padding-right: 32px;
+        justify-self: start;
+    }
+    .project[data-held="true"][data-side="right"] .phonePerspective {
+        left: auto;
+        right: 0;
+    }
+    .project[data-held="true"][data-side="right"] .projectNarrator {
+        grid-column: 2;
+    }
+}
+@media (min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .project[data-held="true"][data-side="left"] .desktopView figcaption {
+        left: auto;
+        right: 0;
+    }
+}
+
+.heroGuide {
+    width: 100%;
+    min-width: 0;
+}
+.greeting {
+    position: relative;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    border-radius: 20px;
+    background: var(--white);
+    color: var(--black);
+    font-size: clamp(20px, 1.9vw, 28px);
+    line-height: 1.25;
+    font-weight: 600;
+}
+.greeting::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    right: 35%;
+    border-inline: 10px solid transparent;
+    border-top: 12px solid var(--white);
+}
+@media (max-width: 767px) {
+    .heroGuide {
+        width: min(100%, clamp(240px, 70vw, 420px));
+    }
+}
+
+.frogTrickArt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.fireflyGlow {
+    filter: drop-shadow(0 0 2px #65ff57) drop-shadow(0 0 5px #39e94b);
+}
+
+.frogTrickArt[data-fluttering="true"] .fireflyGlow {
+    animation: fireflyFlicker 2.7s steps(1, end) infinite;
+}
+
+@keyframes fireflyFlicker {
+    0%,
+    18%,
+    28%,
+    65%,
+    76%,
+    100% {
+        opacity: 1;
+    }
+    14%,
+    23% {
+        opacity: 0.6;
+    }
+    52%,
+    71% {
+        opacity: 0.8;
+    }
+}
+
+.trickStatus {
+    min-height: 1.5em;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fireflyGlow {
+        animation: none !important;
+    }
+}
