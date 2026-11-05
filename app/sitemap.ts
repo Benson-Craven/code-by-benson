@@ -20,5 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: "monthly" as const,
             priority: 0.8,
         })),
+        ...implementedPortfolioProjects.map((project) => ({
+            url: `https://benson.codes/projects/${project.slug}`,
+            lastModified: new Date(`${project.updatedAt}T00:00:00.000Z`),
+            changeFrequency: "monthly" as const,
+            priority: 0.8,
+        })),
     ]
 }

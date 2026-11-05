@@ -57,6 +57,10 @@
 .skip:focus {
     transform: none;
 }
+/* Preview pages scroll deep, so the skip link has to stay with the viewport. */
+.preview .skip {
+    position: fixed;
+}
 .hero,
 .intro,
 .contact {
@@ -1153,5 +1157,751 @@
         .frogSlot
         img {
         display: none;
+    }
+}
+
+.work {
+    --grid-line: #0b0b0c12;
+    position: relative;
+    padding: clamp(96px, 16vw, 180px) max(4.72vw, 24px)
+        clamp(120px, 22vw, 240px);
+    background-color: #e6e6e0;
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--black);
+}
+.workHeader {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+.workHeader h2 {
+    grid-column: span 3;
+    font-size: clamp(42px, 12vw, 92px);
+    font-weight: 600;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+}
+.workHeader p {
+    grid-column: span 1;
+    justify-self: end;
+    font-size: 12px;
+    letter-spacing: -0.02em;
+    opacity: 0.55;
+    white-space: nowrap;
+}
+.workGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px 12px;
+    margin: clamp(36px, 6vw, 72px) 0 0;
+    padding: 0;
+    list-style: none;
+}
+.workItem {
+    min-width: 0;
+}
+.workItem[data-work-layout="wide"] {
+    grid-column: span 4;
+}
+.workItem[data-work-layout="half"] {
+    grid-column: span 2;
+}
+.workCard {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+.workCard:hover,
+.workCard:focus-visible {
+    text-decoration: none;
+}
+.workCover {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--black);
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+.workCover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.workCover .pixelCanvas {
+    transition:
+        opacity 0.25s ease,
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.workCard:hover .workCover img,
+.workCard:focus-visible .workCover img,
+.workCard:hover .workCover .pixelCanvas,
+.workCard:focus-visible .workCover .pixelCanvas {
+    transform: scale(1.04);
+}
+.workCard[data-active="true"] .workCover {
+    transform: scale(1.02);
+}
+.work[data-transitioning="true"]
+    .workCard:not([data-active="true"])
+    .workCover {
+    opacity: 0.35;
+}
+.workMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2px 10px;
+    margin-top: 12px;
+}
+.workTitle {
+    min-width: 0;
+    font-size: clamp(17px, 1.4vw, 22px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+.workTime {
+    margin-left: auto;
+    font-size: clamp(12px, 1.1vw, 15px);
+    opacity: 0.55;
+}
+.pixelCanvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    object-fit: cover;
+    image-rendering: pixelated;
+    transition: opacity 0.25s ease;
+}
+[data-pixel-ready="true"] > .pixelCanvas {
+    opacity: 1;
+}
+.pixelCanvas[data-pixel-complete="true"] {
+    opacity: 0;
+}
+.caseCover .pixelCanvas {
+    position: absolute;
+}
+
+@media (min-width: 768px) {
+    .workHeader {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .workHeader h2 {
+        grid-column: span 8;
+        font-size: clamp(64px, 7vw, 150px);
+    }
+    .workHeader p {
+        grid-column: span 4;
+        font-size: clamp(13px, 1.1vw, 16px);
+    }
+    .workGrid {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 64px 24px;
+    }
+    .workItem[data-work-layout="wide"],
+    .workItem[data-work-layout="half"] {
+        grid-column: span 4;
+    }
+    .workTitle {
+        font-size: clamp(20px, 1.6vw, 26px);
+    }
+}
+
+@media (max-width: 1023px) {
+    .workMeta {
+        display: grid;
+        gap: 4px;
+    }
+    .workTime {
+        margin-left: 0;
+    }
+}
+
+/*
+ * Project detail pages. The reference site keeps these pages short: a tinted
+ * hero, one intro, a run of framed screenshots, a clip, then the next project.
+ * The same 12-column rhythm and browser chrome are reused here so an opened
+ * project reads as part of the same tour rather than a separate site.
+ */
+.caseHero {
+    --case-tint: var(--white);
+    --grid-line: #0b0b0c12;
+    position: relative;
+    padding: clamp(88px, 12svh, 150px) max(4.72vw, 24px)
+        clamp(64px, 12svh, 130px);
+    background-color: var(--case-tint);
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    color: var(--black);
+}
+/* The reference keeps its two actions pinned while the page scrolls. */
+.caseTopbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 6;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding: 16px max(4.72vw, 24px);
+    pointer-events: none;
+}
+.caseTopbar > * {
+    pointer-events: auto;
+}
+.casePill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 20px;
+    border: 2px solid var(--black);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--black);
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.casePill:hover {
+    background: var(--black);
+    color: var(--white);
+    text-decoration: none;
+}
+.caseHeroInner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0 20px;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-top: clamp(36px, 6vw, 84px);
+}
+.caseTitle {
+    grid-column: 1 / -1;
+    font-size: clamp(52px, 7.5vw, 128px);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+}
+.caseMeta {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+    max-width: 760px;
+    margin-top: clamp(24px, 3.4vw, 42px);
+}
+.caseMeta dt {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.55;
+}
+.caseMeta dd {
+    margin: 4px 0 0;
+    font-size: clamp(16px, 1.25vw, 19px);
+    font-weight: 500;
+    line-height: 1.35;
+}
+.caseCover {
+    position: relative;
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 10;
+    margin: clamp(28px, 4vw, 48px) 0 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--black);
+}
+.caseCover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.caseSectionInner {
+    max-width: 1600px;
+    margin-inline: auto;
+}
+
+.caseIntro {
+    padding: clamp(72px, 14svh, 168px) max(4.72vw, 24px);
+    background: var(--white);
+    color: var(--black);
+}
+.caseLead {
+    max-width: 1120px;
+    font-size: clamp(28px, 3.3vw, 56px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+}
+.caseIntroCopy {
+    width: 100%;
+    margin-top: clamp(32px, 6vw, 76px);
+}
+.caseIntroCopy p {
+    margin: 0;
+    font-size: clamp(20px, 2vw, 34px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.caseShots {
+    padding: clamp(72px, 14svh, 168px) max(4.72vw, 24px);
+    background: #e6e6e0;
+    color: var(--black);
+}
+.caseShotWide,
+.caseShotHalf {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+}
+.caseShotHeader {
+    display: grid;
+    gap: 20px;
+    padding-block: clamp(44px, 10svh, 120px);
+}
+.caseShotHeader h2 {
+    font-size: clamp(28px, 3.3vw, 56px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+}
+.caseShotHeader p {
+    max-width: 760px;
+    margin: 0;
+    font-size: clamp(20px, 2vw, 34px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+.caseShotPair {
+    display: grid;
+    gap: clamp(28px, 6vw, 64px);
+}
+/* Browser chrome around every capture, with the reference's dithered shadow. */
+.caseFrame {
+    position: relative;
+}
+.caseFrameShadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: conic-gradient(
+            var(--black) 25%,
+            transparent 0 50%,
+            var(--black) 0 75%,
+            transparent 0
+        )
+        0 0 / 4px 4px;
+    opacity: 0.5;
+    transform: translate(6px, 6px);
+}
+.caseFrameBody {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(11, 11, 12, 0.15);
+    border-radius: 12px;
+    background: var(--white);
+}
+.caseFrameBar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding-inline: 12px;
+    border-bottom: 1px solid rgba(11, 11, 12, 0.1);
+}
+.caseFrameDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(11, 11, 12, 0.15);
+}
+.caseFrameUrl {
+    position: absolute;
+    left: 50%;
+    max-width: 62%;
+    overflow: hidden;
+    padding: 2px 12px;
+    border-radius: 999px;
+    background: rgba(11, 11, 12, 0.05);
+    color: rgba(11, 11, 12, 0.6);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transform: translateX(-50%);
+}
+.caseFrameMedia {
+    position: relative;
+}
+.caseFrameMedia > img,
+.caseFrameMedia > video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #e6e6e0;
+    object-fit: cover;
+    object-position: top;
+}
+.caseFrameMedia > video {
+    aspect-ratio: 16 / 9;
+    background: var(--black);
+}
+
+/* Two-colour silhouette that develops and dissolves over each capture. */
+.developCanvas {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    image-rendering: pixelated;
+    transition: opacity 0.2s ease;
+}
+[data-develop-ready="true"] > .developCanvas {
+    opacity: 1;
+}
+[data-develop-complete="true"] > .developCanvas {
+    opacity: 0;
+}
+
+.caseClipSection {
+    display: grid;
+    align-content: center;
+    min-height: 100svh;
+    padding: clamp(72px, 12svh, 150px) max(4.72vw, 24px);
+    background: var(--white);
+    color: var(--black);
+}
+.caseClipFrame {
+    display: grid;
+    gap: 14px;
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 0 0 auto;
+}
+.caseNext {
+    --case-tint: var(--white);
+    display: grid;
+    align-content: start;
+    min-height: 100svh;
+    padding: clamp(88px, 14svh, 170px) max(4.72vw, 24px) clamp(48px, 8svh, 90px);
+    background: var(--case-tint);
+    color: var(--black);
+}
+.caseNext .caseSectionInner {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+}
+.caseNextLabel {
+    font-size: 14px;
+    opacity: 0.55;
+}
+.caseNextCard {
+    display: grid;
+    gap: clamp(20px, 4vw, 44px);
+    color: inherit;
+    text-decoration: none;
+}
+.caseNextCard:hover {
+    text-decoration: none;
+}
+.caseNextTitle {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: clamp(52px, 7.5vw, 128px);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+}
+.caseNextMedia {
+    display: block;
+    width: min(100%, 92svh);
+    max-width: 900px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--black);
+}
+.caseNextMedia img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.caseNextCard:hover .caseNextMedia img,
+.caseNextCard:focus-visible .caseNextMedia img {
+    transform: scale(1.04);
+}
+
+.caseFrog {
+    /* 30% below the redesign preview's corner scale, flush to the corner. */
+    --case-frog-size: clamp(154px, 47.6vw, 210px);
+    --case-dialogue-gap: 8px;
+    --case-frog-corner-inset: 32px;
+    --case-frog-corner-lift: 6px;
+    position: fixed;
+    right: calc(-1 * var(--case-frog-corner-inset));
+    bottom: calc(var(--case-frog-corner-lift) - var(--case-frog-corner-inset));
+    z-index: 5;
+    width: var(--case-frog-size);
+    aspect-ratio: 320 / 336;
+    pointer-events: none;
+}
+.caseFrogHost {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+}
+.caseFrog[data-frog-ready="true"] .caseFrogHost {
+    visibility: visible;
+}
+.caseFrogFallback {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    display: block;
+    width: calc(100% - 64px);
+    height: calc(100% - 64px);
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+.caseFrog[data-frog-ready="true"] .caseFrogFallback {
+    visibility: hidden;
+}
+.caseDialogue {
+    position: absolute;
+    right: calc(var(--case-frog-corner-inset) + var(--case-dialogue-gap));
+    bottom: calc(100% - 45px);
+    z-index: 1;
+    width: min(340px, calc(100vw - 32px));
+    margin: 0;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: var(--white);
+    color: var(--black);
+    font-size: clamp(15px, 1.15vw, 18px);
+    font-weight: 600;
+    line-height: 1.35;
+    pointer-events: none;
+}
+/* The same dithered offset shadow the screenshot frames use. */
+.caseDialogueShadow {
+    position: absolute;
+    z-index: 0;
+    border-radius: 18px;
+    background: conic-gradient(
+            var(--black) 25%,
+            transparent 0 50%,
+            var(--black) 0 75%,
+            transparent 0
+        )
+        0 0 / 4px 4px;
+    opacity: 0.45;
+    pointer-events: none;
+    transform: translate(4px, 4px);
+}
+.caseDialogueText {
+    transition: opacity 0.18s ease;
+}
+.caseDialoguePixels {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+.caseDialogue::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: calc(
+        var(--case-frog-size) / 2 - var(--case-frog-corner-inset) -
+            var(--case-dialogue-gap) - 10px
+    );
+    border-inline: 10px solid transparent;
+    border-top: 12px solid var(--white);
+}
+
+.caseFooter {
+    padding: clamp(44px, 6vw, 84px) max(4.72vw, 24px);
+    background: var(--black);
+    color: var(--white);
+}
+.caseFooterRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px 40px;
+    max-width: 1600px;
+    margin-inline: auto;
+}
+.caseEmail {
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+.caseFooterLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-size: 16px;
+}
+.caseCopyright {
+    font-size: 13px;
+    opacity: 0.55;
+}
+
+.preview [data-case-reveal] {
+    transition:
+        opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.preview[data-reveal="ready"] [data-case-reveal]:not([data-visible="true"]) {
+    opacity: 0;
+    transform: translateY(26px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .caseHeroInner {
+        animation: caseHeroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+}
+@keyframes caseHeroIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .preview [data-case-reveal],
+    .caseNextMedia img,
+    .developCanvas {
+        transition: none;
+    }
+    .caseHeroInner {
+        animation: none;
+    }
+    .caseDialogueText {
+        transition: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .caseTitle,
+    .caseMeta {
+        grid-column: span 10;
+    }
+    .caseMeta {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .caseCover {
+        grid-column: span 8;
+    }
+    .caseFrameBar {
+        height: 36px;
+    }
+    .caseFrameDot {
+        width: 10px;
+        height: 10px;
+    }
+    .caseIntroCopy {
+        width: min(100%, 62%);
+        margin-left: auto;
+    }
+    .caseShotHeader {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        align-items: start;
+    }
+    .caseShotPair {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        align-items: start;
+    }
+    .caseClipFrame {
+        width: 66.666%;
+    }
+}
+
+@media (max-width: 767px) {
+    .caseHero {
+        padding-top: 96px;
+    }
+    .casePill {
+        min-height: 40px;
+        padding: 8px 14px;
+        font-size: 15px;
+    }
+    .caseTitle,
+    .caseNextTitle {
+        font-size: clamp(42px, 13vw, 76px);
+        letter-spacing: -0.04em;
+    }
+    .caseMeta {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+    }
+    /* Phones read body copy at one size, whatever the block. */
+    .caseLead,
+    .caseIntroCopy p,
+    .caseShotHeader p {
+        font-size: 20px;
+        line-height: 1.35;
+    }
+    .caseClipSection,
+    .caseNext {
+        min-height: auto;
+    }
+    .caseNextMedia {
+        width: 100%;
+    }
+    .caseDialogue {
+        bottom: calc(100% - 39px);
+        width: min(340px, calc(100vw - 24px));
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+    .caseFooter {
+        padding-bottom: 104px;
     }
 }

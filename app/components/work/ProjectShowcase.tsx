@@ -306,12 +306,6 @@ export default function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                                                 >
                                                     {project.title}
                                                 </span>
-                                                <span
-                                                    aria-hidden="true"
-                                                    className="absolute right-1 top-4 z-10 inline-block text-xl leading-none transition-transform duration-200 group-hover/project:-translate-y-1 group-hover/project:translate-x-1 group-focus-visible/title:-translate-y-1 group-focus-visible/title:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none"
-                                                >
-                                                    ↗
-                                                </span>
                                             </Link>
                                         ) : (
                                             project.title

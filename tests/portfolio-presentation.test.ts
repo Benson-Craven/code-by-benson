@@ -26,36 +26,32 @@ async function renderDefaultComponent(
     return renderToStaticMarkup(createElement(Component, props))
 }
 
-test("the composed homepage uses direct hierarchy and truthful project availability", async () => {
-    const homepageHtml = await renderDefaultComponent("../app/page")
+test("the homepage composes the redesign and exposes direct contact paths", async () => {
+    const homepageSource = await readFile(
+        path.join(process.cwd(), "app/(site)/page.tsx"),
+        "utf8",
+    )
 
-    assert.equal(
-        homepageHtml.match(
-            /I build interfaces that make complex systems feel simple\./g,
-        )?.length,
-        1,
-    )
-    assert.match(homepageHtml, /I’m Benson/)
-    assert.match(
-        homepageHtml,
-        /I take product requirements through to responsive, accessible interfaces with React, TypeScript and Next\.js\./,
-    )
-    assert.match(homepageHtml, />bensoncraven@hotmail\.co\.uk</)
-    assert.match(homepageHtml, /<h2[^>]*>Selected work<\/h2>/)
-    assert.match(homepageHtml, /<h2[^>]*>Experience<\/h2>/)
-    assert.match(homepageHtml, /<h2[^>]*>About<\/h2>/)
-    assert.match(homepageHtml, /<h2[^>]*>Contact<\/h2>/)
-    assert.match(homepageHtml, /Live production site/)
-    assert.match(homepageHtml, /Published live site/)
-    assert.match(homepageHtml, /Development phase/)
-    assert.match(
-        homepageHtml,
-        /href="https:\/\/nibbles-with-nifa\.vercel\.app\/"/,
-    )
-    assert.match(homepageHtml, /<dt[^>]*>Role<\/dt>/)
-    assert.match(homepageHtml, /href="\/benson-craven-resume\.pdf"/)
-    assert.match(homepageHtml, /github\.com\/Benson-Craven/)
-    assert.match(homepageHtml, /linkedin\.com\/in\/benson-craven/)
+    for (const marker of [
+        "data-redesign",
+        "<IntroParagraph />",
+        "<ProjectPresentations />",
+        "<AllWork />",
+        "<FrogPresentation />",
+        'href="#work"',
+        'href="#contact"',
+        "mailto:bensoncraven@hotmail.co.uk",
+        "https://www.linkedin.com/in/benson-craven/",
+        "https://github.com/Benson-Craven",
+        'aria-label="Main navigation"',
+        "I build things",
+    ]) {
+        assert.ok(homepageSource.includes(marker), `missing ${marker}`)
+    }
+
+    assert.doesNotMatch(homepageSource, /<h2[^>]*>Experience<\/h2>/)
+    assert.doesNotMatch(homepageSource, /<h2[^>]*>Selected work<\/h2>/)
+    assert.doesNotMatch(homepageSource, /Redesign preview|robots:/)
 })
 
 test("arrow CTAs move in their pointing direction and respect reduced motion", async () => {
@@ -154,10 +150,18 @@ test("public pages avoid high-confidence machine-written copy tells", async () =
         readFile(path.join(process.cwd(), "app/opengraph-image.tsx"), "utf8"),
     ])
     const renderedPages = [
-        await renderDefaultComponent("../app/page"),
+        await readFile(path.join(process.cwd(), "app/(site)/page.tsx"), "utf8"),
         await renderDefaultComponent("../app/not-found"),
         await renderDefaultComponent("../app/loading"),
     ]
+    const redesignedCopy = await Promise.all(
+        [
+            "app/redesign/IntroParagraph.tsx",
+            "app/redesign/projectPresentationData.ts",
+            "app/redesign/projectDetailData.ts",
+            "app/redesign/ProjectCase.tsx",
+        ].map((file) => readFile(path.join(process.cwd(), file), "utf8")),
+    )
 
     for (const project of implementedPortfolioProjects) {
         renderedPages.push(
@@ -170,6 +174,7 @@ test("public pages avoid high-confidence machine-written copy tells", async () =
 
     const publicCopy = [
         ...renderedPages,
+        ...redesignedCopy,
         layoutSource,
         openGraphImageSource,
         ...implementedPortfolioProjects.map(({ seo }) => JSON.stringify(seo)),

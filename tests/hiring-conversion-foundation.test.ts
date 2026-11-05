@@ -37,30 +37,23 @@ async function readApplicationSource(directory: string): Promise<string> {
     return source.join("\n")
 }
 
-test("the homepage exposes truthful availability and direct contact paths", async () => {
-    const [heroHtml, footerHtml, headerHtml, mobileNavSource] =
-        await Promise.all([
-            renderDefaultComponent("../app/components/hero/Hero"),
-            renderDefaultComponent("../app/components/footer/SiteFooter"),
-            renderDefaultComponent("../app/components/navigation/SiteHeader"),
-            readFile(
-                path.join(
-                    process.cwd(),
-                    "app/components/navigation/MobileNav.tsx",
-                ),
-                "utf8",
-            ),
-        ])
+test("the shared navigation and footer expose direct contact paths", async () => {
+    const [footerHtml, headerHtml, mobileNavSource] = await Promise.all([
+        renderDefaultComponent("../app/components/footer/SiteFooter"),
+        renderDefaultComponent("../app/components/navigation/SiteHeader"),
+        readFile(
+            path.join(process.cwd(), "app/components/navigation/MobileNav.tsx"),
+            "utf8",
+        ),
+    ])
 
-    assert.match(heroHtml, /mailto:bensoncraven@hotmail\.co\.uk/)
     assert.match(headerHtml, /mailto:bensoncraven@hotmail\.co\.uk/)
     assert.match(mobileNavSource, /mailto:bensoncraven@hotmail\.co\.uk/)
-    assert.match(heroHtml, /href="\/benson-craven-resume\.pdf"/)
     assert.match(headerHtml, /href="\/benson-craven-resume\.pdf"/)
     assert.match(mobileNavSource, /\/benson-craven-resume\.pdf/)
     assert.match(footerHtml, /href="\/benson-craven-resume\.pdf"/)
     assert.doesNotMatch(
-        heroHtml,
+        headerHtml,
         /href="mailto:bensoncraven@hotmail\.co\.uk"[^>]*target=/,
     )
     assert.match(footerHtml, /looking for a Frontend Engineer role/i)

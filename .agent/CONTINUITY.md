@@ -2,6 +2,12 @@
 
 ## [PLANS]
 
+- 2026-11-04: The redesign now serves the homepage at `/` and its project pages at `/projects/[slug]`; `/redesign*` redirects. Local verification is complete. Real-device review, commit and deployment remain outstanding; `/work` retirement is a follow-up.
+
+- 2026-11-04: The `/redesign` All work grid and pixelated project transitions are implemented and locally verified. Real-device review, commit and deployment remain outstanding.
+
+- 2026-11-04: The redesign now has individual project pages at `/redesign/projects/[slug]` with the cover-morph and frog flood transition. Local verification is complete; real-device review, commit and deployment remain outstanding.
+
 - 2026-11-04: The About frog now matches the hero size below 1024px and carries a planted Irish flag. Local verification is complete; real-device review, commit and deployment remain outstanding.
 
 - 2026-11-04: Larger mobile project frogs and the sequential phone flip are implemented and locally verified. Real-device touch testing and initial WebGL creation failure remain unverified. No commit or deployment.
@@ -17,6 +23,16 @@
 - 2026-07-16: Implement the accepted site-wide presentation refinement against `SLOP.md` without changing the Portfolio v2 identity, routes, project set, or release boundary.
 
 ## [DECISIONS]
+
+- 2026-11-04: The redesign is the homepage. `/` renders it inside an `app/(site)` route group whose layout owns the transition controller; projects live at `/projects/[slug]`; `/redesign` and `/redesign/projects/[slug]` 308 to the new routes; both new routes are indexable and listed in the sitemap. `/work` is unchanged, the old homepage composition is removed, and the new homepage ships without the experience chronology or résumé action. ADR 0018 records the change and the duplicate case-study follow-up.
+
+- 2026-11-04: `/redesign/projects/[slug]` now follows the measured reference page: outgoing page cloned and clipped away late, pixel-develop screenshot frames, browser chrome around every capture, pinned action pills, and a reduced five-section narrative. ADR 0017 records the timings, the open-direction deviation and the omitted phone mockups.
+
+- 2026-11-04: Project preview pages now mount `ProjectFrog`, which reuses the home-page rig and adapter instead of the static corner image. It keeps `data-frog-layer` for the transition flood, rotates five project-specific lines per slug with 0.35-second fade-up and fade-out speech, and keeps the static fallback under reduced motion, hidden tabs and WebGL failure. The rig uses the redesign preview scales, 30% smaller below 1024px: `clamp(154px, 47.6vw, 210px)` and `clamp(240px, 23vw, 340px)` from 1024px, anchored in the bottom-right corner with a 340px speech bubble. ADR 0016 records the change.
+
+- 2026-11-04: `/redesign` now has an All work grid driven by `implementedPortfolioProjects` and a Bayer pixel treatment. Grid covers keep the real image with a viewport-edge dither that opens on hover or focus. Route transitions use a full low-colour pixel clone that resolves in on open and out on close; project heroes use the same reveal. Reduced motion skips the canvas and the intercepted transition. ADR 0015 records the change.
+
+- 2026-11-04: Project pages reuse the existing typed case-study content under `/redesign/projects/[slug]` and stay `noindex`. A persistent layout controller clones the visible cover, floods the viewport from the active frog, then morphs the clone into the hero. Native View Transitions are not used because Next 14 cannot commit the destination inside the update callback; reduced motion and older browsers keep plain `Link` navigation. ADR 0014 records the change.
 
 - 2026-11-04: Below 1024px the About frog uses the hero size and full-body crop and is centred above the viewport bottom; the in-flow slot follows so static fallbacks agree. A decorative Irish tricolour is planted at its right side, fades with the corner speech and appears only while About owns the corner. The wave pauses when hidden and stops under reduced motion. ADR 0013 records the change.
 
@@ -60,6 +76,26 @@
 - Light and dark appearance uses persisted root theme tokens, restores a saved preference before page content renders, defaults first-time visitors to dark, and keeps the hero shader on the same palette without bypassing its motion gate. The decision is recorded in `docs/decisions/0011-use-persisted-root-theme-tokens.md`.
 
 ## [PROGRESS]
+
+- 2026-11-04: Made the redesign the homepage. Added the `app/(site)` route group, moved the home and project routes, updated `projectNavigation` and `ProjectCase` links, added permanent redirects, indexed the new pages with typed project metadata and sitemap entries, and updated the homepage content date. Formatting, lint, typecheck, all 95 tests and an isolated production build pass. Chrome at 1440 and 390 verified the home and project pages, redirects with fragments, keyboard open and focus return, reduced-motion navigation, and no horizontal scroll at 320, 390, 768 and 1440. No commit or deployment.
+
+- 2026-11-04: Frog speech bubbles now use the screenshot pixel reveal: a canvas silhouette of the bubble and its glyphs develops, hands over to the real bubble, then dissolves while the text fades in. The bubble also has the frames' 4px checkerboard shadow. Verified in Chrome with SwiftShader WebGL at 1440 and 390: canvas 170x37 cells and text fades before the dissolve ends. Formatting, lint, typecheck, 94 tests and an isolated production build pass. No commit or deployment.
+
+- 2026-11-04: Preview project pages now carry preview-only first-person copy (`projectPreviewCopy`), a `WordReveal` scroll reveal on the intro and section paragraphs, 20px phone body text, and no screenshot or clip captions. Formatting, lint, typecheck, 93 tests and an isolated production build pass. Chrome checks covered the reveal before and after scroll, reduced motion, and 20px paragraphs at 390px. Measured 5,548 / 4,800 / 3,846px at 1440 / 768 / 390 with no horizontal overflow. No commit or deployment.
+
+- 2026-11-04: Removed the collapsed `Text description` transcript from the preview project pages. The clip keeps its caption and accessible description. Formatting, lint, typecheck, 92 tests and an isolated production build pass. No commit or deployment.
+
+- 2026-11-04: Rebuilt the project page and transition. Added `BrowserFrame`, `PixelDevelop`, the silhouette painter in `pixelDither`, the ghost-clipped exit in `ProjectTransition`, fixed action pills and a fixed preview skip link. Scoped Prettier, lint, typecheck, 92 tests and an isolated production build pass. Chrome at 1440, 768 and 390 measured 5,548 / 4,800 / 3,846px with no horizontal overflow. No commit or deployment.
+
+- 2026-11-04: Moved the project-page frog into the bottom-right corner and reduced the mobile scale by 30% to `clamp(154px, 47.6vw, 210px)`. The layer is pulled 32px right and 26px down to cancel the renderer's corner padding, while the bubble stays 8px or 16px inside the viewport and its tail now meets the frog's head. Captures at 320, 390, 1024 and 1440 and the reduced-motion fallback were checked with no horizontal overflow. No commit or deployment.
+
+- 2026-11-04: Raised the project-page frog to the redesign preview scales, `clamp(220px, 68vw, 300px)` below 1024px and `clamp(240px, 23vw, 340px)` above, and widened the speech bubble to 340px. CSS-only change. Layout checks at 320, 768, 1024, 1440 and 390 found no horizontal overflow; the fallback and live states were captured at 390 and 1440. No commit or deployment.
+
+- 2026-11-04: Added `ProjectFrog`, `projectDialogue`/`pickProjectDialogue`, the project-page frog CSS and new redesign tests, and removed the static frog from `ProjectCase`. Scoped Prettier, lint, typecheck, all 89 tests and an isolated production build at `/tmp/benson-project-frog-build` pass. Browser checks at 1440x1000 and 390x844 covered the dialogue cycle, non-repeating lines, reduced motion, live preference switching, client navigation and fallback sizing. No commit or deployment.
+
+- 2026-11-04: Added `AllWork`, `allWorkData`, `pixelDither` and `PixelReveal`, and updated `ProjectTransition`, `ProjectCase`, the redesign page, scoped CSS, the existing redesign tests and ADR 0015. Closing links now carry the project tint. The full 87-test suite, TypeScript, lint, scoped Prettier and an isolated production build at `/tmp/benson-allwork-build` pass. Browser checks covered 1440, 768, 390 and 320 widths, keyboard Enter, focus return, reduced motion and a production entrance/exit cycle with no page errors. No commit or deployment.
+
+- 2026-11-04: Added `app/redesign/projects/[slug]` pages, the `ProjectTransition` controller, the `projectNavigation` and `projectDetailData` helpers, the `ProjectPresentations` cover/tint attributes and the project-page CSS. The full 82-test suite, TypeScript, lint, Prettier and an isolated production build pass. Production Chrome checks covered open, keyboard open, next project, close, direct load, reduced motion and 390px layout with no page errors.
 
 - 2026-11-04: Updated `frogPlacement`, `FrogPresentation`, the scoped preview CSS and the existing redesign tests, and added `FrogFlag`. The About frog now matches the hero and is centred; the flag is About-only, pauses when hidden and stops under reduced motion. Hero, project, footer and desktop placement are unchanged.
 
@@ -108,6 +144,10 @@
 
 ## [DISCOVERIES]
 
+- 2026-11-04: The reference project page is 5,965px at 1440x900: hero 1,085, intro 601, screenshots 2,478, clip 900, next 900. Its exit keeps the old page visible at 300ms and clips it to the mascot over 0.9s; its screenshots develop as a two-colour silhouette (0.6s, `power1.in`), swap to the real image, then dissolve (0.7s, `power1.out`). Its two action pills are pinned outside the hero.
+
+- 2026-11-04: sebg.ch uses Astro `ClientRouter` with native View Transitions. It names the clicked cover, morphs it into the project hero, floods the new root with a circle from the mascot badge, decodes the destination image before the swap and reverses the flood on return. In this Next 14 app the destination does not commit inside a `startViewTransition` update callback, even with `flushSync`, so the preview uses a deterministic WAAPI clone and flood instead.
+
 - 2026-11-03: Retrieved high-fidelity Figma context and screenshots for Landing `3:13`, intro `33:11` and Footer `36:23`. The approved plan replaces their stock frog placeholder with the local procedural frog and uses dark `#0B0B0C`. Source package found at `/Users/bensoncraven/Documents/deepseek-harness/default-workspace/frog-mascot`.
 
 - The current 56-test suite passes. Experience fixtures use ASCII hyphens and the current Self-Employed chronology; Nibbles local-capture disclosure is asserted at `caseStudy.proof`; Waxlist's approved availability label is `Development phase`.
@@ -133,6 +173,12 @@
 - The in-app browser controller was not exposed during the 2026-07-16 refinement. Chrome responsive mode confirmed no horizontal overflow and hero wrapping of 4, 3, 2, and 2 lines at 320, 390, 768, and 1440 CSS pixels. The shared case-study layout also had no overflow at 1024 pixels. A physical 200% page-zoom pass preserved reflow, skip-link focus, mobile-menu focus entry, and Escape focus restoration.
 
 ## [OUTCOMES]
+
+- 2026-11-04: Project pages now match the reference's length, exit and screenshot presentation. The outgoing page survives the route change as an inert clone and is clipped to the frog over 900ms; screenshots develop from a browser frame on entry; the clip plays only while in view and pauses on exit. Reduced motion keeps real images, no clone and no develop canvas. Verified in Chrome: the exit still shows the project page at 300ms, develop canvases resolve and clear, the layer is removed by 1.1s, and the pills and skip link stay reachable. WebGL failed in headless Chrome, so the static frog fallback rendered; real-device frog, touch and Safari checks remain. No commit or deployment.
+
+- 2026-11-04: Individual project pages now show the animated frog with project dialogue. Each line fades up from 14px, holds for 5.2 seconds and fades out before a random 4.5-10.5 second gap; consecutive lines never repeat. The rig pauses on hidden tabs, reduced motion keeps the static frog with no speech, and WebGL failure restores the fallback. The frog sits in the bottom-right corner at the redesign scales with a 30% mobile reduction: 186px at 390 wide, 154px at 320 and 331px at 1440, under a 340px bubble whose tail meets the head. Measured at 320, 390, 1024 and 1440 with no horizontal overflow; live preference switching, client navigation and the fallback were checked in Chrome with no page errors. No commit or deployment.
+
+- 2026-11-04: The All work grid renders the approved three projects as a wide-then-two-half phone grid and three desktop columns, with no horizontal overflow at 320, 390, 768 or 1440. Pixel covers repaint from a low-resolution Bayer canvas; hover/focus opens the clear centre. The entrance starts on a full pixelated cover and resolves to the sharp hero; the exit reverses into pixels, keeps the project tint, centres the matching card and returns focus to its link. Direct project loads reveal the hero from pixels. Reduced motion leaves the real images and plain `Link` navigation. Production Chrome completed open, close and focus-return with no runtime errors; the only 404 was the known local Vercel analytics request.
 
 - 2026-11-04: About now matches the hero frog and carries a planted Irish flag. Browser measurements at 320, 360, 390, 402, 768, 1023, 1024 and 1440 widths showed the intro frog at the hero size (265x283 at 390) and centred, with no horizontal overflow. The flag faded out during corner travel, stayed hidden on the hero, projects and desktop, ran only while visible, and paused under reduced motion; the static fallback kept the centred, hero-sized frog. Scoped Prettier, lint, typecheck, 21 focused tests, the 77-test suite and an isolated production build at `/private/tmp/benson-intro-build.15350` passed. No commit or deployment.
 

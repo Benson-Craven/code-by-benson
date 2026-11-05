@@ -1,4 +1,6 @@
 import { implementedPortfolioProjects } from "../data/portfolioProjects"
+import { projectDetailPath } from "./projectNavigation"
+import { projectTints } from "./projectDetailData"
 
 export const heldPresentationQuery =
     "(min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
@@ -13,6 +15,7 @@ export type ProjectPresentationData = {
     slug: string
     title: string
     href: string
+    tint: string
     side: "left" | "right"
     bubbles: [string, string, string]
     desktop: [PreviewMedia, PreviewMedia, PreviewMedia]
@@ -71,9 +74,8 @@ export const projectPresentations: ProjectPresentationData[] =
         return {
             slug: project.slug,
             title: project.title,
-            href: project.actions.find(
-                (action) => action.kind === "case-study",
-            )!.href,
+            href: projectDetailPath(project.slug),
+            tint: projectTints[project.slug],
             side: index === 1 ? "right" : "left",
             bubbles: bubbles[index],
             desktop,

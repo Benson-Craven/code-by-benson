@@ -4,6 +4,7 @@ import test from "node:test"
 import { frogPlacement, shouldRenderFrog } from "../app/redesign/frogPlacement"
 import sitemap from "../app/sitemap"
 import { foodTreatment, heartTreatment } from "../app/redesign/frogTreatment"
+import { implementedPortfolioProjects } from "../app/data/portfolioProjects"
 
 test("food waits for the first bubble, staggers in and fades as scrolling continues", () => {
     for (const index of [0, 1, 2]) {
@@ -77,16 +78,24 @@ test("rendering stops for hidden tabs, reduced motion and offscreen positions", 
     assert.equal(shouldRenderFrog(false, false, -311, 312, 800), true)
 })
 
-test("preview stays out of the sitemap and declares noindex", async () => {
+test("the homepage is the indexable redesign and project pages are listed", async () => {
+    const urls = sitemap().map(({ url }) => url)
+
+    assert.equal(urls[0], "https://benson.codes")
     assert.equal(
-        sitemap().some(({ url }) => url.includes("redesign")),
+        urls.some((url) => url.includes("redesign")),
         false,
     )
+    for (const { slug } of implementedPortfolioProjects) {
+        assert.ok(urls.includes(`https://benson.codes/projects/${slug}`))
+    }
+
     const source = await readFile(
-        new URL("../app/redesign/page.tsx", import.meta.url),
+        new URL("../app/(site)/page.tsx", import.meta.url),
         "utf8",
     )
-    assert.match(source, /robots: \{ index: false, follow: false \}/)
+    assert.doesNotMatch(source, /robots:/)
+    assert.doesNotMatch(source, /Redesign preview/)
 })
 
 test("fallback is a nonempty PNG and all supplied modules are present", async () => {
@@ -114,7 +123,7 @@ test("fallback is a nonempty PNG and all supplied modules are present", async ()
     }
 })
 
-test("presentations preserve project order, case-study links and replaceable media", async () => {
+test("presentations preserve project order, project links and replaceable media", async () => {
     const { projectPresentations } =
         await import("../app/redesign/projectPresentationData")
     assert.deepEqual(
@@ -126,7 +135,7 @@ test("presentations preserve project order, case-study links and replaceable med
         ["left", "right", "left"],
     )
     for (const project of projectPresentations) {
-        assert.equal(project.href, `/work/${project.slug}`)
+        assert.equal(project.href, `/projects/${project.slug}`)
         assert.equal(project.bubbles.length, 3)
         assert.equal(project.desktop.length, 3)
         assert.notEqual(project.phone.front, project.phone.back)
@@ -327,6 +336,44 @@ test("footer dialogue can select every line without consecutive repeats", async 
     }
 })
 
+test("each project page speaks its own lines without consecutive repeats", async () => {
+    const { projectDialogue, pickProjectDialogue } =
+        await import("../app/redesign/frogDialogue")
+    const { implementedPortfolioProjects } =
+        await import("../app/data/portfolioProjects")
+    const slugs = implementedPortfolioProjects.map(({ slug }) => slug)
+
+    assert.deepEqual(Object.keys(projectDialogue).sort(), [...slugs].sort())
+    for (const slug of slugs) {
+        const lines = projectDialogue[slug]
+        assert.ok(lines.length >= 4, `${slug} needs a few lines`)
+        assert.equal(new Set(lines).size, lines.length)
+        for (const line of lines) {
+            assert.match(line, /^[A-Z]/, `${line} should start a sentence`)
+            assert.match(line, /[.!?]$/, `${line} should end a sentence`)
+            assert.doesNotMatch(line, /[\u2013\u2014]/, `${line} has a dash`)
+            assert.ok(line.length <= 80, `${line} is too long for the bubble`)
+        }
+
+        let previous = ""
+        const seen = new Set<string>()
+        for (let index = 0; index < 24; index++) {
+            const next = pickProjectDialogue(
+                slug,
+                previous,
+                (index % 9) / 9 + 0.01,
+            )
+            assert.ok(lines.includes(next))
+            assert.notEqual(next, previous)
+            seen.add(next)
+            previous = next
+        }
+        assert.ok(seen.size > 1, `${slug} should rotate its lines`)
+    }
+
+    assert.equal(pickProjectDialogue("missing" as never, ""), "")
+})
+
 test("responsive slides hold for 80 percent of each beat and crossfade in order", async () => {
     const { responsivePresentationProgress: progress } =
         await import("../app/redesign/projectPresentationData")
@@ -525,4 +572,492 @@ test("responsive phone flips solid faces in the final fifth of beat four", async
     assert.ok(Math.abs(progress(0.98).phoneOpacity - 0.5) < 1e-10)
     assert.equal(progress(1).phoneOpacity, 0)
     assert.equal(progress(1).phoneRotation, 180)
+})
+
+test("the project flood starts at the frog and covers the farthest corner", async () => {
+    const { floodGeometry } = await import("../app/redesign/projectNavigation")
+    const geometry = floodGeometry(
+        { left: 32, top: 640, width: 120, height: 126 },
+        { width: 1280, height: 800 },
+    )
+    assert.equal(geometry.x, 92)
+    assert.equal(geometry.y, 703)
+    assert.equal(geometry.from, 63)
+    const farthest = Math.max(
+        Math.hypot(92, 703),
+        Math.hypot(1280 - 92, 703),
+        Math.hypot(92, 800 - 703),
+        Math.hypot(1280 - 92, 800 - 703),
+    )
+    assert.equal(geometry.to, farthest)
+    assert.ok(geometry.to > 1000)
+})
+
+test("without a frog the flood falls back to the bottom left corner", async () => {
+    const { floodGeometry } = await import("../app/redesign/projectNavigation")
+    assert.deepEqual(floodGeometry(null, { width: 390, height: 844 }), {
+        x: 0,
+        y: 844,
+        from: 0,
+        to: Math.hypot(390, 844),
+    })
+})
+
+test("project detail paths resolve only for project pages", async () => {
+    const { isProjectDetailPath, projectDetailPath, projectSlugFromPath } =
+        await import("../app/redesign/projectNavigation")
+
+    for (const slug of [
+        "chronic-pain-recovery",
+        "nibbles-with-nifa",
+        "waxlist",
+    ]) {
+        assert.equal(projectDetailPath(slug), `/projects/${slug}`)
+        assert.equal(projectSlugFromPath(projectDetailPath(slug)), slug)
+        assert.equal(isProjectDetailPath(projectDetailPath(slug)), true)
+    }
+    assert.equal(projectSlugFromPath("/"), undefined)
+    assert.equal(projectSlugFromPath("/work/waxlist"), undefined)
+    assert.equal(isProjectDetailPath("/projects"), false)
+    assert.equal(isProjectDetailPath("/projects/waxlist/extra"), false)
+})
+
+test("retired redesign URLs redirect to the new homepage and project routes", async () => {
+    const { default: config } = await import("../next.config.mjs")
+    const redirects = await (
+        config as {
+            redirects: () => Promise<
+                { source: string; destination: string; permanent: boolean }[]
+            >
+        }
+    ).redirects()
+
+    assert.deepEqual(redirects, [
+        { source: "/redesign", destination: "/", permanent: true },
+        {
+            source: "/redesign/projects/:slug",
+            destination: "/projects/:slug",
+            permanent: true,
+        },
+    ])
+})
+
+test("project pages reuse the tint and wrap to the next project", async () => {
+    const { getRedesignProjectPage, projectTints } =
+        await import("../app/redesign/projectDetailData")
+    const expected = [
+        ["chronic-pain-recovery", "nibbles-with-nifa"],
+        ["nibbles-with-nifa", "waxlist"],
+        ["waxlist", "chronic-pain-recovery"],
+    ] as const
+
+    for (const [slug, next] of expected) {
+        const page = getRedesignProjectPage(slug)
+        assert.ok(page)
+        assert.equal(page.project.slug, slug)
+        assert.equal(page.nextProject.slug, next)
+        assert.equal(page.tint, projectTints[slug])
+        assert.equal(page.nextTint, projectTints[next])
+        assert.ok(page.project.cover.src.startsWith("/images/"))
+        assert.ok(page.preview.lead.length > 0)
+        assert.match(page.preview.note, /^I /)
+    }
+    assert.equal(getRedesignProjectPage("missing"), undefined)
+})
+
+test("project pages are indexable and listed in the sitemap", async () => {
+    const urls = sitemap().map(({ url }) => url)
+    const source = await readFile(
+        new URL("../app/(site)/projects/[slug]/page.tsx", import.meta.url),
+        "utf8",
+    )
+
+    assert.match(source, /export const dynamicParams = false/)
+    assert.match(source, /alternates: \{\s*canonical: url,?\s*\}/)
+    assert.doesNotMatch(source, /robots:/)
+
+    for (const { slug } of implementedPortfolioProjects) {
+        assert.ok(urls.includes(`https://benson.codes/projects/${slug}`))
+    }
+})
+
+test("all work keeps the approved project order, links and grid rhythm", async () => {
+    const { allWorkProjects, allWorkCountLabel } =
+        await import("../app/redesign/allWorkData")
+    const { implementedPortfolioProjects } =
+        await import("../app/data/portfolioProjects")
+
+    assert.deepEqual(
+        allWorkProjects.map(({ slug }) => slug),
+        implementedPortfolioProjects.map(({ slug }) => slug),
+    )
+    assert.deepEqual(
+        allWorkProjects.map(({ href }) => href),
+        implementedPortfolioProjects.map(({ slug }) => `/projects/${slug}`),
+    )
+    assert.deepEqual(
+        allWorkProjects.map(({ layout }) => layout),
+        ["wide", "half", "half"],
+    )
+    assert.equal(allWorkCountLabel(), "3 projects")
+    assert.equal(allWorkCountLabel(1), "1 project")
+    for (const project of allWorkProjects) {
+        assert.match(project.tint, /^#[0-9a-f]{6}$/i)
+        assert.ok(project.title.length > 0)
+        assert.ok(project.timeframe.length > 0)
+        assert.ok(project.cover.src.startsWith("/images/"))
+    }
+})
+
+test("pixel dither exposes a deterministic bayer grid and tinted pixels", async () => {
+    const {
+        bayerThreshold,
+        packColour,
+        parseHexColour,
+        pixelCellSize,
+        pixelColour,
+        pixelCrossfade,
+        pixelGrid,
+        pixelNoise,
+        pixelEdgeVisible,
+        normaliseLuminance,
+        revealProgress,
+    } = await import("../app/redesign/pixelDither")
+
+    const thresholds = new Set(
+        Array.from({ length: 16 }, (_, index) =>
+            bayerThreshold(index % 4, Math.floor(index / 4)),
+        ),
+    )
+    assert.equal(thresholds.size, 16)
+    assert.equal(bayerThreshold(5, 9), bayerThreshold(1, 1))
+
+    assert.deepEqual(parseHexColour("#08d9d6"), {
+        red: 8,
+        green: 217,
+        blue: 214,
+    })
+    assert.equal(parseHexColour("not-a-colour"), null)
+
+    assert.equal(pixelCellSize(1, false), 2)
+    assert.equal(pixelCellSize(3, true), 4 / 3)
+    assert.deepEqual(pixelGrid(440, 294, 2), {
+        columns: 220,
+        rows: 147,
+        cellSize: 2,
+    })
+
+    const tint = packColour(8, 217, 214)
+    const ink = packColour(11, 11, 12)
+    assert.equal(pixelColour(0.8, 0.5, tint, ink), tint)
+    assert.equal(pixelColour(0.2, 0.5, tint, ink), ink)
+    assert.deepEqual(pixelCrossfade("open"), { from: 1, to: 0 })
+    assert.deepEqual(pixelCrossfade("close"), { from: 0, to: 1 })
+
+    assert.equal(pixelNoise(12, 4), pixelNoise(12, 4))
+    const edgeSource = {
+        columns: 700,
+        rows: 400,
+        cellSize: 2,
+        tint,
+        ink,
+        luminance: new Float32Array(700 * 400).fill(0.5),
+        pixelColours: new Uint32Array(700 * 400),
+    }
+    const edgeRect = { left: 20, top: 250, width: 1400, height: 800 }
+    const edgeViewport = { width: 1440, height: 900 }
+    assert.equal(
+        pixelEdgeVisible(350, 200, edgeSource, {
+            rect: edgeRect,
+            viewport: edgeViewport,
+        }),
+        false,
+    )
+    assert.equal(
+        pixelEdgeVisible(699, 399, edgeSource, {
+            rect: edgeRect,
+            viewport: edgeViewport,
+            open: 1,
+        }),
+        true,
+    )
+    assert.equal(
+        pixelEdgeVisible(699, 399, edgeSource, {
+            rect: edgeRect,
+            viewport: edgeViewport,
+            open: 2,
+        }),
+        false,
+    )
+
+    assert.ok(pixelNoise(12, 4) >= 0 && pixelNoise(12, 4) < 1)
+    assert.ok(pixelNoise(12, 4) !== pixelNoise(13, 4))
+
+    const stretched = normaliseLuminance(
+        Float32Array.from([0.6, 0.7, 0.8, 0.9]),
+    )
+    assert.equal(stretched[0], 0)
+    assert.equal(stretched[3], 1)
+    assert.ok(stretched[1] < stretched[2])
+
+    assert.equal(revealProgress(0, 760), 0)
+    assert.equal(revealProgress(760, 760), 1)
+    let previous = 0
+    for (const elapsed of [0, 100, 300, 500, 760]) {
+        const progress = revealProgress(elapsed, 760)
+        assert.ok(progress >= previous)
+        previous = progress
+    }
+})
+
+test("all work grid exposes the shared transition hooks and pixel covers", async () => {
+    const source = await readFile(
+        new URL("../app/redesign/AllWork.tsx", import.meta.url),
+        "utf8",
+    )
+
+    for (const marker of [
+        'id="work"',
+        "data-project-index",
+        "data-work-card",
+        "data-project-link",
+        'data-project-direction="open"',
+        "data-project-cover",
+        "data-project-tint",
+        "<PixelReveal",
+    ]) {
+        assert.ok(source.includes(marker), `missing ${marker}`)
+    }
+
+    const page = await readFile(
+        new URL("../app/(site)/page.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(page, /<AllWork \/>/)
+    assert.match(page, /href="#work"/)
+    assert.doesNotMatch(page, /data-redesign data-project-index/)
+})
+
+test("project pages reveal the hero as pixels and close back to all work", async () => {
+    const source = await readFile(
+        new URL("../app/redesign/ProjectCase.tsx", import.meta.url),
+        "utf8",
+    )
+
+    assert.match(source, /data-project-hero=\{project\.slug\}/)
+    assert.match(source, /<PixelReveal/)
+    assert.match(source, /reveal/)
+    assert.match(source, /href="\/#work"/)
+})
+
+test("project pages run the animated frog behind their dialogue layer", async () => {
+    const projectCase = await readFile(
+        new URL("../app/redesign/ProjectCase.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(projectCase, /<ProjectFrog slug=\{project\.slug\} \/>/)
+    assert.doesNotMatch(projectCase, /frog-static\.png/)
+
+    const frog = await readFile(
+        new URL("../app/redesign/ProjectFrog.tsx", import.meta.url),
+        "utf8",
+    )
+    for (const marker of [
+        "loadFrog",
+        "createFrog",
+        "pickProjectDialogue",
+        "data-project-dialogue",
+        "data-frog-layer",
+        "prefers-reduced-motion: reduce",
+        "webglcontextlost",
+        "visibilitychange",
+        "revealSpeech",
+        "data-dialogue-pixels",
+        "caseDialogueShadow",
+        'ease: "power2.in"',
+    ]) {
+        assert.ok(frog.includes(marker), `missing ${marker}`)
+    }
+
+    const css = await readFile(
+        new URL("../app/redesign/redesign.module.css", import.meta.url),
+        "utf8",
+    )
+    assert.match(css, /\.caseDialogue \{/)
+    assert.match(css, /\.caseFrog\[data-frog-ready="true"\] \.caseFrogFallback/)
+})
+
+test("the transition resolves covers from the clicked card and crossfades pixels", async () => {
+    const source = await readFile(
+        new URL("../app/redesign/ProjectTransition.tsx", import.meta.url),
+        "utf8",
+    )
+
+    for (const marker of [
+        "coverForLink(link, slug)",
+        "createCoverClone",
+        "pixelCrossfade",
+        "waitForPixelReady",
+        "markWorkTransition",
+        'closest<HTMLElement>("#work")',
+        "pixelLayer",
+    ]) {
+        assert.ok(source.includes(marker), `missing ${marker}`)
+    }
+
+    const reveal = await readFile(
+        new URL("../app/redesign/PixelReveal.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(reveal, /prefers-reduced-motion: reduce/)
+    assert.match(reveal, /data-pixel-canvas/)
+})
+
+test("screenshots develop as a two-colour silhouette and dissolve", async () => {
+    const { pixelDevelopVisible } = await import("../app/redesign/pixelDither")
+
+    const visible = (develop: number, resolve: number) => {
+        let count = 0
+        for (let row = 0; row < 40; row += 1) {
+            for (let column = 0; column < 40; column += 1) {
+                if (pixelDevelopVisible(column, row, 40, 40, develop, resolve))
+                    count += 1
+            }
+        }
+        return count
+    }
+
+    // Nothing is painted before the frame is in view.
+    assert.equal(visible(0, 0), 0)
+    // The silhouette fills in as it develops, then clears as it resolves.
+    const half = visible(0.5, 0)
+    const full = visible(1, 0)
+    assert.ok(half > 0)
+    assert.ok(full > half)
+    assert.equal(visible(1, 1), 0)
+    assert.ok(visible(1, 0.3) < full)
+})
+
+test("project pages frame screenshots and keep only the short narrative", async () => {
+    const page = await readFile(
+        new URL("../app/redesign/ProjectCase.tsx", import.meta.url),
+        "utf8",
+    )
+
+    for (const marker of [
+        "BrowserFrame",
+        "PixelDevelop",
+        "WordReveal",
+        "data-project-hero={project.slug}",
+        "caseShotWide",
+        "caseShotPair",
+        "caseClipSection",
+        "data-project-cover={nextProject.slug}",
+    ]) {
+        assert.ok(page.includes(marker), `missing ${marker}`)
+    }
+
+    // Captions were the bulk of the remaining copy; alt text keeps the detail.
+    assert.doesNotMatch(page, /<figcaption/)
+
+    // The long case-study narrative stays on the public /work routes.
+    for (const dropped of [
+        "Constraints",
+        "Ownership",
+        "Outcomes",
+        "Reflection",
+    ]) {
+        assert.ok(!page.includes(`>${dropped}<`), `${dropped} still rendered`)
+        assert.ok(!page.includes(`"${dropped}"`), `${dropped} still rendered`)
+    }
+
+    const frame = await readFile(
+        new URL("../app/redesign/BrowserFrame.tsx", import.meta.url),
+        "utf8",
+    )
+    for (const marker of [
+        "caseFrameShadow",
+        "caseFrameBar",
+        "caseFrameUrl",
+        "caseFrameMedia",
+    ]) {
+        assert.ok(frame.includes(marker), `missing ${marker}`)
+    }
+})
+
+test("the outgoing page is clipped away late instead of covered in tint", async () => {
+    const source = await readFile(
+        new URL("../app/redesign/ProjectTransition.tsx", import.meta.url),
+        "utf8",
+    )
+
+    for (const marker of [
+        "createPageGhost",
+        "ghost.dataset.transitionGhost",
+        "GHOST_CLIP_MS",
+        "ghost.startClip",
+        "ghost.endClip",
+        "cubic-bezier(0.65, 0, 0.35, 1)",
+        'clone.querySelectorAll("canvas")',
+        'querySelectorAll<HTMLVideoElement>("video")',
+        'clone.setAttribute("inert", "")',
+    ]) {
+        assert.ok(source.includes(marker), `missing ${marker}`)
+    }
+
+    assert.ok(!source.includes("FLOOD_COVER_MS"))
+    assert.doesNotMatch(source, /createFlood/)
+})
+
+test("project copy reveals word by word and reads at one size on phones", async () => {
+    const wordReveal = await readFile(
+        new URL("../app/redesign/WordReveal.tsx", import.meta.url),
+        "utf8",
+    )
+    for (const marker of [
+        "data-word",
+        "prefers-reduced-motion: reduce",
+        "requestAnimationFrame",
+        '"scroll"',
+        "document.fonts",
+    ]) {
+        assert.ok(wordReveal.includes(marker), `missing ${marker}`)
+    }
+
+    const css = await readFile(
+        new URL("../app/redesign/redesign.module.css", import.meta.url),
+        "utf8",
+    )
+    const phoneBlock = css.slice(css.indexOf("@media (max-width: 767px)"))
+    assert.match(
+        phoneBlock,
+        /\.caseLead,\s*\n\s*\.caseIntroCopy p,\s*\n\s*\.caseShotHeader p \{\s*\n\s*font-size: 20px/,
+    )
+    assert.doesNotMatch(css, /\.caseClipNote/)
+})
+
+test("the frog speech bubble develops like a screenshot frame", async () => {
+    const speech = await readFile(
+        new URL("../app/redesign/speechDither.ts", import.meta.url),
+        "utf8",
+    )
+    for (const marker of [
+        "buildSpeechSilhouette",
+        "paintSpeechSilhouette",
+        "revealSpeech",
+        "DEVELOP_MS",
+        "RESOLVE_MS",
+        "pixelDevelopVisible",
+        "canvas.hidden = true",
+    ]) {
+        assert.ok(speech.includes(marker), `missing ${marker}`)
+    }
+
+    const css = await readFile(
+        new URL("../app/redesign/redesign.module.css", import.meta.url),
+        "utf8",
+    )
+    assert.match(css, /\.caseDialogueShadow \{/)
+    assert.match(css, /\.caseDialoguePixels \{/)
+    assert.match(css, /conic-gradient\(\s*var\(--black\) 25%/)
 })

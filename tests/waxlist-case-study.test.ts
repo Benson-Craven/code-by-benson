@@ -66,6 +66,10 @@ test("the approved public work set excludes the market dashboard everywhere", ()
         approvedSlugs.map((slug) => `https://benson.codes/work/${slug}`),
     )
     assert.deepEqual(
+        sitemapUrls.filter((url) => url.includes("/projects/")),
+        approvedSlugs.map((slug) => `https://benson.codes/projects/${slug}`),
+    )
+    assert.deepEqual(
         sitemapEntries.map(({ lastModified }) =>
             lastModified instanceof Date
                 ? lastModified.toISOString().slice(0, 10)
@@ -73,6 +77,7 @@ test("the approved public work set excludes the market dashboard everywhere", ()
         ),
         [
             portfolioHomepageUpdatedAt,
+            ...implementedPortfolioProjects.map(({ updatedAt }) => updatedAt),
             ...implementedPortfolioProjects.map(({ updatedAt }) => updatedAt),
         ],
     )

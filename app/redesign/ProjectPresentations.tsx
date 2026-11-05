@@ -331,7 +331,13 @@ export default function ProjectPresentations() {
                                         ))}
                                 </span>
                             </h2>
-                            <Link href={project.href}>
+                            <Link
+                                href={project.href}
+                                data-project-link
+                                data-project-direction="open"
+                                data-project-slug={project.slug}
+                                data-project-tint={project.tint}
+                            >
                                 View project
                                 <span className="sr-only">
                                     : {project.title}
@@ -365,6 +371,11 @@ export default function ProjectPresentations() {
                                                     width={1440}
                                                     height={900}
                                                     loading="lazy"
+                                                    data-project-cover={
+                                                        index === 0
+                                                            ? project.slug
+                                                            : undefined
+                                                    }
                                                     style={{
                                                         objectPosition:
                                                             media.position,

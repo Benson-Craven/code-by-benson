@@ -1,17 +1,10 @@
-import type { Metadata } from "next"
 import Link from "next/link"
-import FrogTrickArtwork from "./FrogTrickArtwork"
-import FrogPresentation from "./FrogPresentation"
-import ProjectPresentations from "./ProjectPresentations"
-import IntroParagraph from "./IntroParagraph"
-import styles from "./redesign.module.css"
-
-export const metadata: Metadata = {
-    title: "Redesign preview",
-    description: "Benson Craven, full-stack developer based in Cork, Ireland.",
-    robots: { index: false, follow: false },
-    alternates: { canonical: "/redesign" },
-}
+import FrogTrickArtwork from "../redesign/FrogTrickArtwork"
+import FrogPresentation from "../redesign/FrogPresentation"
+import ProjectPresentations from "../redesign/ProjectPresentations"
+import AllWork from "../redesign/AllWork"
+import IntroParagraph from "../redesign/IntroParagraph"
+import styles from "../redesign/redesign.module.css"
 
 function FrogSlot({ trick = false }: { trick?: boolean }) {
     return (
@@ -55,7 +48,8 @@ export default function Redesign() {
                             <strong>Benson Craven</strong>
                             <span>Full-stack developer</span>
                         </Link>
-                        <nav aria-label="Preview navigation">
+                        <nav aria-label="Main navigation">
+                            <a href="#work">All work</a>
                             <a href="#contact">Get in touch</a>
                         </nav>
                     </header>
@@ -84,6 +78,7 @@ export default function Redesign() {
                     <FrogSlot />
                 </section>
                 <ProjectPresentations />
+                <AllWork />
             </main>
             <footer id="contact" className={styles.contact} data-frog-section>
                 <div className={styles.contactCopy}>

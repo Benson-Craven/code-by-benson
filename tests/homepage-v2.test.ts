@@ -13,7 +13,7 @@ const approvedProjects = [
     "Waxlist",
 ]
 
-test("Selected Work renders the approved proof-first project order", async () => {
+test("the retained Selected Work component renders the approved proof-first order", async () => {
     assert.deepEqual(
         implementedPortfolioProjects.map(({ title }) => title),
         approvedProjects,
@@ -66,33 +66,27 @@ test("every homepage project feature uses a real local cover", async () => {
     }
 })
 
-test("the homepage is driven by v2 proof and excludes retired claim sections", async () => {
-    const [pageSource, selectedWorkSource, projectFeatureSource] =
-        await Promise.all([
-            readFile(path.join(process.cwd(), "app/page.tsx"), "utf8"),
-            readFile(
-                path.join(
-                    process.cwd(),
-                    "app/components/work/SelectedWork.tsx",
-                ),
-                "utf8",
-            ),
-            readFile(
-                path.join(
-                    process.cwd(),
-                    "app/components/work/ProjectFeature.tsx",
-                ),
-                "utf8",
-            ),
-        ])
+test("the homepage renders the redesign from the typed project collection", async () => {
+    const [pageSource, allWorkSource, presentationSource] = await Promise.all([
+        readFile(path.join(process.cwd(), "app/(site)/page.tsx"), "utf8"),
+        readFile(
+            path.join(process.cwd(), "app/redesign/allWorkData.ts"),
+            "utf8",
+        ),
+        readFile(
+            path.join(process.cwd(), "app/redesign/projectPresentationData.ts"),
+            "utf8",
+        ),
+    ])
 
-    assert.match(selectedWorkSource, /implementedPortfolioProjects\.map/)
+    assert.match(pageSource, /<AllWork \/>/)
+    assert.match(pageSource, /<ProjectPresentations \/>/)
     assert.doesNotMatch(
         pageSource,
-        /EngineeringApproach|TechnicalDepth|ProofStrip/,
+        /SelectedWork|Experience|EngineeringApproach|TechnicalDepth|ProofStrip/,
     )
-    assert.match(projectFeatureSource, /project\.cover\.src/)
-    assert.match(projectFeatureSource, /project\.capabilities\.map/)
+    assert.match(allWorkSource, /implementedPortfolioProjects\.map/)
+    assert.match(presentationSource, /implementedPortfolioProjects\.map/)
 
     const publicProjectCopy = JSON.stringify(implementedPortfolioProjects)
 

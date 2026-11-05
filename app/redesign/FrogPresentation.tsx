@@ -756,7 +756,12 @@ export default function FrogPresentation() {
 
     return (
         <>
-            <div ref={layerRef} className={styles.frogLayer} aria-hidden="true">
+            <div
+                ref={layerRef}
+                className={styles.frogLayer}
+                data-frog-layer
+                aria-hidden="true"
+            >
                 <div ref={hostRef} className={styles.frogHost} />
                 <FrogFood />
                 <FrogFlag />

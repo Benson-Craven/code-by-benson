@@ -1,6 +1,6 @@
 import type { PortfolioProject } from "./portfolio"
 
-export const portfolioHomepageUpdatedAt = "2026-07-16"
+export const portfolioHomepageUpdatedAt = "2026-11-04"
 
 export const chronicPainRecoveryProject = {
     slug: "chronic-pain-recovery",
