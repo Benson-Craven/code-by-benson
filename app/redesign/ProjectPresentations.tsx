@@ -12,6 +12,35 @@ import {
     responsiveStageSize,
 } from "./projectPresentationData"
 
+function animateFlowBubble(bubble: HTMLElement) {
+    const paint = () => {
+        const top =
+            bubble.getBoundingClientRect().top -
+            Number(gsap.getProperty(bubble, "y"))
+        const enter = Math.max(
+            0,
+            Math.min(1, (innerHeight - top) / (innerHeight * 0.2)),
+        )
+        const exit = Math.max(
+            0,
+            Math.min(1, 1 - (top + bubble.offsetHeight) / (innerHeight * 0.2)),
+        )
+        gsap.set(bubble, {
+            opacity: enter * (1 - exit),
+            y: 20 * (1 - enter - exit),
+        })
+    }
+    const trigger = ScrollTrigger.create({
+        trigger: bubble,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: paint,
+        onRefresh: paint,
+    })
+    paint()
+    return trigger
+}
+
 export default function ProjectPresentations() {
     const rootRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
@@ -80,7 +109,7 @@ export default function ProjectPresentations() {
                             gsap.set(
                                 [...slides, browser, ...bubbles, phoneWrapper],
                                 {
-                                    clearProps: "opacity",
+                                    clearProps: "opacity,transform",
                                 },
                             )
                             gsap.set(phone, { clearProps: "transform" })
@@ -132,6 +161,11 @@ export default function ProjectPresentations() {
                                 deviceHeight === null ? "flow" : "held"
                             if (deviceHeight === null) {
                                 clearPresentation()
+                                bubbles.forEach((bubble) =>
+                                    flowTriggers.push(
+                                        animateFlowBubble(bubble),
+                                    ),
+                                )
                                 slides.forEach((slide) => {
                                     const paint = () => {
                                         const rect =
@@ -194,6 +228,7 @@ export default function ProjectPresentations() {
                                 bubbles.forEach((bubble, index) =>
                                     gsap.set(bubble, {
                                         opacity: state.bubbles[index],
+                                        y: state.bubbleY[index],
                                     }),
                                 )
                             }
@@ -243,7 +278,24 @@ export default function ProjectPresentations() {
                     })
                     return () => cleanups.forEach((cleanup) => cleanup())
                 }
-                if (!context.conditions?.held) return
+                if (!context.conditions?.held) {
+                    if (context.conditions?.motion)
+                        sections.forEach((section) => {
+                            section
+                                .querySelectorAll<HTMLElement>("[data-bubble]")
+                                .forEach(animateFlowBubble)
+                        })
+                    return () => {
+                        sections.forEach((section) => {
+                            gsap.set(
+                                section.querySelectorAll("[data-bubble]"),
+                                {
+                                    clearProps: "opacity,transform",
+                                },
+                            )
+                        })
+                    }
+                }
                 sections.forEach((section) => {
                     section.dataset.held = "true"
                     const strip = section.querySelector<HTMLElement>(
@@ -258,7 +310,10 @@ export default function ProjectPresentations() {
                         gsap.set(strip, { yPercent: (-state.screen * 100) / 3 })
                         gsap.set(phone, { rotationY: state.phoneRotation })
                         bubbles.forEach((bubble, index) =>
-                            gsap.set(bubble, { opacity: state.bubbles[index] }),
+                            gsap.set(bubble, {
+                                opacity: state.bubbles[index],
+                                y: state.bubbleY[index],
+                            }),
                         )
                     }
                     ScrollTrigger.create({
@@ -281,7 +336,7 @@ export default function ProjectPresentations() {
                             { clearProps: "transform" },
                         )
                         gsap.set(section.querySelectorAll("[data-bubble]"), {
-                            clearProps: "opacity",
+                            clearProps: "opacity,transform",
                         })
                     })
             },
@@ -358,7 +413,7 @@ export default function ProjectPresentations() {
                             </h2>
                             <Link
                                 href={project.href}
-                                className="shrink-0 py-2.5 text-[clamp(20px,2vw,30px)]"
+                                className="project-action shrink-0"
                                 data-project-link
                                 data-project-direction="open"
                                 data-project-slug={project.slug}
@@ -463,11 +518,17 @@ export default function ProjectPresentations() {
                             <div className="grid gap-4" data-bubbles>
                                 {project.bubbles.map((bubble) => (
                                     <p
-                                        className="rounded-[20px] bg-preview-white p-6 text-[clamp(20px,2vw,30px)] font-semibold leading-[1.25] text-[#1e1e1e]"
+                                        className="showcase-dialogue"
                                         data-bubble
                                         key={bubble}
                                     >
-                                        {bubble}
+                                        <span
+                                            className="showcase-dialogue-tail"
+                                            aria-hidden="true"
+                                        />
+                                        <span className="relative">
+                                            {bubble}
+                                        </span>
                                     </p>
                                 ))}
                             </div>

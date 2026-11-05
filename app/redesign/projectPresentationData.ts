@@ -90,10 +90,15 @@ export function presentationProgress(progress: number) {
     const first = ramp(progress, 0.25, 0.4)
     const second = ramp(progress, 0.65, 0.8)
     return {
+        bubbleY: [
+            20 * (1 - ramp(progress, 0, 0.075) - ramp(first, 0, 0.5)),
+            20 * (1 - ramp(first, 0.5, 1) - ramp(second, 0, 0.5)),
+            20 * (1 - ramp(second, 0.5, 1) - ramp(progress, 0.92, 1)),
+        ],
         screen: first + second,
         phoneRotation: first * 180,
         bubbles: [
-            1 - ramp(first, 0, 0.5),
+            ramp(progress, 0, 0.075) * (1 - ramp(first, 0, 0.5)),
             ramp(first, 0.5, 1) * (1 - ramp(second, 0, 0.5)),
             ramp(second, 0.5, 1) * (1 - ramp(progress, 0.92, 1)),
         ],
@@ -110,13 +115,18 @@ export function responsivePresentationProgress(progress: number) {
             (1 - ramp(beat, index + 0.8, index + 1)),
     )
     const bubbles = [
-        1 - ramp(beat, 0.8, 0.9),
+        ramp(beat, 0, 0.1) * (1 - ramp(beat, 0.8, 0.9)),
         ramp(beat, 0.9, 1) * (1 - ramp(beat, 1.8, 1.9)),
         ramp(beat, 1.9, 2) * (1 - ramp(beat, 4.8, 5)),
     ]
     return {
         slides,
         bubbles,
+        bubbleY: [
+            20 * (1 - ramp(beat, 0, 0.1) - ramp(beat, 0.8, 0.9)),
+            20 * (1 - ramp(beat, 0.9, 1) - ramp(beat, 1.8, 1.9)),
+            20 * (1 - ramp(beat, 1.9, 2) - ramp(beat, 4.8, 5)),
+        ],
         phoneOpacity: ramp(beat, 2.8, 3) * (1 - ramp(beat, 4.8, 5)),
         phoneRotation: ramp(beat, 3.8, 4) * 180,
     }

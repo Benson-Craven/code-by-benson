@@ -274,6 +274,9 @@ test("project beats hold, transition, reverse and fade before release", async ()
     for (const value of [0.8, 0.92, 1]) assert.equal(progress(value).screen, 2)
     assert.ok(Math.abs(progress(0.325).phoneRotation - 90) < 0.001)
     assert.equal(progress(0.8).phoneRotation, 180)
+    assert.equal(progress(0).bubbles[0], 0)
+    assert.equal(progress(0.0375).bubbles[0], 0.5)
+    assert.equal(progress(0.075).bubbles[0], 1)
     assert.deepEqual(progress(1).bubbles, [0, 0, 0])
     for (let i = 0; i <= 100; i++) {
         assert.ok(
@@ -552,6 +555,9 @@ test("responsive slides hold for 80 percent of each beat and crossfade in order"
         if (index < 4) assert.ok(Math.abs(fade.slides[index + 1] - 0.5) < 1e-10)
     }
     assert.deepEqual(progress(1).slides, [0, 0, 0, 0, 0])
+    assert.equal(progress(0).bubbles[0], 0)
+    assert.equal(progress(0.01).bubbles[0], 0.5)
+    assert.equal(progress(0.02).bubbles[0], 1)
     assert.deepEqual(progress(-1), progress(0))
     assert.deepEqual(progress(2), progress(1))
     const samples = Array.from({ length: 501 }, (_, index) => index / 500)
@@ -1283,4 +1289,40 @@ test("the frog speech bubble develops like a screenshot frame", async () => {
     assert.match(css, /\.case-dialogue-shadow \{/)
     assert.match(css, /\.case-dialogue-pixels \{/)
     assert.match(css, /conic-gradient\(\s*#0b0b0c 25%/)
+})
+
+test("showcase speech rises into and out of each held beat", async () => {
+    const { presentationProgress, responsivePresentationProgress } =
+        await import("../app/redesign/projectPresentationData")
+    for (const [progress, beats] of [
+        [
+            presentationProgress,
+            [
+                [0, 0.075, 0.25, 0.325],
+                [0.325, 0.4, 0.65, 0.725],
+                [0.725, 0.8, 0.92, 1],
+            ],
+        ],
+        [
+            responsivePresentationProgress,
+            [
+                [0, 0.02, 0.16, 0.18],
+                [0.18, 0.2, 0.36, 0.38],
+                [0.38, 0.4, 0.96, 1],
+            ],
+        ],
+    ] as const) {
+        beats.forEach(([start, entered, leaving, end], index) => {
+            assert.ok(Math.abs(progress(start).bubbleY[index] - 20) < 1e-8)
+            assert.ok(Math.abs(progress(entered).bubbleY[index]) < 1e-8)
+            assert.ok(Math.abs(progress(leaving).bubbleY[index]) < 1e-8)
+            assert.ok(Math.abs(progress(end).bubbleY[index] + 20) < 1e-8)
+            const entry = progress((start + entered) / 2)
+            const exit = progress((leaving + end) / 2)
+            assert.ok(Math.abs(entry.bubbles[index] - 0.5) < 1e-8)
+            assert.ok(Math.abs(exit.bubbles[index] - 0.5) < 1e-8)
+            assert.ok(entry.bubbleY[index] > 0)
+            assert.ok(exit.bubbleY[index] < 0)
+        })
+    }
 })

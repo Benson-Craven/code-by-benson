@@ -128,7 +128,7 @@ export default function ProjectCase({
                         <div className="pointer-events-none fixed inset-x-0 top-0 z-[6] mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3 p-[16px_max(4.72vw,24px)] [&>*]:pointer-events-auto">
                             <Link
                                 href="/#work"
-                                className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border-2 border-preview-black bg-preview-white px-5 py-2.5 text-[17px] font-semibold text-preview-black no-underline hover:bg-preview-black hover:text-preview-white hover:no-underline max-md:min-h-10 max-md:px-3.5 max-md:py-2 max-md:text-[15px]"
+                                className="project-action"
                                 data-project-link
                                 data-project-direction="close"
                                 data-project-slug={project.slug}
@@ -138,7 +138,7 @@ export default function ProjectCase({
                             </Link>
                             {liveSite?.kind === "live-site" ? (
                                 <a
-                                    className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border-2 border-preview-black bg-preview-white px-5 py-2.5 text-[17px] font-semibold text-preview-black no-underline hover:bg-preview-black hover:text-preview-white hover:no-underline max-md:min-h-10 max-md:px-3.5 max-md:py-2 max-md:text-[15px]"
+                                    className="project-action"
                                     href={liveSite.href}
                                     target="_blank"
                                     rel="noreferrer"
