@@ -6,6 +6,72 @@ export type FrogAnchor = {
     scroll: number
 }
 
+/**
+ * The renderer crops its circular badge from a fixed point measured from the
+ * host's left and bottom edges. Keep these in step with `BADGE` in
+ * `public/frog-mascot/src/frog-mascot.js`.
+ */
+export const frogBadgeGeometry = {
+    x: 100,
+    yFromBottom: 152,
+    radius: 61.5,
+} as const
+
+/**
+ * The badge stays while All Work has passed the viewport's middle and the
+ * footer has not yet reached the top. The footer is part of the same run, so
+ * the frog can hand over to its footer slot without a second transition.
+ */
+export function workBadgeActive(
+    workTop: number,
+    footerTop: number,
+    viewportHeight: number,
+) {
+    // Leave the badge once the footer covers a fifth of the viewport.
+    return workTop < viewportHeight / 2 && footerTop > viewportHeight * 0.8
+}
+
+/**
+ * Docking starts once the footer is less than 15% into the viewport. The gap
+ * between this and `workBadgeActive` stops the badge flickering on and off
+ * around the release point.
+ */
+export function workBadgeStarts(
+    workTop: number,
+    footerTop: number,
+    viewportHeight: number,
+) {
+    return workTop < viewportHeight / 2 && footerTop > viewportHeight * 0.85
+}
+
+/** Layer offsets that place the renderer's badge circle on a viewport point. */
+export function workBadgePosition(
+    pointX: number,
+    pointY: number,
+    layerHeight: number,
+) {
+    return {
+        x: pointX - frogBadgeGeometry.x,
+        y: pointY - (layerHeight - frogBadgeGeometry.yFromBottom),
+        centreX: pointX,
+        centreY: pointY,
+    }
+}
+
+/** Layer offsets that dock the badge circle in the bottom-right corner. */
+export function workBadgeDock(
+    viewportWidth: number,
+    viewportHeight: number,
+    layerHeight: number,
+    inset: number,
+) {
+    return workBadgePosition(
+        viewportWidth - inset - frogBadgeGeometry.radius,
+        viewportHeight - inset - frogBadgeGeometry.radius,
+        layerHeight,
+    )
+}
+
 export function frogPlacement(
     anchors: FrogAnchor[],
     scroll: number,

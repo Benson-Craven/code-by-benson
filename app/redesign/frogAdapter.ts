@@ -7,6 +7,10 @@ export interface FrogInstance {
     talk(duration?: number): void
     setSmiling(on: boolean): void
     setAttention(x: number | null, y?: number): void
+    /** Face front and crop into the renderer's small circular badge. */
+    setBadge(on: boolean): void
+    /** Blend the full-body pose (0) into the circular badge (1). */
+    setBadgeMix(mix: number): void
     destroy(): void
 }
 interface FrogModule {

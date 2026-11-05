@@ -10,6 +10,9 @@ import {
     frogPlacement,
     cornerFrogPlacement,
     shouldRenderFrog,
+    workBadgeActive,
+    workBadgeDock,
+    workBadgeStarts,
     type FrogAnchor,
 } from "./frogPlacement"
 import {
@@ -20,7 +23,7 @@ import {
 import { foodTreatment, heartTreatment, frogTrick } from "./frogTreatment"
 import FrogFood from "./FrogFood"
 import FrogFlag from "./FrogFlag"
-import { pickFooterDialogue } from "./frogDialogue"
+import { pickAllWorkDialogue, pickFooterDialogue } from "./frogDialogue"
 import { cn } from "@/utils/cn"
 
 export default function FrogPresentation() {
@@ -43,6 +46,8 @@ export default function FrogPresentation() {
         const sections = Array.from(
             root.querySelectorAll<HTMLElement>("[data-frog-section]"),
         )
+        const work = root.querySelector<HTMLElement>("[data-frog-work]")!
+        const badge = layer.querySelector<HTMLElement>("[data-frog-badge]")!
         const button =
             root.querySelector<HTMLButtonElement>("[data-frog-trick]")!
         const footer = sections[sections.length - 1]
@@ -61,6 +66,11 @@ export default function FrogPresentation() {
         }
         const dialogue = root.querySelector<HTMLElement>(
             "[data-frog-dialogue]",
+        )!
+        // The badge carries its own bubble, so it is a sibling of the rendered
+        // frog rather than the footer slot the other dialogue is anchored to.
+        const workDialogue = layer.querySelector<HTMLElement>(
+            "[data-frog-work-dialogue]",
         )!
         let dialogueTimer: ReturnType<typeof setTimeout> | undefined
         let dialogueActive = false
@@ -122,12 +132,78 @@ export default function FrogPresentation() {
                 !failed &&
                 !reduced.matches &&
                 !document.hidden &&
+                badgeState === "off" &&
                 (narrow.matches
                     ? footer.getBoundingClientRect().top <= innerHeight * 0.75
                     : rect.top >= 80 && rect.top < innerHeight * 0.8),
             )
             if (dialogueActive) scheduleDialogue()
             else clearDialogue()
+        }
+        let workDialogueTimer: ReturnType<typeof setTimeout> | undefined
+        let workDialogueActive = false
+        let previousWorkDialogue = ""
+        function clearWorkDialogue() {
+            clearTimeout(workDialogueTimer)
+            workDialogueTimer = undefined
+            gsap.killTweensOf(workDialogue)
+            workDialogue.textContent = ""
+            workDialogue.hidden = true
+        }
+        function showWorkDialogue() {
+            previousWorkDialogue = pickAllWorkDialogue(previousWorkDialogue)
+            workDialogue.textContent = previousWorkDialogue
+            workDialogue.hidden = false
+            gsap.fromTo(
+                workDialogue,
+                { opacity: 0, y: 10 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.35,
+                    ease: "power2.out",
+                    overwrite: true,
+                },
+            )
+            frog?.talk(2.2)
+            workDialogueTimer = setTimeout(() => {
+                gsap.to(workDialogue, {
+                    opacity: 0,
+                    y: 10,
+                    duration: 0.35,
+                    ease: "power2.in",
+                    overwrite: true,
+                    onComplete: () => {
+                        clearWorkDialogue()
+                        scheduleWorkDialogue()
+                    },
+                })
+            }, 5200)
+        }
+        function scheduleWorkDialogue() {
+            if (!workDialogueActive || workDialogueTimer !== undefined) return
+            workDialogueTimer = setTimeout(
+                () => {
+                    workDialogueTimer = undefined
+                    if (!workDialogueActive) return
+                    showWorkDialogue()
+                },
+                4500 + Math.random() * 6000,
+            )
+        }
+        function updateWorkDialogue(running: boolean) {
+            const active = Boolean(
+                running &&
+                badgeState === "on" &&
+                frog &&
+                !failed &&
+                !reduced.matches &&
+                !document.hidden,
+            )
+            if (active === workDialogueActive) return
+            workDialogueActive = active
+            if (active) scheduleWorkDialogue()
+            else clearWorkDialogue()
         }
         let footerSeen = false
         let clicks = 0
@@ -155,6 +231,11 @@ export default function FrogPresentation() {
         let loading = false
         let hop: gsap.core.Timeline | undefined
         let aboutAnimation: gsap.core.Timeline | undefined
+        let badgeState: "off" | "entering" | "on" | "leaving" = "off"
+        let badgeTimeline: gsap.core.Timeline | undefined
+        let smileCall: gsap.core.Tween | undefined
+        const badgeMix = { value: 0 }
+        let latestPlacement: FrogAnchor | undefined
         const originalScrollBehavior =
             document.documentElement.style.scrollBehavior
         document.documentElement.style.scrollBehavior = "auto"
@@ -481,6 +562,201 @@ export default function FrogPresentation() {
                 else hop.pause()
             }
         }
+        function badgeInset() {
+            return narrow.matches ? 20 : 24
+        }
+        // The layer's CSS top is 0 on desktop and the safe-area lift on phones.
+        function layerBaseTop() {
+            return parseFloat(getComputedStyle(layer).top) || 0
+        }
+        // The live normal placement in layer coordinates, so the exit can
+        // chase the footer as the page keeps scrolling.
+        function layerPlacement(): FrogAnchor {
+            const responsive = narrow.matches && !reduced.matches
+            const anchor =
+                latestPlacement ??
+                (responsive
+                    ? cornerFrogPlacement(
+                          sections.map(
+                              (section) =>
+                                  section.getBoundingClientRect().top + scrollY,
+                          ),
+                          scrollY,
+                          innerWidth,
+                          innerHeight,
+                      )
+                    : frogPlacement(anchors, window.scrollY, !held.matches))
+            if (responsive) return anchor
+            const rootRect = root.getBoundingClientRect()
+            return {
+                ...anchor,
+                x: rootRect.left + anchor.x,
+                y: rootRect.top + anchor.y,
+            }
+        }
+        function resetBadge() {
+            badgeTimeline?.kill()
+            badgeTimeline = undefined
+            smileCall?.kill()
+            smileCall = undefined
+            workDialogueActive = false
+            clearWorkDialogue()
+            badgeState = "off"
+            delete root.dataset.frogDocked
+            frog?.setSmiling(false)
+            frog?.setBadge(false)
+            badgeMix.value = 0
+            gsap.killTweensOf([badge, badgeMix])
+            gsap.set(badge, {
+                opacity: 0,
+                scale: 0.7,
+                clearProps: "boxShadow",
+            })
+        }
+        function enterBadge() {
+            if (!frog || failed || reduced.matches || disposed) return
+            badgeState = "entering"
+            const rect = layer.getBoundingClientRect()
+            const baseTop = layerBaseTop()
+            const dock = workBadgeDock(
+                innerWidth,
+                innerHeight,
+                rect.height || 1,
+                badgeInset(),
+            )
+            root.dataset.frogDocked = "true"
+            gsap.killTweensOf([layer, badge, badgeMix])
+            // Keep the current screen position through the fixed switch.
+            gsap.set(layer, { x: rect.left, y: rect.top - baseTop })
+            badgeMix.value = 0
+            frog.setBadgeMix(0)
+            frog.setSmiling(false)
+            badgeTimeline = gsap
+                .timeline({
+                    onComplete: () => {
+                        badgeState = "on"
+                        frog?.setSmiling(true)
+                        smileCall = gsap.delayedCall(1.5, () =>
+                            frog?.setSmiling(false),
+                        )
+                        // The first line lands with the arrival, then cycles.
+                        workDialogueActive = !document.hidden
+                        if (workDialogueActive) showWorkDialogue()
+                    },
+                })
+                .to(
+                    layer,
+                    {
+                        x: dock.x,
+                        y: dock.y - baseTop,
+                        duration: 0.72,
+                        ease: "power3.inOut",
+                    },
+                    0,
+                )
+                .to(
+                    badgeMix,
+                    {
+                        value: 1,
+                        duration: 0.6,
+                        ease: "power2.inOut",
+                        onUpdate: () => frog?.setBadgeMix(badgeMix.value),
+                    },
+                    0,
+                )
+                .fromTo(
+                    badge,
+                    {
+                        opacity: 0,
+                        scale: 0.62,
+                        boxShadow: "0 0 0 0 #fbfbf8, 0 0 0 0 #3a5de3",
+                    },
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        boxShadow: "0 0 0 4px #fbfbf8, 0 0 0 6px #3a5de3",
+                        duration: 0.5,
+                        ease: "back.out(1.7)",
+                    },
+                    0.08,
+                )
+        }
+        function leaveBadge() {
+            if (badgeState === "off") return
+            badgeState = "leaving"
+            smileCall?.kill()
+            smileCall = undefined
+            workDialogueActive = false
+            clearWorkDialogue()
+            frog?.setSmiling(false)
+            const rect = layer.getBoundingClientRect()
+            const baseTop = layerBaseTop()
+            const start = {
+                x: rect.left,
+                y: rect.top - baseTop,
+                width: rect.width,
+                height: rect.height,
+            }
+            const move = { value: 0 }
+            gsap.killTweensOf([layer, badge, badgeMix, move])
+            badgeTimeline = gsap
+                .timeline({
+                    onComplete: () => {
+                        badgeState = "off"
+                        delete root.dataset.frogDocked
+                        frog?.setBadge(false)
+                        gsap.set(badge, {
+                            opacity: 0,
+                            scale: 0.7,
+                            clearProps: "boxShadow",
+                        })
+                        position()
+                    },
+                })
+                .to(
+                    badge,
+                    {
+                        opacity: 0,
+                        scale: 0.7,
+                        duration: 0.3,
+                        ease: "power2.in",
+                    },
+                    0,
+                )
+                .to(
+                    badgeMix,
+                    {
+                        value: 0,
+                        duration: 0.68,
+                        ease: "power2.inOut",
+                        onUpdate: () => frog?.setBadgeMix(badgeMix.value),
+                    },
+                    0,
+                )
+                .to(
+                    move,
+                    {
+                        value: 1,
+                        duration: 0.68,
+                        ease: "power2.inOut",
+                        onUpdate: () => {
+                            // Retarget every frame so scrolling stays continuous.
+                            const target = layerPlacement()
+                            gsap.set(layer, {
+                                x: start.x + (target.x - start.x) * move.value,
+                                y: start.y + (target.y - start.y) * move.value,
+                                width:
+                                    start.width +
+                                    (target.width - start.width) * move.value,
+                                height:
+                                    start.height +
+                                    (target.height - start.height) * move.value,
+                            })
+                        },
+                    },
+                    0,
+                )
+        }
         function position() {
             if (disposed || anchors.length === 0) return
             readAnchors()
@@ -524,15 +800,46 @@ export default function FrogPresentation() {
                             ? String(corner.index === index ? corner.speech : 0)
                             : ""
             })
-            gsap.set(layer, {
-                x: placement.x,
-                y: placement.y,
-                width: placement.width,
-                height: placement.height,
-            })
-            const top = responsive
-                ? placement.y
-                : root.getBoundingClientRect().top + placement.y
+            latestPlacement = placement
+            const workRect = work.getBoundingClientRect()
+            const footerRect = footer.getBoundingClientRect()
+            const dockable = Boolean(frog) && !failed && !reduced.matches
+            if (badgeState === "off") {
+                if (
+                    dockable &&
+                    workBadgeStarts(workRect.top, footerRect.top, innerHeight)
+                )
+                    enterBadge()
+            } else if (badgeState === "on" || badgeState === "entering") {
+                if (
+                    !dockable ||
+                    !workBadgeActive(workRect.top, footerRect.top, innerHeight)
+                )
+                    leaveBadge()
+            }
+            if (badgeState === "off") {
+                gsap.set(layer, {
+                    x: placement.x,
+                    y: placement.y,
+                    width: placement.width,
+                    height: placement.height,
+                })
+            } else if (badgeState === "on") {
+                // Keep the circle docked through viewport resizes.
+                const dock = workBadgeDock(
+                    innerWidth,
+                    innerHeight,
+                    layer.getBoundingClientRect().height || 1,
+                    badgeInset(),
+                )
+                gsap.set(layer, { x: dock.x, y: dock.y - layerBaseTop() })
+            }
+            const top =
+                badgeState === "off"
+                    ? responsive
+                        ? placement.y
+                        : root.getBoundingClientRect().top + placement.y
+                    : layer.getBoundingClientRect().top
             const running = shouldRenderFrog(
                 document.hidden,
                 reduced.matches,
@@ -542,6 +849,7 @@ export default function FrogPresentation() {
             )
             updateFirefly(running)
             updateDialogue(running)
+            updateWorkDialogue(running)
             frog?.setPaused(!running)
             reactToScroll(running, corner, responsive)
             layer.style.visibility =
@@ -587,6 +895,7 @@ export default function FrogPresentation() {
             dialogueActive = false
             clearDialogue()
             resetAboutAnimation()
+            resetBadge()
             delete root.dataset.frogReady
             frog?.canvas.removeEventListener("webglcontextlost", fail)
             frog?.destroy()
@@ -616,6 +925,7 @@ export default function FrogPresentation() {
             resetAboutAnimation()
             resetTrick()
             if (reduced.matches) {
+                resetBadge()
                 frog?.canvas.removeEventListener("webglcontextlost", fail)
                 frog?.destroy()
                 frog = undefined
@@ -725,6 +1035,7 @@ export default function FrogPresentation() {
             lenis?.destroy()
             hop?.kill()
             aboutAnimation?.kill()
+            resetBadge()
             flightTween?.kill()
             gsap.killTweensOf([
                 layer,
@@ -767,9 +1078,20 @@ export default function FrogPresentation() {
                 data-frog-layer
                 aria-hidden="true"
             >
+                {/* The paper disc and ring behind the renderer's circular crop. */}
+                <div
+                    className="preview-frog-badge pointer-events-none"
+                    data-frog-badge
+                />
                 <div
                     ref={hostRef}
                     className="preview-frog-host pointer-events-none h-full w-full"
+                />
+                {/* Spoken only while docked; the footer has its own bubble. */}
+                <p
+                    className="preview-frog-work-dialogue speech-tail-down pointer-events-none m-0 rounded-[20px] bg-preview-white px-4 py-3 text-[clamp(16px,1.5vw,19px)] font-semibold leading-[1.3] text-preview-black"
+                    data-frog-work-dialogue
+                    hidden
                 />
                 <FrogFood />
                 <FrogFlag />

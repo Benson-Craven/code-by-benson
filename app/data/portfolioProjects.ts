@@ -10,7 +10,7 @@ export const chronicPainRecoveryProject = {
         "A production healthcare website that organises pain science, treatment information and consultation routes for patients.",
     status: "production",
     availabilityLabel: "Live production site",
-    timeframe: "2025 - 2026",
+    timeframe: "2024 - 2026",
     stack: ["Next.js", "TypeScript"],
     capabilities: [
         {

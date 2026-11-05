@@ -244,6 +244,64 @@
     }
 }
 
+/* ---- All Work frog badge ----------------------------------------------- */
+
+/*
+ * From All Work's midpoint through the footer approach the frog sits in a
+ * paper disc with a ring, cropped by the renderer's circular badge. The disc
+ * is anchored to the same point the renderer crops from: 100px from the
+ * layer's left and 152px above its bottom.
+ */
+
+.preview-frog-host {
+    position: relative;
+}
+
+.preview-frog-badge {
+    position: absolute;
+    left: 100px;
+    bottom: 152px;
+    z-index: 0;
+    width: 123px;
+    height: 123px;
+    margin: 0 0 -61.5px -61.5px;
+    border-radius: 50%;
+    background: #fbfbf8;
+    box-shadow:
+        0 0 0 4px #fbfbf8,
+        0 0 0 6px #3a5de3;
+    opacity: 0;
+    transform: scale(0.7);
+    pointer-events: none;
+}
+
+.preview-root[data-frog-docked="true"] .preview-frog-layer {
+    position: fixed;
+}
+
+/* The corner crop belongs to the standing frog, not the circular badge. */
+.preview-root[data-frog-docked="true"] .preview-frog-host {
+    clip-path: none;
+}
+
+/*
+ * The badge bubble sits directly above the circle. Its right edge lines up with
+ * the badge's right edge, so its tail lands on the frog's head. The offsets
+ * mirror `frogBadgeGeometry`: `100%` is the layer's 320px width, 161.5px is the
+ * badge centre plus its radius, and 152px is the centre above the layer's base.
+ */
+.preview-frog-work-dialogue {
+    position: absolute;
+    right: calc(100% - 161.5px);
+    bottom: calc(152px + 61.5px + 12px);
+    width: min(260px, calc(100vw - 40px));
+}
+
+.preview-frog-work-dialogue::after {
+    /* 61.5px to the badge centre, less half of the 20px tail. */
+    right: 51.5px;
+}
+
 /* ---- Sticky project stage --------------------------------------------- */
 
 @media (min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {

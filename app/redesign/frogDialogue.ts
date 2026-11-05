@@ -11,6 +11,19 @@ export const footerDialogue = [
     "Still here? Good. I like the company.",
 ]
 
+// The docked All Work badge has its own bubble, so these lines are about the
+// section itself: choosing a project while the frog stands guard in the corner.
+export const allWorkDialogue = [
+    "Three projects. I have notes on all three.",
+    "Hover a title. The cover follows along.",
+    "This circle is smaller than my last office.",
+    "I guard the work. Mostly I stand here.",
+    "Open one. I will be right here.",
+    "The third project is still in the workshop.",
+    "Scroll slowly. The covers are worth it.",
+    "Benson built these. I watched.",
+]
+
 // Each line stays close to the project it introduces, so the frog reads as a
 // guide rather than a generic mascot repeating itself on every page.
 export const projectDialogue: Record<PortfolioProjectSlug, string[]> = {
@@ -50,6 +63,10 @@ function pickLine(lines: string[], previous: string, random: number) {
 
 export function pickFooterDialogue(previous: string, random = Math.random()) {
     return pickLine(footerDialogue, previous, random)
+}
+
+export function pickAllWorkDialogue(previous: string, random = Math.random()) {
+    return pickLine(allWorkDialogue, previous, random)
 }
 
 export function pickProjectDialogue(

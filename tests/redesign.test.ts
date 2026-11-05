@@ -3,8 +3,13 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 import {
     aboutFlagOpacity,
+    frogBadgeGeometry,
     frogPlacement,
     shouldRenderFrog,
+    workBadgeActive,
+    workBadgeDock,
+    workBadgePosition,
+    workBadgeStarts,
 } from "../app/redesign/frogPlacement"
 import sitemap from "../app/sitemap"
 import { foodTreatment, heartTreatment } from "../app/redesign/frogTreatment"
@@ -80,6 +85,94 @@ test("rendering stops for hidden tabs, reduced motion and offscreen positions", 
     assert.equal(shouldRenderFrog(false, false, 800, 312, 800), false)
     assert.equal(shouldRenderFrog(false, false, -312, 312, 800), false)
     assert.equal(shouldRenderFrog(false, false, -311, 312, 800), true)
+})
+
+test("the frog leaves the badge once the footer is 20% into the viewport", () => {
+    // Docking starts when the work section reaches the middle.
+    assert.equal(workBadgeStarts(600, 2400, 1000), false)
+    assert.equal(workBadgeStarts(500, 2400, 1000), false)
+    assert.equal(workBadgeStarts(499, 2400, 1000), true)
+    // It stays until the footer covers a fifth of the viewport.
+    assert.equal(workBadgeActive(-200, 900, 1000), true)
+    assert.equal(workBadgeActive(-200, 801, 1000), true)
+    assert.equal(workBadgeActive(-200, 800, 1000), false)
+    assert.equal(workBadgeActive(-200, 0, 1000), false)
+    // Scrolling back up out of All Work also releases it.
+    assert.equal(workBadgeActive(500, 900, 1000), false)
+    // A small band above the release point keeps it from flickering.
+    assert.equal(workBadgeStarts(-200, 800, 1000), false)
+    assert.equal(workBadgeStarts(-200, 850, 1000), false)
+    assert.equal(workBadgeStarts(-200, 851, 1000), true)
+})
+
+test("the badge circle docks in the bottom-right corner whatever the layer size", () => {
+    for (const [width, height, inset] of [
+        [320, 700, 20],
+        [390, 844, 20],
+        [1024, 800, 24],
+        [1440, 1000, 24],
+    ] as const) {
+        for (const layerHeight of [234, 283, 348]) {
+            const dock = workBadgeDock(width, height, layerHeight, inset)
+            assert.equal(
+                dock.x + frogBadgeGeometry.x,
+                width - inset - frogBadgeGeometry.radius,
+            )
+            assert.equal(
+                dock.y + layerHeight - frogBadgeGeometry.yFromBottom,
+                height - inset - frogBadgeGeometry.radius,
+            )
+            assert.equal(dock.centreX, width - inset - frogBadgeGeometry.radius)
+            assert.equal(
+                dock.centreY,
+                height - inset - frogBadgeGeometry.radius,
+            )
+        }
+    }
+    // The entry flight starts from a viewport point, not from the layer corner.
+    const start = workBadgePosition(320, 480, 348)
+    assert.equal(start.x + frogBadgeGeometry.x, 320)
+    assert.equal(start.y + 348 - frogBadgeGeometry.yFromBottom, 480)
+    assert.equal(start.centreX, 320)
+    assert.equal(start.centreY, 480)
+})
+
+test("the frog docks as a paper-ringed circle over the all work grid", async () => {
+    const allWork = await readFile(
+        new URL("../app/redesign/AllWork.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(allWork, /data-frog-work/)
+    const presentation = await readFile(
+        new URL("../app/redesign/FrogPresentation.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(presentation, /data-frog-badge/)
+    assert.match(presentation, /data-frog-work-dialogue/)
+    assert.match(presentation, /pickAllWorkDialogue/)
+    assert.match(presentation, /workBadgeStarts\(/)
+    assert.match(presentation, /root\.dataset\.frogDocked = "true"/)
+    assert.match(presentation, /frog\.setBadgeMix\(0\)/)
+    assert.match(presentation, /frog\?\.setBadgeMix\(badgeMix\.value\)/)
+    assert.match(presentation, /frog\?\.setBadge\(false\)/)
+    const css = await readFile(
+        new URL("../app/redesign/preview.css", import.meta.url),
+        "utf8",
+    )
+    assert.match(css, /\.preview-frog-badge\s*\{/)
+    assert.match(css, /0 0 0 4px #fbfbf8/)
+    // The ring echoes the preview's blue and sits outside a paper gap.
+    assert.match(css, /0 0 0 6px #3a5de3/)
+    assert.match(css, /\.preview-frog-work-dialogue\s*\{/)
+    // The bubble is anchored to the same geometry as the cropped circle.
+    assert.match(css, /right: calc\(100% - 161\.5px\)/)
+    assert.match(css, /\.preview-root\[data-frog-docked="true"\]/)
+    const adapter = await readFile(
+        new URL("../app/redesign/frogAdapter.ts", import.meta.url),
+        "utf8",
+    )
+    assert.match(adapter, /setBadge\(on: boolean\)/)
+    assert.match(adapter, /setBadgeMix\(mix: number\)/)
 })
 
 test("the homepage is the indexable redesign and project pages are listed", async () => {
@@ -271,6 +364,40 @@ test("page-directed attention can be released and speech drives the rig", async 
     assert.equal(activity, 3)
 })
 
+test("the badge blend clamps and only resets the pose when it re-enters", async () => {
+    const modulePath = "../public/frog-mascot/src/frog-mascot.js"
+    const { FrogMascot } = await import(modulePath)
+    const applied: string[] = []
+    const frog = {
+        badgeMix: 0,
+        badgeOn: false,
+        opts: {} as { badge?: boolean },
+        applyBadge() {
+            applied.push("apply")
+        },
+    }
+    const setMix = FrogMascot.prototype.setBadgeMix
+    setMix.call(frog, 0.35)
+    assert.equal(frog.badgeMix, 0.35)
+    assert.equal(frog.badgeOn, true)
+    assert.equal(frog.opts.badge, false)
+    assert.deepEqual(applied, ["apply"])
+    setMix.call(frog, 1)
+    assert.equal(frog.badgeMix, 1)
+    assert.equal(frog.opts.badge, true)
+    assert.deepEqual(applied, ["apply"])
+    setMix.call(frog, 0)
+    assert.equal(frog.badgeMix, 0)
+    assert.equal(frog.badgeOn, false)
+    setMix.call(frog, 4)
+    assert.equal(frog.badgeMix, 1)
+    assert.deepEqual(applied, ["apply", "apply"])
+    setMix.call(frog, -2)
+    assert.equal(frog.badgeMix, 0)
+    setMix.call(frog, Number.NaN)
+    assert.equal(frog.badgeMix, 0)
+})
+
 test("tricks catch once, hop three times, then only sigh", async () => {
     const { frogTrick } = await import("../app/redesign/frogTreatment")
     assert.deepEqual(
@@ -338,6 +465,36 @@ test("footer dialogue can select every line without consecutive repeats", async 
             assert.ok(footerDialogue.includes(next))
         }
     }
+})
+
+test("the docked badge speaks its own All Work lines without repeats", async () => {
+    const { allWorkDialogue, pickAllWorkDialogue } =
+        await import("../app/redesign/frogDialogue")
+    assert.ok(allWorkDialogue.length >= 4)
+    assert.equal(new Set(allWorkDialogue).size, allWorkDialogue.length)
+    for (const line of allWorkDialogue) {
+        assert.match(line, /^[A-Z]/, `${line} should start a sentence`)
+        assert.match(line, /[.!?]$/, `${line} should end a sentence`)
+        assert.doesNotMatch(line, /[\u2013\u2014]/, `${line} has a dash`)
+        assert.ok(line.length <= 80, `${line} is too long for the bubble`)
+    }
+    // Every value in 0..1 reaches exactly one line, in order.
+    assert.deepEqual(
+        allWorkDialogue.map((_, index) =>
+            pickAllWorkDialogue("", index / allWorkDialogue.length),
+        ),
+        allWorkDialogue,
+    )
+    let previous = ""
+    const seen = new Set<string>()
+    for (let index = 0; index < 24; index++) {
+        const next = pickAllWorkDialogue(previous, (index % 9) / 9 + 0.01)
+        assert.ok(allWorkDialogue.includes(next))
+        assert.notEqual(next, previous)
+        seen.add(next)
+        previous = next
+    }
+    assert.ok(seen.size > 1, "the badge should rotate its lines")
 })
 
 test("each project page speaks its own lines without consecutive repeats", async () => {

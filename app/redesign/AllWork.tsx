@@ -8,6 +8,7 @@ export default function AllWork() {
             id="work"
             className="preview-work relative bg-[#e6e6e0] px-[max(4.72vw,24px)] pb-[clamp(120px,22vw,240px)] pt-[clamp(96px,16vw,180px)] text-preview-black grid-paper [--grid-line:#0b0b0c12]"
             data-project-index
+            data-frog-work
             aria-labelledby="work-title"
         >
             <div className="grid grid-cols-4 items-end gap-4 md:grid-cols-12">

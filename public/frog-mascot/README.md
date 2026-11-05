@@ -87,6 +87,7 @@ frog.blink();
 frog.sleep();                // force the sleeping pose
 frog.wake();                 // wake with the shudder
 frog.setBadge(true);         // circular crop, faces front
+frog.setBadgeMix(0.5);       // blend between full body (0) and badge (1)
 frog.setPalette({ ink: '#10141a' });
 frog.resize();               // normally automatic (ResizeObserver)
 frog.destroy();              // stop the loop, dispose GPU resources

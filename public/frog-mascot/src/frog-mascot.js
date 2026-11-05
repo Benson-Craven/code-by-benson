@@ -220,6 +220,7 @@ export class FrogMascot {
     this.happyUntil = 0;
     this.pageSmiling = false;
     this.badgeOn = !!this.opts.badge;
+    this.badgeMix = this.badgeOn ? 1 : 0;
     this.bubbleTimer = 0;
     this.stretch = 0;
     this.time = 0;
@@ -461,18 +462,18 @@ export class FrogMascot {
     /* --- placement --- */
     this.stretch += (Math.min(24, Math.abs(this.drag.offset.x) * 0.1) - this.stretch) * Math.min(1, dt * 8);
 
-    let wantX = this.layout.x + offsetX + (this.badgeOn ? 0 : this.follow.x * 22);
-    let wantY = this.layout.feetWorldY - this.character.bounds.minY * this.layout.scale
-      - offsetY - (this.badgeOn ? 0 : this.follow.y * 8);
-    let wantS = this.layout.scale;
+    const mix = this.badgeMix;
+    const badgeScale = (BADGE.radius * 1.24) / HEAD_HALF_WIDTH;
+    const normalX = this.layout.x + offsetX + (mix > 0 ? 0 : this.follow.x * 22);
+    const normalY = this.layout.feetWorldY - this.character.bounds.minY * this.layout.scale
+      - offsetY - (mix > 0 ? 0 : this.follow.y * 8);
+    // Blend the full-body pose into the badge instead of switching at once.
+    const wantX = normalX + (BADGE.x - normalX) * mix;
+    const wantY = normalY + (BADGE.y - HEAD_LOCAL_Y * badgeScale - normalY) * mix;
+    const wantS = this.layout.scale + (badgeScale - this.layout.scale) * mix;
 
-    if (this.badgeOn) {
-      wantS = (BADGE.radius * 1.24) / HEAD_HALF_WIDTH;
-      wantX = BADGE.x;
-      wantY = BADGE.y - HEAD_LOCAL_Y * wantS;
-    }
-
-    const wantTurn = this.badgeOn ? 0 : this.layout.turn + this.follow.x * 0.34;
+    const normalTurn = this.layout.turn + this.follow.x * 0.34;
+    const wantTurn = normalTurn * (1 - mix);
     this.view.turn += (wantTurn - this.view.turn) * Math.min(1, dt * 5);
 
     const ease = Math.min(1, dt * 7);
@@ -503,8 +504,15 @@ export class FrogMascot {
     /* --- uniforms --- */
     const u = this.dither.pass.uniforms;
     const px = this.dither.pixelRatio;
-    if (this.badgeOn) {
-      u.uClip.value.set(BADGE.x / px, BADGE.y / px, (BADGE.radius * 1.06) / px);
+    if (mix > 0) {
+      // Open the crop from the fixed badge point as the badge dissolves. The
+      // centre drifts back to the live head only while the circle is huge.
+      const open = 1 - mix;
+      const cropRadius = BADGE.radius * 1.06
+        + open * Math.max(this.width, this.height) * 6;
+      const cropX = (BADGE.x * mix + head.x * open) / px;
+      const cropY = (BADGE.y * mix + (this.height - head.y) * open) / px;
+      u.uClip.value.set(cropX, cropY, cropRadius / px);
       u.uPrint.value.set(1, 1, 0, 1);
       if (u.uTug) u.uTug.value.set(0, 0);
     } else {
@@ -581,9 +589,24 @@ export class FrogMascot {
 
   /** Face front and crop into a small circle. */
   setBadge(on) {
+    this.badgeMix = on ? 1 : 0;
     this.badgeOn = !!on;
     this.opts.badge = this.badgeOn;
     this.applyBadge();
+    return this;
+  }
+
+  /**
+   * Blend between the full-body pose (0) and the circular badge (1).
+   * Animating this opens the crop instead of snapping it on or off.
+   */
+  setBadgeMix(mix) {
+    const next = Math.max(0, Math.min(1, Number(mix) || 0));
+    const wasBadge = this.badgeOn;
+    this.badgeMix = next;
+    this.badgeOn = next > 0;
+    this.opts.badge = next >= 1;
+    if (this.badgeOn && !wasBadge) this.applyBadge();
     return this;
   }
 
