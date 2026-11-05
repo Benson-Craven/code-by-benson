@@ -73,7 +73,27 @@ export const showcaseMedia: Record<
             },
         },
     },
-    "nibbles-with-nifa": { desktop: {}, mobile: {} },
+    "nibbles-with-nifa": {
+        desktop: {
+            0: {
+                type: "video",
+                src: "/images/nibbles-with-nifa/nwn-hp-1.mp4",
+                poster: implementedPortfolioProjects[1].cover.src,
+                alt: "Nibbles with Nifa desktop homepage walkthrough",
+                label: "Homepage",
+            },
+        },
+        mobile: {
+            front: {
+                type: "video",
+                src: "/images/nibbles-with-nifa/nwn-mobile-1.mp4",
+                poster: implementedPortfolioProjects[1].cover.src,
+                alt: "Chronic Pain Recovery mobile homepage walkthrough",
+                label: "Mobile homepage",
+                position: "center top",
+            },
+        },
+    },
     waxlist: { desktop: {}, mobile: {} },
 }
 

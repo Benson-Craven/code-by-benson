@@ -216,6 +216,10 @@
 
 ## [OUTCOMES]
 
+- 2026-11-05: Removed the final walkthrough section from the CPRIE project page only. Its replacement showcase videos and next-project section remain. Scoped formatting, lint, typecheck and diff whitespace passed. Browser checks and production build were not rerun for this conditional rendering change.
+
+- 2026-11-05: ProjectCase now reuses the three CPR desktop showcase videos for its hero and screenshot frames through PreviewMedia, retaining muted inline looping playback and existing posters. Other project media and the separate walkthrough remain unchanged. Scoped Prettier, lint, typecheck, diff whitespace and isolated production build passed. Redesign tests passed 46/48; existing homepage copy and mobile-back image expectations fail against unchanged data. Browser playback, mobile, keyboard and reduced-motion checks were not run.
+
 - 2026-11-05: Added showcaseMedia in projectPresentationData.ts with per-project desktop slots 0/1/2 and mobile front/back overrides. Omitted slots retain current media. Connected existing CPR desktop and mobile clips plus the mobile still; updated docs/showcase-media.md and tests/redesign.test.ts. Preserved prior copy and renderer edits. Scoped formatting, lint, typecheck, diff whitespace and isolated production build passed. Redesign tests passed 47/48, including the new media test; the existing Waxlist unpublished-copy assertion still fails against prior user edits. Browser layout, playback, keyboard and reduced-motion checks were not run.
 
 - 2026-11-05: Updated showcase videos at the user's request to autoplay muted and loop inline without controls, replacing click-to-play behaviour. Updated the media guide.

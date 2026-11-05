@@ -4,6 +4,8 @@ import { useEffect, useRef, type CSSProperties } from "react"
 import Link from "next/link"
 import type { RedesignProjectPage } from "./projectDetailData"
 import BrowserFrame from "./BrowserFrame"
+import PreviewMedia from "./PreviewMedia"
+import { showcaseMedia } from "./projectPresentationData"
 import PixelDevelop from "./PixelDevelop"
 import PixelReveal from "./PixelReveal"
 import ProjectFrog from "./ProjectFrog"
@@ -35,6 +37,10 @@ export default function ProjectCase({
     const clip = project.evidence.clip
     const clipDescriptionId = `${project.slug}-project-clip-description`
     const frameHost = frameHosts[project.slug] ?? "Local build"
+    const desktopMedia =
+        project.slug === "chronic-pain-recovery"
+            ? showcaseMedia[project.slug].desktop
+            : undefined
     const leadShot = project.evidence.stills[0]
     const pairShots = [project.evidence.stills[1], project.evidence.stills[2]]
     // The reference pairs one claim with its screenshots. This uses the second
@@ -186,16 +192,25 @@ export default function ProjectCase({
                                 className="group/cover relative col-span-full mt-[clamp(28px,4vw,48px)] aspect-[16/10] overflow-hidden rounded-xl bg-preview-black md:col-span-8"
                                 data-project-hero={project.slug}
                             >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                    className="block h-full w-full object-cover"
-                                    src={project.cover.src}
-                                    alt={project.cover.alt}
-                                    width={project.cover.width}
-                                    height={project.cover.height}
-                                    loading="eager"
-                                    fetchPriority="high"
-                                />
+                                {desktopMedia?.[0] ? (
+                                    <PreviewMedia
+                                        media={desktopMedia[0]}
+                                        className="block h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            className="block h-full w-full object-cover"
+                                            src={project.cover.src}
+                                            alt={project.cover.alt}
+                                            width={project.cover.width}
+                                            height={project.cover.height}
+                                            loading="eager"
+                                            fetchPriority="high"
+                                        />
+                                    </>
+                                )}
                                 <PixelReveal
                                     src={project.cover.src}
                                     tint={tint}
@@ -234,15 +249,24 @@ export default function ProjectCase({
                         <div className="mx-auto max-w-[1600px]">
                             <figure className="m-0 grid gap-3">
                                 <BrowserFrame label={frameHost}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={leadShot.src}
-                                        alt={leadShot.alt}
-                                        width={leadShot.width}
-                                        height={leadShot.height}
-                                        loading="eager"
-                                    />
-                                    <PixelDevelop delayMs={120} />
+                                    {desktopMedia?.[0] ? (
+                                        <PreviewMedia
+                                            media={desktopMedia[0]}
+                                            className="block w-full"
+                                        />
+                                    ) : (
+                                        <>
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img
+                                                src={leadShot.src}
+                                                alt={leadShot.alt}
+                                                width={leadShot.width}
+                                                height={leadShot.height}
+                                                loading="eager"
+                                            />
+                                            <PixelDevelop delayMs={120} />
+                                        </>
+                                    )}
                                 </BrowserFrame>
                             </figure>
 
@@ -261,21 +285,38 @@ export default function ProjectCase({
                             </div>
 
                             <div className="grid gap-[clamp(28px,6vw,64px)] md:grid-cols-2 md:items-start md:gap-5">
-                                {pairShots.map((still) => (
+                                {pairShots.map((still, index) => (
                                     <figure
                                         key={still.id}
                                         className="m-0 grid gap-3"
                                     >
                                         <BrowserFrame label={frameHost}>
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={still.src}
-                                                alt={still.alt}
-                                                width={still.width}
-                                                height={still.height}
-                                                loading="lazy"
-                                            />
-                                            <PixelDevelop delayMs={80} />
+                                            {desktopMedia?.[
+                                                (index + 1) as 1 | 2
+                                            ] ? (
+                                                <PreviewMedia
+                                                    media={
+                                                        desktopMedia[
+                                                            (index + 1) as 1 | 2
+                                                        ]!
+                                                    }
+                                                    className="block w-full"
+                                                />
+                                            ) : (
+                                                <>
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        src={still.src}
+                                                        alt={still.alt}
+                                                        width={still.width}
+                                                        height={still.height}
+                                                        loading="lazy"
+                                                    />
+                                                    <PixelDevelop
+                                                        delayMs={80}
+                                                    />
+                                                </>
+                                            )}
                                         </BrowserFrame>
                                     </figure>
                                 ))}
@@ -283,44 +324,49 @@ export default function ProjectCase({
                         </div>
                     </section>
 
-                    <section
-                        className="grid min-h-svh content-center bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,12svh,150px)] text-preview-black max-md:min-h-0"
-                        aria-labelledby="project-clip"
-                    >
-                        <h2 id="project-clip" className="sr-only">
-                            Walkthrough
-                        </h2>
-                        <figure className="m-0 ml-auto grid w-full max-w-[1120px] gap-3.5 md:w-2/3">
-                            <BrowserFrame label={frameHost}>
-                                <video
-                                    ref={videoRef}
-                                    controls={clip.controls}
-                                    preload={clip.preload}
-                                    playsInline={clip.playsInline}
-                                    muted={clip.muted}
-                                    poster={clip.poster}
-                                    aria-describedby={clipDescriptionId}
-                                >
-                                    <source src={clip.src} type="video/mp4" />
-                                    {clip.captionsSrc ? (
-                                        <track
-                                            kind="captions"
-                                            src={clip.captionsSrc}
-                                            srcLang="en"
-                                            label="English"
-                                            default
+                    {project.slug !== "chronic-pain-recovery" && (
+                        <section
+                            className="grid min-h-svh content-center bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,12svh,150px)] text-preview-black max-md:min-h-0"
+                            aria-labelledby="project-clip"
+                        >
+                            <h2 id="project-clip" className="sr-only">
+                                Walkthrough
+                            </h2>
+                            <figure className="m-0 ml-auto grid w-full max-w-[1120px] gap-3.5 md:w-2/3">
+                                <BrowserFrame label={frameHost}>
+                                    <video
+                                        ref={videoRef}
+                                        controls={clip.controls}
+                                        preload={clip.preload}
+                                        playsInline={clip.playsInline}
+                                        muted={clip.muted}
+                                        poster={clip.poster}
+                                        aria-describedby={clipDescriptionId}
+                                    >
+                                        <source
+                                            src={clip.src}
+                                            type="video/mp4"
                                         />
-                                    ) : null}
-                                    Your browser does not support embedded
-                                    video.
-                                </video>
-                                <PixelDevelop poster={clip.poster} />
-                            </BrowserFrame>
-                            <p id={clipDescriptionId} className="sr-only">
-                                {clip.description}
-                            </p>
-                        </figure>
-                    </section>
+                                        {clip.captionsSrc ? (
+                                            <track
+                                                kind="captions"
+                                                src={clip.captionsSrc}
+                                                srcLang="en"
+                                                label="English"
+                                                default
+                                            />
+                                        ) : null}
+                                        Your browser does not support embedded
+                                        video.
+                                    </video>
+                                    <PixelDevelop poster={clip.poster} />
+                                </BrowserFrame>
+                                <p id={clipDescriptionId} className="sr-only">
+                                    {clip.description}
+                                </p>
+                            </figure>
+                        </section>
+                    )}
 
                     <section
                         className="grid min-h-svh content-start bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(48px,8svh,90px)] pt-[clamp(88px,14svh,170px)] text-preview-black max-md:min-h-0"
