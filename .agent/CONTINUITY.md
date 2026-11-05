@@ -2,6 +2,8 @@
 
 ## [PLANS]
 
+- 2026-11-05: The redesign is committed and merged to `main` as `7a416e5` and pushed to `origin`. `refactor/codebase`, `website-redesign` and `retro-redesign` were deleted locally and on `origin`; `main` is the only branch. Deployment and real-device review remain outstanding.
+
 - 2026-11-04: The redesign now serves the homepage at `/` and its project pages at `/projects/[slug]`; `/redesign*` redirects. Local verification is complete. Real-device review, commit and deployment remain outstanding; `/work` retirement is a follow-up.
 
 - 2026-11-04: The `/redesign` All work grid and pixelated project transitions are implemented and locally verified. Real-device review, commit and deployment remain outstanding.
