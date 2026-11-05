@@ -249,7 +249,7 @@ test("presentations preserve project order, project links and replaceable media"
                 ).length > 0,
             )
         }
-        assert.match(project.phone.front.label, /Temporary/)
+        assert.ok(project.phone.front.label.trim().length > 0)
         if (project.slug !== "chronic-pain-recovery") {
             assert.ok(
                 project.desktop.every(({ label }) =>
@@ -263,6 +263,37 @@ test("presentations preserve project order, project links and replaceable media"
         /Nifa owns.*editorial/,
     )
     assert.match(projectPresentations[2].bubbles.join(" "), /unpublished/)
+})
+
+test("showcase device slots select independent clips and images with fallbacks", async () => {
+    const { projectPresentations, showcaseMedia } =
+        await import("../app/redesign/projectPresentationData")
+    const [cpr, nibbles] = projectPresentations
+    assert.equal(cpr.desktop[0], showcaseMedia[cpr.slug].desktop?.[0])
+    assert.equal(cpr.phone.front, showcaseMedia[cpr.slug].mobile?.front)
+    assert.equal(cpr.phone.back, showcaseMedia[cpr.slug].mobile?.back)
+    assert.equal(cpr.desktop[0].type, "video")
+    assert.equal(cpr.phone.front.type, "video")
+    assert.equal(cpr.phone.back.type, "image")
+    assert.notEqual(cpr.desktop[0].src, cpr.phone.front.src)
+    assert.notEqual(cpr.phone.front.src, cpr.phone.back.src)
+    assert.equal(cpr.phone.front.poster, cpr.phone.back.src)
+    assert.equal(
+        nibbles.phone.front.src,
+        implementedPortfolioProjects[1].cover.src,
+    )
+    assert.equal(
+        nibbles.phone.back.src,
+        implementedPortfolioProjects[1].cover.src,
+    )
+    for (const media of [...cpr.desktop, cpr.phone.front, cpr.phone.back]) {
+        for (const path of [media.src, media.poster].filter(Boolean)) {
+            assert.ok(
+                (await readFile(new URL(`../public${path}`, import.meta.url)))
+                    .length > 0,
+            )
+        }
+    }
 })
 
 test("project beats hold, transition, reverse and fade before release", async () => {

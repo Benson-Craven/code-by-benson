@@ -5,7 +5,9 @@ import { projectTints } from "./projectDetailData"
 export const heldPresentationQuery =
     "(min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference)"
 
-type PreviewMedia = {
+export type PreviewMedia = {
+    type?: "image" | "video"
+    poster?: string
     src: string
     alt: string
     label: string
@@ -21,6 +23,60 @@ export type ProjectPresentationData = {
     desktop: [PreviewMedia, PreviewMedia, PreviewMedia]
     phone: { front: PreviewMedia; back: PreviewMedia }
 }
+// Override individual device slots here. Omitted slots keep their existing media.
+export const showcaseMedia: Record<
+    string,
+    {
+        desktop?: Partial<Record<0 | 1 | 2, PreviewMedia>>
+        mobile?: Partial<Record<"front" | "back", PreviewMedia>>
+    }
+> = {
+    "chronic-pain-recovery": {
+        desktop: {
+            0: {
+                type: "video",
+                src: "/images/chronic-pain-recovery/cprie-hp-1-vid.mp4",
+                poster: implementedPortfolioProjects[0].cover.src,
+                alt: "Chronic Pain Recovery desktop homepage walkthrough",
+                label: "Homepage",
+            },
+            1: {
+                type: "video",
+                src: "/images/chronic-pain-recovery/cprie-hp-2.mp4",
+                poster: implementedPortfolioProjects[0].cover.src,
+                alt: "Chronic Pain Recovery desktop homepage walkthrough",
+                label: "Homepage",
+            },
+            2: {
+                type: "video",
+                src: "/images/chronic-pain-recovery/cprie-hp-3.mp4",
+                poster: implementedPortfolioProjects[0].cover.src,
+                alt: "Chronic Pain Recovery desktop homepage walkthrough",
+                label: "Homepage",
+            },
+        },
+        mobile: {
+            front: {
+                type: "video",
+                src: "/images/chronic-pain-recovery/cprie-hp-1-mobile.mp4",
+                poster: "/images/chronic-pain-recovery/cprie-hp-1-mobile-sc.png",
+                alt: "Chronic Pain Recovery mobile homepage walkthrough",
+                label: "Mobile homepage",
+                position: "center top",
+            },
+            back: {
+                type: "video",
+                src: "/images/chronic-pain-recovery/cprie-hp-1-mobile-2.mp4",
+                alt: "Chronic Pain Recovery mobile homepage",
+                label: "Mobile homepage",
+                position: "center top",
+            },
+        },
+    },
+    "nibbles-with-nifa": { desktop: {}, mobile: {} },
+    waxlist: { desktop: {}, mobile: {} },
+}
+
 const bubbles: [string, string, string][] = [
     [
         "A healthcare website that helps patients find pain science, treatment information and consultation routes.",
@@ -28,13 +84,13 @@ const bubbles: [string, string, string][] = [
         "Reusable sections bring headings, image descriptions and FAQ schema into the page structure.",
     ],
     [
-        "A food and travel site for Nifa's recipes and stories. Nifa owns the writing, photography and editorial direction.",
+        "A food and travel site for recipes and stories. Nifa owns the writing, photography and editorial direction.",
         "Benson built the Next.js frontend and Sanity content architecture, including private previews.",
-        "A separate recipe ready state lets Nifa keep rough notes without publishing incomplete recipes.",
+        "A separate recipe ready state lets the admin keep rough notes without publishing incomplete recipes or stories.",
     ],
     [
-        "An unpublished record-collecting app that brings collection, shelf and buying information together.",
-        "Benson built the product interface, server-side Spotify OAuth, Discogs integration and Postgres storage.",
+        "An record-collecting tool that brings collection, shelf and buying information together from Discogs.",
+        "Benson built the product interface, server-side Spotify OAuth, Discogs integration and PostgreSQL storage.",
         "Deterministic matching scores release confidence before price and availability rank buying options.",
     ],
 ]
@@ -69,8 +125,8 @@ export const projectPresentations: ProjectPresentationData[] =
         const phone = {
             ...cover,
             position: "center top",
-            label: "Temporary phone crop",
         }
+        const media = showcaseMedia[project.slug]
         return {
             slug: project.slug,
             title: project.title,
@@ -78,8 +134,15 @@ export const projectPresentations: ProjectPresentationData[] =
             tint: projectTints[project.slug],
             side: index === 1 ? "right" : "left",
             bubbles: bubbles[index],
-            desktop,
-            phone: { front: { ...phone }, back: { ...phone } },
+            desktop: [
+                media?.desktop?.[0] ?? desktop[0],
+                media?.desktop?.[1] ?? desktop[1],
+                media?.desktop?.[2] ?? desktop[2],
+            ],
+            phone: {
+                front: media?.mobile?.front ?? { ...phone },
+                back: media?.mobile?.back ?? { ...phone },
+            },
         }
     })
 

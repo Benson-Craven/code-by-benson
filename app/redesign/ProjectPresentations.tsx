@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useRef } from "react"
 import Link from "next/link"
+import PreviewMedia from "./PreviewMedia"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import {
@@ -447,25 +448,16 @@ export default function ProjectPresentations() {
                                                 data-responsive-slide
                                                 key={index}
                                             >
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img
+                                                <PreviewMedia
                                                     className="absolute inset-0 h-full w-full object-cover"
-                                                    src={media.src}
-                                                    alt={media.alt}
-                                                    width={1440}
-                                                    height={900}
-                                                    loading="lazy"
-                                                    data-project-cover={
+                                                    media={media}
+                                                    cover={
                                                         index === 0
                                                             ? project.slug
                                                             : undefined
                                                     }
-                                                    style={{
-                                                        objectPosition:
-                                                            media.position,
-                                                    }}
                                                 />
-                                                <figcaption className="absolute bottom-0 left-0 bg-preview-white px-3 py-1.5 text-sm leading-[1.5] tracking-normal text-[#1e1e1e]">
+                                                <figcaption className="pointer-events-none absolute left-0 top-0 bg-preview-white px-3 py-1.5 text-sm leading-[1.5] tracking-normal text-[#1e1e1e]">
                                                     {media.label}
                                                 </figcaption>
                                             </figure>
@@ -473,10 +465,7 @@ export default function ProjectPresentations() {
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                className="preview-phone-perspective relative mb-0 ml-auto mr-0 mt-6 aspect-[9/18] w-[clamp(100px,16vw,190px)] [perspective:1000px] max-lg:mx-auto max-lg:mt-6 max-lg:aspect-auto max-lg:w-[min(180px,50vw)] max-lg:[perspective:none]"
-                                aria-hidden="true"
-                            >
+                            <div className="preview-phone-perspective relative mb-0 ml-auto mr-0 mt-6 aspect-[9/18] w-[clamp(100px,16vw,190px)] [perspective:1000px] max-lg:mx-auto max-lg:mt-6 max-lg:aspect-auto max-lg:w-[min(180px,50vw)] max-lg:[perspective:none]">
                                 <div
                                     className="preview-phone relative h-full w-full [transform-style:preserve-3d]"
                                     data-phone
@@ -489,23 +478,11 @@ export default function ProjectPresentations() {
                                                 data-responsive-slide
                                                 key={face}
                                             >
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img
+                                                <PreviewMedia
                                                     className="h-full w-full object-cover"
-                                                    src={
-                                                        project.phone[face].src
-                                                    }
-                                                    alt=""
-                                                    width={1440}
-                                                    height={900}
-                                                    loading="lazy"
-                                                    style={{
-                                                        objectPosition:
-                                                            project.phone[face]
-                                                                .position,
-                                                    }}
+                                                    media={project.phone[face]}
                                                 />
-                                                <span className="absolute inset-x-0 bottom-0 bg-preview-white p-2 text-center text-xs leading-[1.5] tracking-normal text-[#1e1e1e]">
+                                                <span className="pointer-events-none absolute inset-x-0 top-5 bg-preview-white p-2 text-center text-xs leading-[1.5] tracking-normal text-[#1e1e1e]">
                                                     {project.phone[face].label}
                                                 </span>
                                             </div>

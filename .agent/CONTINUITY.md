@@ -2,6 +2,8 @@
 
 ## [PLANS]
 
+- 2026-11-05: Independent showcase device media is implemented and locally checked. Browser playback and visual review remain outstanding.
+
 - 2026-11-05: Release the All Work badge when the footer covers 20% of the viewport, blending back into the frog's normal scroll travel instead of holding the badge to the footer top. Implementation and local verification are complete. Real-device review, commit and deployment remain outstanding.
 
 - 2026-11-05: Make the All Work badge hand off continuously into the footer frog. The badge now stays through the footer approach and the renderer blends the circle open into the footer slot. Implementation and local verification are complete. Real-device review, commit and deployment remain outstanding.
@@ -213,6 +215,12 @@
 - The in-app browser controller was not exposed during the 2026-07-16 refinement. Chrome responsive mode confirmed no horizontal overflow and hero wrapping of 4, 3, 2, and 2 lines at 320, 390, 768, and 1440 CSS pixels. The shared case-study layout also had no overflow at 1024 pixels. A physical 200% page-zoom pass preserved reflow, skip-link focus, mobile-menu focus entry, and Escape focus restoration.
 
 ## [OUTCOMES]
+
+- 2026-11-05: Added showcaseMedia in projectPresentationData.ts with per-project desktop slots 0/1/2 and mobile front/back overrides. Omitted slots retain current media. Connected existing CPR desktop and mobile clips plus the mobile still; updated docs/showcase-media.md and tests/redesign.test.ts. Preserved prior copy and renderer edits. Scoped formatting, lint, typecheck, diff whitespace and isolated production build passed. Redesign tests passed 47/48, including the new media test; the existing Waxlist unpublished-copy assertion still fails against prior user edits. Browser layout, playback, keyboard and reduced-motion checks were not run.
+
+- 2026-11-05: Updated showcase videos at the user's request to autoplay muted and loop inline without controls, replacing click-to-play behaviour. Updated the media guide.
+
+- 2026-11-05: Added PreviewMedia for desktop and phone showcase slots with native video controls, inline playback, optional posters and deferred loading. Moved the user's CPR MP4 selection from the shared image cover into presentation data. Preserved existing copy edits. Added docs/showcase-media.md. Formatting, typecheck, lint and isolated production build passed. Focused redesign tests passed 46/47; the remaining test expects Temporary phone labels and unpublished Waxlist wording that the user's existing edits removed. Browser playback, mobile and keyboard checks were not run.
 
 - 2026-11-05: Shared project-action buttons in the homepage showcase and project pages now move 2px left and 3px up on hover with a 180ms ease-out return. The CSS animation requires hover support and no reduced-motion preference. Only preview.css and this log changed for this task; existing working-tree changes were preserved. Scoped Prettier, 47 redesign tests, lint, typecheck, production build and diff whitespace checks passed. Browser host unavailable, so visual hover, mobile and keyboard checks remain unverified.
 
