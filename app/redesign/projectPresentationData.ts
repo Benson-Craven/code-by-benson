@@ -122,11 +122,12 @@ export function responsivePresentationProgress(progress: number) {
     }
 }
 
-export function responsiveStageFits(
+export function responsiveStageSize(
     viewport: number,
     heading: number,
-    device: number,
     narration: number,
+    spacing: number,
 ) {
-    return heading + device + narration + 80 <= viewport
+    const available = viewport - heading - narration - spacing
+    return available >= 180 ? Math.min(345, available) : null
 }

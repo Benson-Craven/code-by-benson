@@ -9,7 +9,7 @@ import {
     presentationProgress,
     projectPresentations,
     responsivePresentationProgress,
-    responsiveStageFits,
+    responsiveStageSize,
 } from "./projectPresentationData"
 
 export default function ProjectPresentations() {
@@ -54,9 +54,10 @@ export default function ProjectPresentations() {
                     const cleanups = sections.map((section) => {
                         const heading =
                             section.querySelector<HTMLElement>("header")!
-                        const devices = section.querySelector<HTMLElement>(
-                            "[data-project-devices]",
-                        )!
+                        const stage =
+                            section.querySelector<HTMLElement>(
+                                ".preview-stage",
+                            )!
                         const browser = section.querySelector<HTMLElement>(
                             "[data-browser-frame]",
                         )!
@@ -74,6 +75,8 @@ export default function ProjectPresentations() {
                             section.querySelector<HTMLElement>("[data-phone]")!
                         const phoneWrapper = phone.parentElement!
                         const clearPresentation = () => {
+                            section.style.removeProperty("--device-height")
+                            section.style.removeProperty("--narration-height")
                             gsap.set(
                                 [...slides, browser, ...bubbles, phoneWrapper],
                                 {
@@ -111,14 +114,24 @@ export default function ProjectPresentations() {
                                 "--narration-height",
                                 `${narration}px`,
                             )
-                            const fits = responsiveStageFits(
-                                innerHeight,
+                            const stageStyle = getComputedStyle(stage)
+                            const spacing =
+                                parseFloat(stageStyle.paddingTop) +
+                                parseFloat(stageStyle.paddingBottom) +
+                                parseFloat(
+                                    getComputedStyle(heading).marginBottom,
+                                ) +
+                                parseFloat(stageStyle.rowGap) * 2
+                            const deviceHeight = responsiveStageSize(
+                                stage.clientHeight,
                                 heading.offsetHeight,
-                                devices.offsetHeight,
                                 narration,
+                                spacing,
                             )
-                            section.dataset.responsive = fits ? "held" : "flow"
-                            if (!fits) {
+                            section.dataset.responsive =
+                                deviceHeight === null ? "flow" : "held"
+                            if (deviceHeight === null) {
+                                clearPresentation()
                                 slides.forEach((slide) => {
                                     const paint = () => {
                                         const rect =
@@ -149,6 +162,10 @@ export default function ProjectPresentations() {
                                 })
                                 return
                             }
+                            section.style.setProperty(
+                                "--device-height",
+                                `${deviceHeight}px`,
+                            )
                             const paint = (progress: number) => {
                                 const state =
                                     responsivePresentationProgress(progress)
@@ -200,16 +217,23 @@ export default function ProjectPresentations() {
                                 clearPresentation()
                             }
                         }
+                        let active = true
                         safeSetup()
                         window.addEventListener("resize", safeSetup)
+                        window.addEventListener("orientationchange", safeSetup)
                         void document.fonts.ready.then(() => {
-                            if (!disposed && section.dataset.responsive) {
+                            if (!disposed && active) {
                                 safeSetup()
                                 ScrollTrigger.refresh()
                             }
                         })
                         return () => {
+                            active = false
                             window.removeEventListener("resize", safeSetup)
+                            window.removeEventListener(
+                                "orientationchange",
+                                safeSetup,
+                            )
                             trigger?.kill()
                             flowTriggers.forEach((item) => item.kill())
                             delete section.dataset.responsive

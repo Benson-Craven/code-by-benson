@@ -52,6 +52,48 @@ export function shouldRenderFrog(
     return !hidden && !reduced && top < viewportHeight && top + height > 0
 }
 
+/**
+ * The About frog carries a decorative tricolour on every layout. Mobile only
+ * plants it while About owns the corner frog, matching the speech fade.
+ * Desktop fades it in over the last fifth of the approach, then fades it out as
+ * the next section enters, so it never follows the frog into a project.
+ */
+export function aboutFlagOpacity({
+    aboutActive,
+    introTop,
+    introBottom,
+    viewportHeight,
+    cornerActive,
+    cornerIndex,
+    cornerSpeech,
+    reduced,
+}: {
+    aboutActive: boolean
+    introTop: number
+    introBottom: number
+    viewportHeight: number
+    cornerActive: boolean
+    cornerIndex: number
+    cornerSpeech: number
+    reduced: boolean
+}) {
+    if (reduced || !aboutActive) return 0
+    if (cornerActive) return cornerIndex === 1 ? cornerSpeech : 0
+    const enter = Math.max(
+        0,
+        Math.min(1, (viewportHeight * 0.2 - introTop) / (viewportHeight * 0.2)),
+    )
+    // Fade out over the first quarter of the next section's entry.
+    const exit = Math.max(
+        0,
+        Math.min(
+            1,
+            (introBottom - viewportHeight * 0.75) / (viewportHeight * 0.25),
+        ),
+    )
+    return Math.min(enter, exit)
+}
+
 export const responsiveFrogSides = [
     "right",
     "center",

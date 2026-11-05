@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
-import { frogPlacement, shouldRenderFrog } from "../app/redesign/frogPlacement"
+import {
+    aboutFlagOpacity,
+    frogPlacement,
+    shouldRenderFrog,
+} from "../app/redesign/frogPlacement"
 import sitemap from "../app/sitemap"
 import { foodTreatment, heartTreatment } from "../app/redesign/frogTreatment"
 import { implementedPortfolioProjects } from "../app/data/portfolioProjects"
@@ -510,14 +514,16 @@ test("irish flag keeps the tricolour, ripples and honours reduced motion", async
         "#ff883e",
     ])
     assert.match(flag, /data-frog-flag/)
+    // Desktop tucks the flag in so it clears the About paragraph.
+    assert.match(flag, /lg:right-\[-6%\]/)
     const presentation = await readFile(
         new URL("../app/redesign/FrogPresentation.tsx", import.meta.url),
         "utf8",
     )
-    assert.match(
-        presentation,
-        /const flagOpacity =\s*cornerActive && corner\.index === 1 && aboutActive/,
-    )
+    assert.match(presentation, /const flagOpacity = aboutFlagOpacity\({/)
+    assert.match(presentation, /introTop: introRect\.top/)
+    assert.match(presentation, /introBottom: introRect\.bottom/)
+    assert.match(presentation, /cornerIndex: corner\.index/)
     assert.match(presentation, /flag\.style\.opacity = String\(flagOpacity\)/)
     assert.match(
         presentation,
@@ -541,13 +547,56 @@ test("irish flag keeps the tricolour, ripples and honours reduced motion", async
     assert.match(config, /flagWave:/)
 })
 
-test("responsive sticky stages require room for the heading, device and narration", async () => {
-    const { responsiveStageFits: fits } =
+test("about flag follows About on desktop and the corner frog on mobile", () => {
+    const desktop = {
+        aboutActive: true,
+        introTop: 0,
+        introBottom: 1000,
+        viewportHeight: 1000,
+        cornerActive: false,
+        cornerIndex: 1,
+        cornerSpeech: 1,
+        reduced: false,
+    }
+    assert.equal(aboutFlagOpacity(desktop), 1)
+    // Desktop fades the flag in over the last fifth of the approach.
+    assert.equal(aboutFlagOpacity({ ...desktop, introTop: 100 }), 0.5)
+    assert.equal(aboutFlagOpacity({ ...desktop, introTop: 200 }), 0)
+    assert.equal(aboutFlagOpacity({ ...desktop, introTop: 250 }), 0)
+    // The flag fades out over the first quarter of the next section's entry.
+    assert.equal(aboutFlagOpacity({ ...desktop, introBottom: 875 }), 0.5)
+    assert.equal(aboutFlagOpacity({ ...desktop, introBottom: 750 }), 0)
+    assert.equal(aboutFlagOpacity({ ...desktop, introBottom: 700 }), 0)
+    assert.equal(aboutFlagOpacity({ ...desktop, aboutActive: false }), 0)
+    assert.equal(aboutFlagOpacity({ ...desktop, reduced: true }), 0)
+    // Mobile keeps the corner-speech contract and ignores the desktop offsets.
+    const mobile = {
+        ...desktop,
+        introTop: 240,
+        introBottom: 760,
+        cornerActive: true,
+        cornerSpeech: 0.4,
+    }
+    assert.equal(aboutFlagOpacity(mobile), 0.4)
+    assert.equal(aboutFlagOpacity({ ...mobile, cornerIndex: 0 }), 0)
+    assert.equal(aboutFlagOpacity({ ...mobile, cornerIndex: 2 }), 0)
+})
+
+test("responsive stages size devices before falling back to document flow", async () => {
+    const { responsiveStageSize: size } =
         await import("../app/redesign/projectPresentationData")
-    assert.equal(fits(777, 120, 264, 200), true)
-    assert.equal(fits(390, 120, 220, 200), false)
-    assert.equal(fits(600, 100, 220, 200), true)
-    assert.equal(fits(600, 101, 220, 200), false)
+    assert.equal(size(600, 100, 256, 64), 180)
+    assert.equal(size(599.9, 100, 256, 64), null)
+    assert.equal(size(1000, 100, 256, 64), 345)
+    assert.equal(size(390, 96, 365, 64), null)
+    // Chrome measurements at 401 x 715 before adaptive sizing.
+    assert.equal(size(715, 96, 364.527, 64), 190.473)
+    assert.equal(size(715, 50, 364.527, 64), 236.473)
+    assert.equal(size(844, 96, 365, 64), 319)
+    assert.equal(size(874, 96, 365, 64), 345)
+    // Font wrapping or a larger safe-area reservation can force flow again.
+    assert.equal(size(715, 120, 365, 64), null)
+    assert.equal(size(715, 96, 390, 64), null)
 })
 
 test("responsive phone flips solid faces in the final fifth of beat four", async () => {
@@ -851,6 +900,18 @@ test("project pages reveal the hero as pixels and close back to all work", async
     assert.match(source, /href="\/#work"/)
 })
 
+test("the project hero reveal hands the cover back to the real image", async () => {
+    const reveal = await readFile(
+        new URL("../app/redesign/PixelReveal.tsx", import.meta.url),
+        "utf8",
+    )
+
+    // The ready utility outranks the completed utility, so completion has to
+    // clear the ready flag or the pixel canvas covers the hero indefinitely.
+    assert.match(reveal, /canvas\.dataset\.pixelComplete = "true"/)
+    assert.match(reveal, /delete host\.dataset\.pixelReady/)
+})
+
 test("project pages run the animated frog behind their dialogue layer", async () => {
     const projectCase = await readFile(
         new URL("../app/redesign/ProjectCase.tsx", import.meta.url),
@@ -888,6 +949,11 @@ test("project pages run the animated frog behind their dialogue layer", async ()
     assert.match(
         css,
         /\.case-frog\[data-frog-ready="true"\] \.case-frog-fallback/,
+    )
+    // Desktop restores the preview's corner scale; phones keep the reduction.
+    assert.match(
+        css,
+        /@media \(min-width: 1024px\) \{\s*\.case-frog \{\s*--case-frog-size: clamp\(240px, 23vw, 340px\);/,
     )
 })
 

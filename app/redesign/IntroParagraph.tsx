@@ -54,7 +54,14 @@ export default function IntroParagraph({ className }: { className?: string }) {
     return (
         <p ref={paragraphRef} className={className}>
             {words(
-                "I'm a full-stack developer with a focus on frontend, based in Cork, Ireland. For three years I've built fast, accessible websites, and I care most about",
+                "I'm a full-stack developer with a focus on frontend, based in",
+            )}{" "}
+            <span className="font-light text-[#199A65]">
+                {words("Cork, Ireland")}
+            </span>
+            <span data-intro-word>.</span>{" "}
+            {words(
+                "For three years I've built fast, accessible websites, and I care most about",
             )}{" "}
             <em className="font-light not-italic text-preview-blue">
                 {words("interactive motion")}

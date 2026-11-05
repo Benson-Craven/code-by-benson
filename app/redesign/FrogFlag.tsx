@@ -9,9 +9,10 @@ const flagColumns = [
 ]
 
 export default function FrogFlag() {
+    // Desktop tucks the flag against the frog so it clears the About copy.
     return (
         <div
-            className="preview-flag group/flag pointer-events-none absolute bottom-0 right-[-21%] aspect-[64/130] w-[30%] opacity-0 transition-opacity duration-[400ms] ease-[ease] motion-reduce:transition-none"
+            className="preview-flag group/flag pointer-events-none absolute bottom-0 right-[-21%] aspect-[64/130] w-[30%] opacity-0 transition-opacity duration-[400ms] ease-[ease] motion-reduce:transition-none lg:right-[-6%]"
             data-frog-flag
             aria-hidden="true"
         >

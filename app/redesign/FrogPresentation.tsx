@@ -6,6 +6,7 @@ import Lenis from "lenis"
 import "lenis/dist/lenis.css"
 import { createFrog, loadFrog, type FrogInstance } from "./frogAdapter"
 import {
+    aboutFlagOpacity,
     frogPlacement,
     cornerFrogPlacement,
     shouldRenderFrog,
@@ -281,10 +282,16 @@ export default function FrogPresentation() {
                 introRect.top <= innerHeight * 0.35 &&
                 introRect.bottom > innerHeight * 0.35
             // Keep the planted flag with the intro only, never across travel.
-            const flagOpacity =
-                cornerActive && corner.index === 1 && aboutActive
-                    ? corner.speech
-                    : 0
+            const flagOpacity = aboutFlagOpacity({
+                aboutActive,
+                introTop: introRect.top,
+                introBottom: introRect.bottom,
+                viewportHeight: innerHeight,
+                cornerActive,
+                cornerIndex: corner.index,
+                cornerSpeech: corner.speech,
+                reduced: reduced.matches,
+            })
             flag.style.opacity = String(flagOpacity)
             flag.dataset.visible = String(flagOpacity > 0)
             if (aboutActive && !project) beat = "about"

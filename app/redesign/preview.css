@@ -366,16 +366,17 @@
         padding-block: 24px;
         display: flex;
         flex-direction: column;
+        row-gap: 8px;
     }
 
     .preview-project[data-responsive="held"] .preview-heading {
         gap: 8px;
-        margin-bottom: 16px;
+        margin-bottom: 0;
         flex-shrink: 0;
     }
 
     .preview-project[data-responsive="held"] [data-project-devices] {
-        height: clamp(220px, 34vh, 360px);
+        height: var(--device-height, 345px);
         flex-shrink: 0;
         display: grid;
         place-items: center;
@@ -386,7 +387,7 @@
 
     .preview-project[data-responsive="held"] [data-browser-frame] {
         grid-area: 1 / 1;
-        width: min(100%, calc((clamp(220px, 34vh, 360px) - 32px) * 1.6));
+        width: min(100%, calc(var(--device-height, 345px) * 328 / 345));
     }
 
     .preview-project[data-responsive="held"] [data-screen-strip] {
@@ -400,11 +401,11 @@
 
     .preview-project[data-responsive="held"] .preview-phone-perspective {
         grid-area: 1 / 1;
-        height: clamp(220px, 34vh, 360px);
-        width: calc(clamp(220px, 34vh, 360px) / 2);
+        height: var(--device-height, 345px);
+        width: calc(var(--device-height, 345px) * 169 / 345);
         min-width: 0;
         min-height: 0;
-        aspect-ratio: 9 / 18;
+        aspect-ratio: 169 / 345;
         margin: 0;
         perspective: 1000px;
     }
@@ -434,6 +435,7 @@
 
     .preview-project[data-responsive="held"] .preview-narrator {
         min-height: var(--narration-height);
+        flex-shrink: 0;
         margin-top: auto;
     }
 
@@ -530,7 +532,7 @@
 /* ---- Case-study frog, driven by runtime variables ---------------------- */
 
 .case-frog {
-    /* 30% below the redesign preview's corner scale, flush to the corner. */
+    /* Phones keep a 30% reduction; desktop uses the preview's corner scale. */
     --case-frog-size: clamp(154px, 47.6vw, 210px);
     --case-dialogue-gap: 8px;
     --case-frog-corner-inset: 32px;
@@ -542,6 +544,12 @@
     width: var(--case-frog-size);
     aspect-ratio: 320 / 336;
     pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+    .case-frog {
+        --case-frog-size: clamp(240px, 23vw, 340px);
+    }
 }
 
 .case-frog-host {

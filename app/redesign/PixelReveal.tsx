@@ -109,6 +109,10 @@ export default function PixelReveal({
                 }
 
                 canvas.dataset.pixelComplete = "true"
+                // The ready state keeps the canvas visible and outranks the
+                // completed state in the cascade, so clear it to hand the hero
+                // back to the real image.
+                delete host.dataset.pixelReady
             }
             frame = requestAnimationFrame(tick)
         }
