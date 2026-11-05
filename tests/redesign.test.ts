@@ -523,21 +523,22 @@ test("irish flag keeps the tricolour, ripples and honours reduced motion", async
         presentation,
         /flag\.dataset\.visible = String\(flagOpacity > 0\)/,
     )
-    const css = await readFile(
-        new URL("../app/redesign/redesign.module.css", import.meta.url),
+    const flagSource = await readFile(
+        new URL("../app/redesign/FrogFlag.tsx", import.meta.url),
         "utf8",
     )
-    assert.match(css, /\.flagColumn\s*\{[^}]*animation: flagWave/)
-    assert.match(css, /\.flagColumn\s*\{[^}]*animation-play-state: paused/)
+    assert.match(flagSource, /animate-flag-wave/)
+    assert.match(flagSource, /\[animation-play-state:paused\]/)
     assert.match(
-        css,
-        /\.frogFlag\[data-visible="true"\] \.flagColumn\s*\{\s*animation-play-state: running/,
+        flagSource,
+        /group-data-\[visible=true\]\/flag:\[animation-play-state:running\]/,
     )
-    const reduced = css.slice(css.indexOf("@keyframes flagWave"))
-    assert.match(
-        reduced,
-        /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.frogFlag\s*\{[^}]*\}\s*\.flagColumn\s*\{\s*animation: none;/,
+    assert.match(flagSource, /motion-reduce:animate-none/)
+    const config = await readFile(
+        new URL("../tailwind.config.ts", import.meta.url),
+        "utf8",
     )
+    assert.match(config, /flagWave:/)
 })
 
 test("responsive sticky stages require room for the heading, device and narration", async () => {
@@ -873,18 +874,21 @@ test("project pages run the animated frog behind their dialogue layer", async ()
         "visibilitychange",
         "revealSpeech",
         "data-dialogue-pixels",
-        "caseDialogueShadow",
+        "case-dialogue-shadow",
         'ease: "power2.in"',
     ]) {
         assert.ok(frog.includes(marker), `missing ${marker}`)
     }
 
     const css = await readFile(
-        new URL("../app/redesign/redesign.module.css", import.meta.url),
+        new URL("../app/redesign/preview.css", import.meta.url),
         "utf8",
     )
-    assert.match(css, /\.caseDialogue \{/)
-    assert.match(css, /\.caseFrog\[data-frog-ready="true"\] \.caseFrogFallback/)
+    assert.match(css, /\.case-dialogue \{/)
+    assert.match(
+        css,
+        /\.case-frog\[data-frog-ready="true"\] \.case-frog-fallback/,
+    )
 })
 
 test("the transition resolves covers from the clicked card and crossfades pixels", async () => {
@@ -949,9 +953,8 @@ test("project pages frame screenshots and keep only the short narrative", async 
         "PixelDevelop",
         "WordReveal",
         "data-project-hero={project.slug}",
-        "caseShotWide",
-        "caseShotPair",
-        "caseClipSection",
+        "pairShots.map",
+        'id="project-clip"',
         "data-project-cover={nextProject.slug}",
     ]) {
         assert.ok(page.includes(marker), `missing ${marker}`)
@@ -976,10 +979,10 @@ test("project pages frame screenshots and keep only the short narrative", async 
         "utf8",
     )
     for (const marker of [
-        "caseFrameShadow",
-        "caseFrameBar",
-        "caseFrameUrl",
-        "caseFrameMedia",
+        "conic-gradient",
+        "max-w-[62%]",
+        "group/media",
+        "text-ellipsis",
     ]) {
         assert.ok(frame.includes(marker), `missing ${marker}`)
     }
@@ -1024,16 +1027,13 @@ test("project copy reveals word by word and reads at one size on phones", async 
         assert.ok(wordReveal.includes(marker), `missing ${marker}`)
     }
 
-    const css = await readFile(
-        new URL("../app/redesign/redesign.module.css", import.meta.url),
+    const caseSource = await readFile(
+        new URL("../app/redesign/ProjectCase.tsx", import.meta.url),
         "utf8",
     )
-    const phoneBlock = css.slice(css.indexOf("@media (max-width: 767px)"))
-    assert.match(
-        phoneBlock,
-        /\.caseLead,\s*\n\s*\.caseIntroCopy p,\s*\n\s*\.caseShotHeader p \{\s*\n\s*font-size: 20px/,
-    )
-    assert.doesNotMatch(css, /\.caseClipNote/)
+    // Phones read body copy at one size, whatever the block.
+    assert.equal(caseSource.match(/max-md:text-xl/g)?.length, 3)
+    assert.doesNotMatch(caseSource, /caseClipNote/)
 })
 
 test("the frog speech bubble develops like a screenshot frame", async () => {
@@ -1054,10 +1054,10 @@ test("the frog speech bubble develops like a screenshot frame", async () => {
     }
 
     const css = await readFile(
-        new URL("../app/redesign/redesign.module.css", import.meta.url),
+        new URL("../app/redesign/preview.css", import.meta.url),
         "utf8",
     )
-    assert.match(css, /\.caseDialogueShadow \{/)
-    assert.match(css, /\.caseDialoguePixels \{/)
-    assert.match(css, /conic-gradient\(\s*var\(--black\) 25%/)
+    assert.match(css, /\.case-dialogue-shadow \{/)
+    assert.match(css, /\.case-dialogue-pixels \{/)
+    assert.match(css, /conic-gradient\(\s*#0b0b0c 25%/)
 })

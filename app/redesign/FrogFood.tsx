@@ -1,10 +1,9 @@
-import styles from "./redesign.module.css"
-
 export default function FrogFood() {
     return (
-        <div className={styles.frogFood}>
+        <div className="preview-frog-food pointer-events-none absolute inset-0 max-lg:hidden">
             <svg
                 data-frog-food="burger"
+                className="absolute left-[18%] top-[57%] h-auto w-[20%] origin-center opacity-0"
                 viewBox="0 0 24 24"
                 focusable="false"
                 shapeRendering="crispEdges"
@@ -18,6 +17,7 @@ export default function FrogFood() {
             </svg>
             <svg
                 data-frog-food="shake"
+                className="absolute left-[42%] top-[62%] h-auto w-[17%] origin-center opacity-0"
                 viewBox="0 0 24 28"
                 focusable="false"
                 shapeRendering="crispEdges"
@@ -34,6 +34,7 @@ export default function FrogFood() {
             </svg>
             <svg
                 data-frog-food="sushi"
+                className="absolute left-[64%] top-[56%] h-auto w-[20%] origin-center opacity-0"
                 viewBox="0 0 26 24"
                 focusable="false"
                 shapeRendering="crispEdges"

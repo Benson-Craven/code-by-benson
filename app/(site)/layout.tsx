@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import ProjectTransition from "../redesign/ProjectTransition"
+import "../redesign/preview.css"
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
     return (

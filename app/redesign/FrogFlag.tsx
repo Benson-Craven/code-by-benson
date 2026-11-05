@@ -1,5 +1,3 @@
-import styles from "./redesign.module.css"
-
 // Six columns keep the tricolour in order while the flag ripples.
 const flagColumns = [
     "#169b62",
@@ -12,8 +10,13 @@ const flagColumns = [
 
 export default function FrogFlag() {
     return (
-        <div className={styles.frogFlag} data-frog-flag aria-hidden="true">
+        <div
+            className="preview-flag group/flag pointer-events-none absolute bottom-0 right-[-21%] aspect-[64/130] w-[30%] opacity-0 transition-opacity duration-[400ms] ease-[ease] motion-reduce:transition-none"
+            data-frog-flag
+            aria-hidden="true"
+        >
             <svg
+                className="h-full w-full overflow-visible"
                 viewBox="0 0 64 130"
                 focusable="false"
                 shapeRendering="crispEdges"
@@ -25,7 +28,7 @@ export default function FrogFlag() {
                     return (
                         <g
                             key={index}
-                            className={styles.flagColumn}
+                            className="origin-center animate-flag-wave [animation-play-state:paused] group-data-[visible=true]/flag:[animation-play-state:running] motion-reduce:animate-none"
                             style={{ animationDelay: `${-index * 0.22}s` }}
                         >
                             <rect

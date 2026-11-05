@@ -9,7 +9,6 @@ import PixelReveal from "./PixelReveal"
 import ProjectFrog from "./ProjectFrog"
 import WordReveal from "./WordReveal"
 import { projectDetailPath } from "./projectNavigation"
-import styles from "./redesign.module.css"
 
 const contactEmail = "mailto:bensoncraven@hotmail.co.uk"
 
@@ -110,23 +109,26 @@ export default function ProjectCase({
     return (
         <div
             ref={rootRef}
-            className={styles.preview}
+            className="preview-root group"
             data-redesign
             data-project-page={project.slug}
         >
-            <a href="#project-main" className={styles.skip}>
+            <a
+                href="#project-main"
+                className="fixed left-6 top-4 z-10 -translate-y-[200%] bg-preview-white p-3 text-preview-black focus:translate-y-0"
+            >
                 Skip to content
             </a>
             <main id="project-main" tabIndex={-1}>
                 <article>
                     <header
-                        className={styles.caseHero}
+                        className="relative bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(64px,12svh,130px)] pt-[clamp(88px,12svh,150px)] text-preview-black grid-paper [--grid-line:#0b0b0c12] max-md:pt-24"
                         style={{ "--case-tint": tint } as CSSProperties}
                     >
-                        <div className={styles.caseTopbar}>
+                        <div className="pointer-events-none fixed inset-x-0 top-0 z-[6] mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3 p-[16px_max(4.72vw,24px)] [&>*]:pointer-events-auto">
                             <Link
                                 href="/#work"
-                                className={styles.casePill}
+                                className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border-2 border-preview-black bg-preview-white px-5 py-2.5 text-[17px] font-semibold text-preview-black no-underline hover:bg-preview-black hover:text-preview-white hover:no-underline max-md:min-h-10 max-md:px-3.5 max-md:py-2 max-md:text-[15px]"
                                 data-project-link
                                 data-project-direction="close"
                                 data-project-slug={project.slug}
@@ -136,7 +138,7 @@ export default function ProjectCase({
                             </Link>
                             {liveSite?.kind === "live-site" ? (
                                 <a
-                                    className={styles.casePill}
+                                    className="inline-flex min-h-[44px] items-center gap-2.5 rounded-full border-2 border-preview-black bg-preview-white px-5 py-2.5 text-[17px] font-semibold text-preview-black no-underline hover:bg-preview-black hover:text-preview-white hover:no-underline max-md:min-h-10 max-md:px-3.5 max-md:py-2 max-md:text-[15px]"
                                     href={liveSite.href}
                                     target="_blank"
                                     rel="noreferrer"
@@ -150,30 +152,43 @@ export default function ProjectCase({
                             ) : null}
                         </div>
 
-                        <div className={styles.caseHeroInner}>
-                            <h1 className={styles.caseTitle}>
+                        <div className="mx-auto grid max-w-[1600px] grid-cols-12 gap-x-5 pt-[clamp(36px,6vw,84px)] motion-safe:animate-case-hero-in">
+                            <h1 className="col-span-full text-balance text-[clamp(52px,7.5vw,128px)] font-semibold leading-[0.9] tracking-[-0.045em] max-md:text-[clamp(42px,13vw,76px)] max-md:tracking-[-0.04em] md:col-span-10">
                                 {project.title}
                             </h1>
-                            <dl className={styles.caseMeta}>
+                            <dl className="col-span-full mt-[clamp(24px,3.4vw,42px)] grid max-w-[760px] grid-cols-2 gap-x-5 gap-y-[18px] max-md:grid-cols-1 max-md:gap-[14px] md:col-span-10 md:grid-cols-3">
                                 <div>
-                                    <dt>Year</dt>
-                                    <dd>{project.timeframe}</dd>
+                                    <dt className="text-sm font-medium leading-[1.5] opacity-55">
+                                        Year
+                                    </dt>
+                                    <dd className="mt-1 text-[clamp(16px,1.25vw,19px)] font-medium leading-[1.35]">
+                                        {project.timeframe}
+                                    </dd>
                                 </div>
                                 <div>
-                                    <dt>Role</dt>
-                                    <dd>{project.ownership.role}</dd>
+                                    <dt className="text-sm font-medium leading-[1.5] opacity-55">
+                                        Role
+                                    </dt>
+                                    <dd className="mt-1 text-[clamp(16px,1.25vw,19px)] font-medium leading-[1.35]">
+                                        {project.ownership.role}
+                                    </dd>
                                 </div>
                                 <div>
-                                    <dt>Stack</dt>
-                                    <dd>{project.stack.join(" · ")}</dd>
+                                    <dt className="text-sm font-medium leading-[1.5] opacity-55">
+                                        Stack
+                                    </dt>
+                                    <dd className="mt-1 text-[clamp(16px,1.25vw,19px)] font-medium leading-[1.35]">
+                                        {project.stack.join(" · ")}
+                                    </dd>
                                 </div>
                             </dl>
                             <figure
-                                className={styles.caseCover}
+                                className="group/cover relative col-span-full mt-[clamp(28px,4vw,48px)] aspect-[16/10] overflow-hidden rounded-xl bg-preview-black md:col-span-8"
                                 data-project-hero={project.slug}
                             >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
+                                    className="block h-full w-full object-cover"
                                     src={project.cover.src}
                                     alt={project.cover.alt}
                                     width={project.cover.width}
@@ -192,29 +207,32 @@ export default function ProjectCase({
                     </header>
 
                     <section
-                        className={styles.caseIntro}
+                        className="bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,14svh,168px)] text-preview-black"
                         aria-labelledby="project-context"
                     >
-                        <div className={styles.caseSectionInner}>
+                        <div className="mx-auto max-w-[1600px]">
                             <WordReveal
                                 text={preview.lead}
-                                className={styles.caseLead}
+                                className="max-w-[1120px] text-[clamp(28px,3.3vw,56px)] font-semibold leading-[1.05] tracking-[-0.03em] max-md:text-xl max-md:leading-[1.35]"
                             />
-                            <div className={styles.caseIntroCopy}>
+                            <div className="mt-[clamp(32px,6vw,76px)] w-full md:ml-auto md:w-[min(100%,62%)]">
                                 <h2 id="project-context" className="sr-only">
                                     Context
                                 </h2>
-                                <WordReveal text={preview.note} />
+                                <WordReveal
+                                    text={preview.note}
+                                    className="m-0 text-[clamp(20px,2vw,34px)] font-medium leading-[1.2] tracking-[-0.02em] max-md:text-xl max-md:leading-[1.35]"
+                                />
                             </div>
                         </div>
                     </section>
 
                     <section
-                        className={styles.caseShots}
+                        className="bg-[#e6e6e0] px-[max(4.72vw,24px)] py-[clamp(72px,14svh,168px)] text-preview-black"
                         aria-labelledby="project-screens"
                     >
-                        <div className={styles.caseSectionInner}>
-                            <figure className={styles.caseShotWide}>
+                        <div className="mx-auto max-w-[1600px]">
+                            <figure className="m-0 grid gap-3">
                                 <BrowserFrame label={frameHost}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
@@ -228,18 +246,25 @@ export default function ProjectCase({
                                 </BrowserFrame>
                             </figure>
 
-                            <div className={styles.caseShotHeader}>
-                                <h2 id="project-screens" data-case-reveal>
+                            <div className="grid gap-5 py-[clamp(44px,10svh,120px)] md:grid-cols-2 md:items-start md:gap-5">
+                                <h2
+                                    id="project-screens"
+                                    className="text-[clamp(28px,3.3vw,56px)] font-semibold leading-[1.05] tracking-[-0.03em]"
+                                    data-case-reveal
+                                >
                                     {narrative.title}
                                 </h2>
-                                <WordReveal text={narrative.approach} />
+                                <WordReveal
+                                    text={narrative.approach}
+                                    className="m-0 max-w-[760px] text-[clamp(20px,2vw,34px)] font-medium leading-[1.2] tracking-[-0.02em] max-md:text-xl max-md:leading-[1.35]"
+                                />
                             </div>
 
-                            <div className={styles.caseShotPair}>
+                            <div className="grid gap-[clamp(28px,6vw,64px)] md:grid-cols-2 md:items-start md:gap-5">
                                 {pairShots.map((still) => (
                                     <figure
                                         key={still.id}
-                                        className={styles.caseShotHalf}
+                                        className="m-0 grid gap-3"
                                     >
                                         <BrowserFrame label={frameHost}>
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -259,13 +284,13 @@ export default function ProjectCase({
                     </section>
 
                     <section
-                        className={styles.caseClipSection}
+                        className="grid min-h-svh content-center bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,12svh,150px)] text-preview-black max-md:min-h-0"
                         aria-labelledby="project-clip"
                     >
                         <h2 id="project-clip" className="sr-only">
                             Walkthrough
                         </h2>
-                        <figure className={styles.caseClipFrame}>
+                        <figure className="m-0 ml-auto grid w-full max-w-[1120px] gap-3.5 md:w-2/3">
                             <BrowserFrame label={frameHost}>
                                 <video
                                     ref={videoRef}
@@ -298,35 +323,36 @@ export default function ProjectCase({
                     </section>
 
                     <section
-                        className={styles.caseNext}
+                        className="grid min-h-svh content-start bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(48px,8svh,90px)] pt-[clamp(88px,14svh,170px)] text-preview-black max-md:min-h-0"
                         style={{ "--case-tint": nextTint } as CSSProperties}
                         aria-labelledby="project-next"
                     >
-                        <div className={styles.caseSectionInner}>
+                        <div className="mx-auto grid w-full max-w-[1600px] gap-3">
                             <p
                                 id="project-next"
-                                className={styles.caseNextLabel}
+                                className="text-sm leading-[1.5] opacity-55"
                             >
                                 Next project
                             </p>
                             <Link
                                 href={projectDetailPath(nextProject.slug)}
-                                className={styles.caseNextCard}
+                                className="group/card grid gap-[clamp(20px,4vw,44px)] text-inherit no-underline hover:no-underline"
                                 data-project-link
                                 data-project-direction="open"
                                 data-project-slug={nextProject.slug}
                                 data-project-tint={nextTint}
                             >
-                                <span className={styles.caseNextTitle}>
+                                <span className="flex items-baseline justify-between gap-4 text-balance text-[clamp(52px,7.5vw,128px)] font-semibold leading-[0.9] tracking-[-0.045em] max-md:text-[clamp(42px,13vw,76px)] max-md:tracking-[-0.04em]">
                                     {nextProject.title}
                                     <span aria-hidden="true">→</span>
                                 </span>
                                 <span
-                                    className={styles.caseNextMedia}
+                                    className="preview-next-media block w-[min(100%,92svh)] max-w-[900px] overflow-hidden rounded-xl bg-preview-black max-md:w-full"
                                     data-project-cover={nextProject.slug}
                                 >
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
+                                        className="block aspect-[3/2] h-auto w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/card:scale-[1.04] group-focus-visible/card:scale-[1.04] motion-reduce:transition-none"
                                         src={nextProject.cover.src}
                                         alt=""
                                         width={nextProject.cover.width}
@@ -340,12 +366,15 @@ export default function ProjectCase({
                 </article>
             </main>
 
-            <footer className={styles.caseFooter}>
-                <div className={styles.caseFooterRow}>
-                    <a className={styles.caseEmail} href={contactEmail}>
+            <footer className="bg-preview-black px-[max(4.72vw,24px)] py-[clamp(44px,6vw,84px)] text-preview-white max-md:pb-[104px]">
+                <div className="mx-auto flex max-w-[1600px] flex-wrap items-baseline justify-between gap-x-10 gap-y-6">
+                    <a
+                        className="text-[clamp(28px,3vw,44px)] font-semibold underline underline-offset-[0.12em]"
+                        href={contactEmail}
+                    >
                         Say hi
                     </a>
-                    <div className={styles.caseFooterLinks}>
+                    <div className="flex flex-wrap gap-6 text-base">
                         <a href="https://www.linkedin.com/in/benson-craven/">
                             LinkedIn
                         </a>
@@ -360,7 +389,9 @@ export default function ProjectCase({
                             All work
                         </Link>
                     </div>
-                    <p className={styles.caseCopyright}>© 2026 Benson Craven</p>
+                    <p className="text-[13px] opacity-55">
+                        © 2026 Benson Craven
+                    </p>
                 </div>
             </footer>
 

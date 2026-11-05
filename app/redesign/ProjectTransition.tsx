@@ -3,7 +3,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { createPixelatedImageCanvas, pixelCrossfade } from "./pixelDither"
-import styles from "./redesign.module.css"
 import {
     floodGeometry,
     isElementVisible,
@@ -162,9 +161,9 @@ function createPageGhost(geometry: FloodGeometry): PageGhost | null {
         (page && getComputedStyle(page).backgroundColor) ||
         getComputedStyle(document.body).backgroundColor
     const ghost = document.createElement("div")
-    // The clone lives outside the page root, so it carries the preview class to
+    // The clone lives outside the page root, so it carries the root class to
     // keep the same font, palette and selection colours as the page it copies.
-    ghost.className = styles.preview
+    ghost.className = "preview-root"
     ghost.dataset.redesign = ""
     ghost.dataset.transitionGhost = "true"
     ghost.setAttribute("aria-hidden", "true")

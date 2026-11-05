@@ -13,7 +13,7 @@ function words(text: string) {
     ))
 }
 
-export default function IntroParagraph() {
+export default function IntroParagraph({ className }: { className?: string }) {
     const paragraphRef = useRef<HTMLParagraphElement>(null)
 
     useEffect(() => {
@@ -52,12 +52,14 @@ export default function IntroParagraph() {
     }, [])
 
     return (
-        <p ref={paragraphRef}>
+        <p ref={paragraphRef} className={className}>
             {words(
                 "I'm a full-stack developer with a focus on frontend, based in Cork, Ireland. For three years I've built fast, accessible websites, and I care most about",
             )}{" "}
-            <em>{words("interactive motion")}</em> {words("and")}{" "}
-            {words("thoughtful design.")}
+            <em className="font-light not-italic text-preview-blue">
+                {words("interactive motion")}
+            </em>{" "}
+            {words("and")} {words("thoughtful design.")}
         </p>
     )
 }

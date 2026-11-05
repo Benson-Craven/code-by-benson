@@ -11,7 +11,6 @@ import {
     responsivePresentationProgress,
     responsiveStageFits,
 } from "./projectPresentationData"
-import styles from "./redesign.module.css"
 
 export default function ProjectPresentations() {
     const rootRef = useRef<HTMLDivElement>(null)
@@ -56,10 +55,10 @@ export default function ProjectPresentations() {
                         const heading =
                             section.querySelector<HTMLElement>("header")!
                         const devices = section.querySelector<HTMLElement>(
-                            `.${styles.projectDevices}`,
+                            "[data-project-devices]",
                         )!
                         const browser = section.querySelector<HTMLElement>(
-                            `.${styles.browserFrame}`,
+                            "[data-browser-frame]",
                         )!
                         const slides = Array.from(
                             section.querySelectorAll<HTMLElement>(
@@ -297,15 +296,18 @@ export default function ProjectPresentations() {
             {projectPresentations.map((project) => (
                 <section
                     key={project.slug}
-                    className={styles.project}
+                    className="preview-project group relative px-[max(4.72vw,24px)] py-16 text-preview-black grid-paper-columns [--grid-line:#fbfbf81f] data-[project=chronic-pain-recovery]:bg-[#08d9d6] data-[project=nibbles-with-nifa]:bg-[#ff2e63] data-[project=waxlist]:bg-[#ffe506] data-[project=waxlist]:[--grid-line:#0b0b0c0f]"
                     data-project={project.slug}
                     data-side={project.side}
                     data-frog-section
                     aria-labelledby={`${project.slug}-title`}
                 >
-                    <div className={styles.projectStage}>
-                        <header className={styles.projectHeading}>
-                            <h2 id={`${project.slug}-title`}>
+                    <div className="preview-stage mx-auto max-w-[1600px]">
+                        <header className="preview-heading mb-10 flex flex-wrap items-baseline justify-between gap-6">
+                            <h2
+                                id={`${project.slug}-title`}
+                                className="max-w-[900px] text-[clamp(36px,4.4vw,80px)] font-medium leading-[1.05] tracking-[-0.2rem] text-white group-data-[project=waxlist]:text-preview-black"
+                            >
                                 <span className="sr-only">{project.title}</span>
                                 <span aria-hidden="true">
                                     {project.title
@@ -313,12 +315,11 @@ export default function ProjectPresentations() {
                                         .map((word, wordIndex) => (
                                             <Fragment key={wordIndex}>
                                                 {wordIndex > 0 ? " " : null}
-                                                <span
-                                                    className={styles.titleWord}
-                                                >
+                                                <span className="mb-[-0.12em] inline-block overflow-clip whitespace-nowrap pb-[0.12em] align-top">
                                                     {Array.from(word).map(
                                                         (letter, index) => (
                                                             <span
+                                                                className="inline-block"
                                                                 data-title-letter
                                                                 key={index}
                                                             >
@@ -333,6 +334,7 @@ export default function ProjectPresentations() {
                             </h2>
                             <Link
                                 href={project.href}
+                                className="shrink-0 py-2.5 text-[clamp(20px,2vw,30px)]"
                                 data-project-link
                                 data-project-direction="open"
                                 data-project-slug={project.slug}
@@ -344,28 +346,31 @@ export default function ProjectPresentations() {
                                 </span>
                             </Link>
                         </header>
-                        <div className={styles.projectDevices}>
-                            <div className={styles.browserFrame}>
+                        <div className="relative pb-12" data-project-devices>
+                            <div
+                                className="overflow-hidden rounded-xl border-2 border-[#1e1e1e] bg-preview-white text-[#1e1e1e]"
+                                data-browser-frame
+                            >
                                 <div
-                                    className={styles.browserBar}
+                                    className="flex items-center gap-6 px-4 py-2 text-xs leading-[1.5] tracking-normal"
                                     aria-hidden="true"
                                 >
-                                    <span>● ● ●</span>
+                                    <span className="tracking-[4px] text-[#777]">
+                                        ● ● ●
+                                    </span>
                                     <span>{project.title}</span>
                                 </div>
-                                <div className={styles.desktopScreen}>
-                                    <div
-                                        className={styles.screenStrip}
-                                        data-screen-strip
-                                    >
+                                <div className="preview-desktop-screen">
+                                    <div data-screen-strip>
                                         {project.desktop.map((media, index) => (
                                             <figure
-                                                className={styles.desktopView}
+                                                className="preview-desktop-view relative m-0 aspect-[1440/900] bg-[#e6e6e0]"
                                                 data-responsive-slide
                                                 key={index}
                                             >
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
+                                                    className="absolute inset-0 h-full w-full object-cover"
                                                     src={media.src}
                                                     alt={media.alt}
                                                     width={1440}
@@ -381,7 +386,7 @@ export default function ProjectPresentations() {
                                                             media.position,
                                                     }}
                                                 />
-                                                <figcaption>
+                                                <figcaption className="absolute bottom-0 left-0 bg-preview-white px-3 py-1.5 text-sm leading-[1.5] tracking-normal text-[#1e1e1e]">
                                                     {media.label}
                                                 </figcaption>
                                             </figure>
@@ -390,20 +395,24 @@ export default function ProjectPresentations() {
                                 </div>
                             </div>
                             <div
-                                className={styles.phonePerspective}
+                                className="preview-phone-perspective relative mb-0 ml-auto mr-0 mt-6 aspect-[9/18] w-[clamp(100px,16vw,190px)] [perspective:1000px] max-lg:mx-auto max-lg:mt-6 max-lg:aspect-auto max-lg:w-[min(180px,50vw)] max-lg:[perspective:none]"
                                 aria-hidden="true"
                             >
-                                <div className={styles.phone} data-phone>
+                                <div
+                                    className="preview-phone relative h-full w-full [transform-style:preserve-3d]"
+                                    data-phone
+                                >
                                     {(["front", "back"] as const).map(
                                         (face) => (
                                             <div
-                                                className={styles.phoneFace}
+                                                className="preview-phone-face absolute inset-0 overflow-hidden rounded-[26px] border-[7px] border-preview-black bg-preview-white [backface-visibility:hidden] after:absolute after:left-[32%] after:top-[5px] after:h-2.5 after:w-[36%] after:rounded-xl after:bg-preview-black after:content-[''] data-[face=back]:[transform:rotateY(180deg)]"
                                                 data-face={face}
                                                 data-responsive-slide
                                                 key={face}
                                             >
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
+                                                    className="h-full w-full object-cover"
                                                     src={
                                                         project.phone[face].src
                                                     }
@@ -417,7 +426,7 @@ export default function ProjectPresentations() {
                                                                 .position,
                                                     }}
                                                 />
-                                                <span>
+                                                <span className="absolute inset-x-0 bottom-0 bg-preview-white p-2 text-center text-xs leading-[1.5] tracking-normal text-[#1e1e1e]">
                                                     {project.phone[face].label}
                                                 </span>
                                             </div>
@@ -426,21 +435,26 @@ export default function ProjectPresentations() {
                                 </div>
                             </div>
                         </div>
-                        <div className={styles.projectNarrator}>
-                            <div className={styles.bubbles}>
+                        <div className="preview-narrator mt-9">
+                            <div className="grid gap-4" data-bubbles>
                                 {project.bubbles.map((bubble) => (
-                                    <p data-bubble key={bubble}>
+                                    <p
+                                        className="rounded-[20px] bg-preview-white p-6 text-[clamp(20px,2vw,30px)] font-semibold leading-[1.25] text-[#1e1e1e]"
+                                        data-bubble
+                                        key={bubble}
+                                    >
                                         {bubble}
                                     </p>
                                 ))}
                             </div>
                             <div
-                                className={`${styles.frogSlot} ${styles.projectFrog}`}
+                                className="preview-frog-slot preview-project-frog relative mt-6 aspect-[320/336] w-[min(100%,var(--project-frog-size))] max-w-[640px] justify-self-start group-data-[side=right]:ml-auto"
                                 data-frog-slot
                                 aria-hidden="true"
                             >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
+                                    className="h-full w-full object-contain [image-rendering:pixelated] group-data-[frog-ready=true]:invisible"
                                     src="/frog-mascot/frog-static.png"
                                     alt=""
                                     width={320}

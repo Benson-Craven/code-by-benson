@@ -4,14 +4,28 @@ import FrogPresentation from "../redesign/FrogPresentation"
 import ProjectPresentations from "../redesign/ProjectPresentations"
 import AllWork from "../redesign/AllWork"
 import IntroParagraph from "../redesign/IntroParagraph"
-import styles from "../redesign/redesign.module.css"
+import { cn } from "@/utils/cn"
 
-function FrogSlot({ trick = false }: { trick?: boolean }) {
+function FrogSlot({
+    className,
+    trick = false,
+}: {
+    className?: string
+    trick?: boolean
+}) {
     return (
-        <div className={styles.frogSlot} data-frog-slot aria-hidden="true">
+        <div
+            className={cn(
+                "preview-frog-slot relative aspect-[320/336] max-w-[640px] justify-self-end",
+                className,
+            )}
+            data-frog-slot
+            aria-hidden="true"
+        >
             {/* The fallback is rendered from the same procedural rig as the canvas. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
+                className="h-full w-full object-contain [image-rendering:pixelated] group-data-[frog-ready=true]:invisible"
                 src="/frog-mascot/frog-static.png"
                 alt=""
                 width={320}
@@ -20,7 +34,7 @@ function FrogSlot({ trick = false }: { trick?: boolean }) {
             {trick && (
                 <>
                     <p
-                        className={styles.footerDialogue}
+                        className="preview-footer-dialogue speech-tail-down bg-preview-white text-preview-black pointer-events-none absolute bottom-[90%] left-0 z-[4] m-0 w-full rounded-[20px] px-5 py-4 text-[clamp(18px,1.7vw,24px)] font-semibold leading-[1.3]"
                         data-frog-dialogue
                         hidden
                     />
@@ -33,66 +47,87 @@ function FrogSlot({ trick = false }: { trick?: boolean }) {
 
 export default function Redesign() {
     return (
-        <div className={styles.preview} data-redesign>
-            <a href="#redesign-main" className={styles.skip}>
+        <div className="preview-root group" data-redesign>
+            <a
+                href="#redesign-main"
+                className="bg-preview-white text-preview-black fixed left-6 top-4 z-10 -translate-y-[200%] p-3 focus:translate-y-0"
+            >
                 Skip to content
             </a>
             <main id="redesign-main" tabIndex={-1}>
                 <section
-                    className={styles.hero}
+                    className="preview-hero bg-preview-blue text-preview-white grid-paper flex min-h-[max(720px,100svh)] flex-col justify-between px-[max(4.72vw,24px)] pb-[74px] pt-[46px] [--grid-line:#fbfbf80a] max-md:px-6 max-md:pb-9 max-md:pt-7 md:min-h-svh md:py-[clamp(24px,5svh,46px)]"
                     data-frog-section
                     aria-labelledby="redesign-title"
                 >
-                    <header className={styles.header}>
-                        <Link href="/" className={styles.identity}>
-                            <strong>Benson Craven</strong>
+                    <header className="flex items-start justify-between gap-6 text-[22px] leading-[1.1] max-md:text-lg">
+                        <Link href="/" className="flex flex-col">
+                            <strong className="font-bold">Benson Craven</strong>
                             <span>Full-stack developer</span>
                         </Link>
-                        <nav aria-label="Main navigation">
-                            <a href="#work">All work</a>
-                            <a href="#contact">Get in touch</a>
+                        <nav
+                            aria-label="Main navigation"
+                            className="flex gap-8 text-lg max-md:gap-3 max-md:text-base"
+                        >
+                            <a href="#work" className="py-2.5 max-md:hidden">
+                                All work
+                            </a>
+                            <a href="#contact" className="py-2.5">
+                                Get in touch
+                            </a>
                         </nav>
                     </header>
-                    <div className={styles.heroBottom}>
-                        <h1 id="redesign-title">
+                    <div className="grid grid-cols-[minmax(0,1fr)_40%] items-end gap-3 pt-40 max-lg:block max-md:pt-[120px] md:pt-[clamp(24px,5svh,64px)]">
+                        <h1 className="mb-10 text-[clamp(64px,9.93vw,180px)] font-semibold leading-[0.8] tracking-[-0.35rem] max-md:m-0 max-md:w-full max-md:text-[clamp(53px,10.8vw,82px)] max-md:leading-[0.9] max-md:tracking-[-0.02em] max-[359px]:text-[clamp(47px,14.7vw,53px)]">
                             I build things
                             <br />
-                            for the <em>web</em>.
+                            for the <em className="font-normal">web</em>.
                         </h1>
-                        <div className={styles.heroGuide}>
-                            <p className={styles.greeting} data-frog-greeting>
+                        <div className="preview-hero-guide w-full min-w-0 max-lg:mt-10">
+                            <p
+                                className="preview-greeting speech-tail-down bg-preview-white text-preview-black relative mb-[18px] rounded-[20px] px-[22px] py-[18px] text-[clamp(20px,1.9vw,28px)] font-semibold leading-[1.25]"
+                                data-frog-greeting
+                            >
                                 Hi, I&apos;m Benson&apos;s frog. Scroll down,
                                 I&apos;ll show you around.
                             </p>
-                            <FrogSlot />
+                            <FrogSlot className="ml-auto w-full md:w-[min(100%,var(--project-frog-size))]" />
                         </div>
                     </div>
                 </section>
                 <section
                     id="intro"
-                    className={styles.intro}
+                    className="preview-intro grid-paper relative grid min-h-[max(792px,110svh)] grid-cols-[36%_1fr] items-center gap-x-[5%] px-[max(4.72vw,24px)] pb-[74px] pt-[46px] [--grid-line:#0b0b0c0a] max-lg:flex max-lg:flex-col max-md:min-h-[110svh] max-md:justify-center max-md:gap-10 max-md:px-6 max-md:pb-9 max-md:pt-20"
                     data-frog-section
                     aria-label="About Benson"
                 >
-                    <IntroParagraph />
-                    <FrogSlot />
+                    <IntroParagraph className="col-start-2 max-w-[800px] py-[100px] text-[clamp(30px,3.33vw,60px)] font-medium leading-[1.25] tracking-[-0.1rem] max-md:p-0 max-md:text-[clamp(29px,5.5vw,40px)]" />
+                    <FrogSlot className="absolute bottom-6 left-[2%] w-[36%] max-lg:relative max-lg:inset-auto max-lg:self-center" />
                 </section>
                 <ProjectPresentations />
                 <AllWork />
             </main>
-            <footer id="contact" className={styles.contact} data-frog-section>
-                <div className={styles.contactCopy}>
-                    <h2>Got something in mind?</h2>
-                    <p>I&apos;m taking on new work</p>
+            <footer
+                id="contact"
+                className="preview-contact bg-preview-black text-preview-white grid-paper flex min-h-[max(720px,100svh)] flex-col justify-between px-[max(4.72vw,24px)] pb-[74px] pt-[clamp(96px,13.9vw,200px)] [--grid-line:#fbfbf80a] max-md:px-6 max-md:pb-9 max-md:pt-[88px] md:min-h-svh md:py-[clamp(24px,5svh,46px)]"
+                data-frog-section
+            >
+                <div>
+                    <h2 className="text-[clamp(64px,9.93vw,180px)] font-semibold leading-[0.9] tracking-[-0.3rem] max-md:text-[clamp(54px,10.8vw,82px)] md:text-[clamp(54px,min(9.93vw,12svh),180px)]">
+                        Got something in mind?
+                    </h2>
+                    <p className="mt-9 text-[clamp(28px,3.47vw,58px)] md:mt-[clamp(16px,3svh,36px)]">
+                        I&apos;m taking on new work
+                    </p>
                     <a
-                        className={styles.sayHi}
+                        className="mt-[68px] inline-block text-[clamp(52px,5.55vw,90px)] max-md:mt-10 md:mt-[clamp(20px,4svh,48px)]"
                         href="mailto:bensoncraven@hotmail.co.uk"
                     >
                         Say hi
                     </a>
                 </div>
-                <div className={styles.footerBottom}>
-                    <div className={styles.footerLinks}>
+                <div className="preview-footer-bottom mt-[72px] grid grid-cols-[minmax(0,1fr)_40%] items-end gap-9 max-md:mt-[60px] max-md:flex max-md:flex-col max-md:items-center max-md:gap-10 md:mt-6">
+                    <div className="grid max-w-[690px] grid-cols-2 items-center gap-x-8 gap-y-16 max-md:w-full max-md:gap-x-5 max-md:gap-y-7 md:gap-y-[clamp(24px,5svh,64px)] [&>:is(a,button)]:min-h-[44px] [&>:is(a,button)]:w-fit [&>:is(a,button)]:text-left [&>:is(a,button)]:text-[25px] max-md:[&>:is(a,button)]:text-[21px] [&>a:nth-child(-n+2)]:text-[clamp(28px,2.78vw,48px)] [&>a:nth-child(-n+2)]:font-bold">
                         <a href="https://www.linkedin.com/in/benson-craven/">
                             LinkedIn
                         </a>
@@ -104,10 +139,13 @@ export default function Redesign() {
                         <span
                             data-frog-trick-status
                             role="status"
-                            className={styles.trickStatus}
+                            className="min-h-[1.5em] font-mono text-sm"
                         />
                     </div>
-                    <FrogSlot trick />
+                    <FrogSlot
+                        trick
+                        className="w-full max-lg:ml-auto md:w-[min(100%,var(--project-frog-size))]"
+                    />
                 </div>
             </footer>
             <FrogPresentation />

@@ -16,11 +16,11 @@ import {
     presentationProgress,
     responsivePresentationProgress,
 } from "./projectPresentationData"
-import styles from "./redesign.module.css"
 import { foodTreatment, heartTreatment, frogTrick } from "./frogTreatment"
 import FrogFood from "./FrogFood"
 import FrogFlag from "./FrogFlag"
 import { pickFooterDialogue } from "./frogDialogue"
+import { cn } from "@/utils/cn"
 
 export default function FrogPresentation() {
     const layerRef = useRef<HTMLDivElement>(null)
@@ -509,9 +509,8 @@ export default function FrogPresentation() {
                 ? String(corner.index === 0 ? corner.speech : 0)
                 : ""
             sections.forEach((section, index) => {
-                const narration = section.querySelector<HTMLElement>(
-                    `.${styles.bubbles}`,
-                )
+                const narration =
+                    section.querySelector<HTMLElement>("[data-bubbles]")
                 if (narration)
                     narration.style.opacity =
                         responsive && section.dataset.responsive === "held"
@@ -743,9 +742,8 @@ export default function FrogPresentation() {
             flag.style.opacity = ""
             delete flag.dataset.visible
             sections.forEach((section) => {
-                const narration = section.querySelector<HTMLElement>(
-                    `.${styles.bubbles}`,
-                )
+                const narration =
+                    section.querySelector<HTMLElement>("[data-bubbles]")
                 if (narration) narration.style.opacity = ""
             })
             document.documentElement.style.scrollBehavior =
@@ -758,17 +756,28 @@ export default function FrogPresentation() {
         <>
             <div
                 ref={layerRef}
-                className={styles.frogLayer}
+                className="preview-frog-layer pointer-events-none invisible absolute left-0 top-0 z-[2] h-[336px] w-80"
                 data-frog-layer
                 aria-hidden="true"
             >
-                <div ref={hostRef} className={styles.frogHost} />
+                <div
+                    ref={hostRef}
+                    className="preview-frog-host pointer-events-none h-full w-full"
+                />
                 <FrogFood />
                 <FrogFlag />
-                <div className={styles.frogHearts}>
+                <div className="pointer-events-none absolute inset-0">
                     {[0, 1, 2].map((index) => (
                         <svg
                             key={index}
+                            className={cn(
+                                "absolute h-auto origin-center opacity-0",
+                                index === 1
+                                    ? "left-[44%] top-[18%] w-[14%]"
+                                    : index === 2
+                                      ? "left-[68%] top-[24%] w-[10%]"
+                                      : "left-[22%] top-[24%] w-[12%]",
+                            )}
                             data-frog-heart
                             viewBox="0 0 16 15"
                             focusable="false"

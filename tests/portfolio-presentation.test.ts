@@ -34,7 +34,7 @@ test("the homepage composes the redesign and exposes direct contact paths", asyn
 
     for (const marker of [
         "data-redesign",
-        "<IntroParagraph />",
+        "<IntroParagraph",
         "<ProjectPresentations />",
         "<AllWork />",
         "<FrogPresentation />",

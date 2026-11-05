@@ -6,7 +6,6 @@ import type { PortfolioProjectSlug } from "../data/portfolio"
 import { createFrog, loadFrog, type FrogInstance } from "./frogAdapter"
 import { pickProjectDialogue } from "./frogDialogue"
 import { revealSpeech, type SpeechReveal } from "./speechDither"
-import styles from "./redesign.module.css"
 
 const FIRST_LINE_DELAY_MS = 2000
 const GAP_MIN_MS = 4500
@@ -216,39 +215,39 @@ export default function ProjectFrog({ slug }: { slug: PortfolioProjectSlug }) {
     return (
         <div
             ref={layerRef}
-            className={styles.caseFrog}
+            className="case-frog"
             data-frog-layer
             aria-hidden="true"
         >
             <p
                 ref={dialogueRef}
-                className={styles.caseDialogue}
+                className="case-dialogue"
                 data-project-dialogue
                 hidden
             >
                 <span
                     ref={dialogueTextRef}
-                    className={styles.caseDialogueText}
+                    className="case-dialogue-text motion-reduce:transition-none"
                 />
             </p>
             <span
                 ref={shadowRef}
-                className={styles.caseDialogueShadow}
+                className="case-dialogue-shadow"
                 aria-hidden="true"
                 hidden
             />
             <canvas
                 ref={pixelsRef}
-                className={styles.caseDialoguePixels}
+                className="case-dialogue-pixels"
                 data-dialogue-pixels
                 aria-hidden="true"
                 hidden
             />
-            <div ref={hostRef} className={styles.caseFrogHost} />
+            <div ref={hostRef} className="case-frog-host" />
             {/* The fallback shares the canvas footprint until the rig loads. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-                className={styles.caseFrogFallback}
+                className="case-frog-fallback"
                 src="/frog-mascot/frog-static.png"
                 alt=""
                 width={320}

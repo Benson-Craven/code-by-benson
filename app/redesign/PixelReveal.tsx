@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import styles from "./redesign.module.css"
+import { cn } from "@/utils/cn"
 import {
     paintPixelatedImage,
     paintPixelEdgeCover,
@@ -15,6 +15,7 @@ type PixelRevealProps = {
     tint: string
     reveal?: boolean
     delayMs?: number
+    className?: string
 }
 
 const REVEAL_DURATION_MS = 760
@@ -25,6 +26,7 @@ export default function PixelReveal({
     tint,
     reveal = false,
     delayMs = 0,
+    className,
 }: PixelRevealProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -243,7 +245,10 @@ export default function PixelReveal({
     return (
         <canvas
             ref={canvasRef}
-            className={styles.pixelCanvas}
+            className={cn(
+                "pointer-events-none absolute inset-0 z-[1] h-full w-full object-cover opacity-0 transition-opacity duration-[250ms] [image-rendering:pixelated] data-[pixel-complete=true]:opacity-0 group-data-[pixel-ready=true]/cover:opacity-100",
+                className,
+            )}
             data-pixel-canvas
             aria-hidden="true"
         />

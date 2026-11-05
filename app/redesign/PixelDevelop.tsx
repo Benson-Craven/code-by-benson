@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import styles from "./redesign.module.css"
 import { paintDevelopedImage, preparePixelSilhouette } from "./pixelDither"
 
 type PixelDevelopProps = {
@@ -147,7 +146,7 @@ export default function PixelDevelop({
     return (
         <canvas
             ref={canvasRef}
-            className={styles.developCanvas}
+            className="pointer-events-none absolute inset-0 z-[3] h-full w-full opacity-0 transition-opacity duration-200 [image-rendering:pixelated] data-[develop-complete=true]:opacity-0 group-data-[develop-ready=true]/media:opacity-100 motion-reduce:transition-none"
             data-develop-canvas
             aria-hidden="true"
         />

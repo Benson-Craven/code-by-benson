@@ -1,0 +1,667 @@
+/*
+ * The redesign preview is now built with Tailwind utilities. This file keeps
+ * only the rules utilities express badly:
+ *
+ * - font faces, which have no utility form
+ * - one root rule, because the route transition clones the page root outside
+ *   React and the clone needs the same font, palette and selection colours
+ * - cross-cutting link and button states, so focus and hover cannot drift
+ * - speech-tail geometry, built from bordered pseudo-elements
+ * - the corner-frog and sticky-stage engines, which combine runtime CSS
+ *   variables with three or four simultaneous media conditions
+ *
+ * Base rules use :where() so utilities always win. Media and state rules keep
+ * their own specificity so they still override the utilities they replace.
+ */
+
+@font-face {
+    font-family: "Funnel Sans Preview";
+    src: url("/fonts/FunnelSans/FunnelSans.ttf") format("truetype");
+    font-weight: 300 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Funnel Sans Preview";
+    src: url("/fonts/FunnelSans/FunnelSans-Italic.ttf") format("truetype");
+    font-weight: 300 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+:where(.preview-root) {
+    /* Shared by the hero, footer and project frog slots. */
+    --project-frog-size: clamp(200px, 55vw, 300px);
+    position: relative;
+    isolation: isolate;
+    color-scheme: light;
+    background: #fbfbf8;
+    color: #0b0b0c;
+    font-family: "Funnel Sans Preview", sans-serif;
+    font-synthesis: none;
+    letter-spacing: -0.03em;
+}
+
+:where(.preview-root) ::selection {
+    color: #fbfbf8;
+    background: #0b0b0c;
+}
+
+:where(.preview-root) :where(a, button) {
+    touch-action: manipulation;
+}
+
+:where(.preview-root) :where(a, button):focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 7px;
+}
+
+:where(.preview-root) :where(a, button):hover {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+/* Speech tails. The triangle is a bordered pseudo-element, not a box. */
+.speech-tail-down::after {
+    content: "";
+    position: absolute;
+    right: 35%;
+    bottom: -10px;
+    border-inline: 10px solid transparent;
+    border-top: 12px solid #fbfbf8;
+}
+
+/* ---- Corner frog engine ------------------------------------------------ */
+
+@media (max-width: 1023px) {
+    .preview-root {
+        --corner-size: clamp(220px, 68vw, 300px);
+        --corner-height: calc(var(--corner-size) * 291 / 273);
+        --corner-crop: var(--corner-height);
+        --speech-width: min(
+            420px,
+            calc(100vw - var(--corner-size) * 0.8 - 32px)
+        );
+    }
+
+    .preview-project {
+        --corner-size: clamp(220px, 68vw, 300px);
+        --corner-height: calc(var(--corner-size) * 291 / 273);
+        --corner-crop: var(--corner-height);
+        --speech-width: min(420px, 52vw);
+    }
+
+    .preview-root .preview-hero,
+    .preview-root .preview-intro,
+    .preview-root .preview-contact {
+        padding-bottom: max(180px, calc(var(--corner-size) * 0.6));
+    }
+
+    .preview-root .preview-frog-slot,
+    .preview-root .preview-hero-guide .preview-frog-slot,
+    .preview-root .preview-footer-bottom .preview-frog-slot,
+    .preview-root .preview-project-frog {
+        width: var(--corner-size);
+        height: var(--corner-crop);
+        aspect-ratio: auto;
+        flex-shrink: 0;
+    }
+
+    .preview-root .preview-frog-slot img {
+        height: var(--corner-height);
+        aspect-ratio: auto;
+        object-position: center bottom;
+        clip-path: inset(0 0 calc(var(--corner-height) - var(--corner-crop)));
+    }
+
+    .preview-root .preview-intro .preview-frog-slot {
+        position: relative;
+        inset: auto;
+        align-self: center;
+    }
+
+    .preview-root[data-corner-frog="true"] .preview-frog-layer {
+        position: fixed;
+        top: calc(-1 * env(safe-area-inset-bottom));
+    }
+
+    .preview-frog-host {
+        clip-path: inset(
+            0 0 calc(var(--active-corner-height) - var(--active-corner-crop))
+        );
+    }
+
+    .preview-root[data-corner-frog="true"] .preview-greeting,
+    .preview-root[data-corner-frog="true"] .preview-footer-dialogue {
+        position: fixed;
+        z-index: 3;
+        left: auto;
+        right: calc(var(--corner-size) * 0.8);
+        bottom: calc(24px + env(safe-area-inset-bottom));
+        width: var(--speech-width);
+        padding: 16px;
+        margin: 0;
+        font-size: clamp(16px, 2.3vw, 22px);
+        pointer-events: none;
+    }
+
+    .preview-root[data-corner-frog="true"] .preview-greeting::after,
+    .preview-root[data-corner-frog="true"] .preview-footer-dialogue::after {
+        top: auto;
+        right: -10px;
+        bottom: 16px;
+        border-block: 8px solid transparent;
+        border-right: 0;
+        border-left: 12px solid #fbfbf8;
+    }
+
+    .preview-root[data-corner-frog="true"] .preview-frog-trick-art {
+        position: fixed;
+        inset: auto;
+        left: var(--corner-x);
+        bottom: calc(
+            env(safe-area-inset-bottom) - var(--active-corner-height) +
+                var(--active-corner-crop)
+        );
+        width: var(--active-corner-size);
+        height: var(--active-corner-height);
+    }
+}
+
+/*
+ * On mobile the hero speech sits above the frog, like the reference. The
+ * footer speech rises to the frog's face only when the footer links have
+ * enough room above it.
+ */
+@media (max-width: 767px) {
+    .preview-root[data-corner-frog="true"] .preview-greeting {
+        right: 24px;
+        width: min(calc(100vw - 48px), 480px);
+        bottom: calc(
+            var(--active-corner-crop) - var(--active-corner-height) * 0.2 +
+                36px + env(safe-area-inset-bottom)
+        );
+    }
+
+    /* Back to a downward tail: on phones the bubble sits above the frog. */
+    .preview-root[data-corner-frog="true"] .preview-greeting::after {
+        top: auto;
+        right: calc(var(--corner-size) / 2 - 34px);
+        bottom: -10px;
+        border-block: 0;
+        border-inline: 10px solid transparent;
+        border-top: 12px solid #fbfbf8;
+    }
+}
+
+@media (max-width: 767px) and (min-width: 360px) and (min-height: 790px) {
+    .preview-root[data-corner-frog="true"] .preview-footer-dialogue {
+        bottom: calc(
+            var(--active-corner-height) * 0.5 + env(safe-area-inset-bottom)
+        );
+    }
+}
+
+@media (max-width: 359px) {
+    .preview-root[data-corner-frog="true"] .preview-greeting {
+        padding: 13px 14px;
+        font-size: 15px;
+        bottom: calc(
+            var(--active-corner-crop) - var(--active-corner-height) * 0.2 +
+                24px + env(safe-area-inset-bottom)
+        );
+    }
+}
+
+/*
+ * Below 768px the footer frog and its dialogue are fixed to the viewport, so
+ * the in-flow slot must not reserve a second copy of its height. Collapsing it
+ * keeps the footer at one viewport and preserves the corner-frog fallbacks.
+ */
+@media (max-width: 767px) {
+    .preview-root[data-corner-frog="true"][data-frog-ready="true"]
+        .preview-contact {
+        justify-content: flex-start;
+    }
+
+    .preview-root[data-corner-frog="true"][data-frog-ready="true"]
+        .preview-footer-bottom {
+        gap: 0;
+    }
+
+    .preview-root[data-corner-frog="true"][data-frog-ready="true"]
+        .preview-footer-bottom
+        .preview-frog-slot {
+        height: 0;
+    }
+
+    .preview-root[data-corner-frog="true"][data-frog-ready="true"]
+        .preview-footer-bottom
+        .preview-frog-slot
+        img {
+        display: none;
+    }
+}
+
+/* ---- Sticky project stage --------------------------------------------- */
+
+@media (min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .preview-root {
+        --project-frog-size: clamp(240px, 23vw, 340px);
+    }
+
+    .preview-project[data-held="true"] {
+        height: 350svh;
+        padding-block: 0;
+    }
+
+    .preview-project[data-held="true"] .preview-stage {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        display: grid;
+        grid-template-columns: minmax(240px, 28%) minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        gap: 24px 4%;
+        padding-block: 40px 24px;
+    }
+
+    .preview-project[data-held="true"] .preview-heading {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+    }
+
+    .preview-project[data-held="true"] [data-project-devices] {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: center;
+        width: min(100%, calc((100svh - 240px) * 1.6));
+        justify-self: end;
+        padding-bottom: 36px;
+        padding-left: 32px;
+    }
+
+    .preview-project[data-held="true"] .preview-desktop-screen {
+        aspect-ratio: 1440 / 900;
+        overflow: hidden;
+    }
+
+    .preview-project[data-held="true"] [data-screen-strip] {
+        will-change: transform;
+    }
+
+    .preview-project[data-held="true"] .preview-phone-perspective {
+        position: absolute;
+        margin: 0;
+        bottom: 0;
+        right: auto;
+        left: 0;
+        width: clamp(110px, 13vw, 190px);
+    }
+
+    .preview-project[data-held="true"] .preview-narrator {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: end;
+        margin-top: 0;
+    }
+
+    .preview-project[data-held="true"] [data-bubbles] {
+        display: grid;
+    }
+
+    .preview-project[data-held="true"] [data-bubbles] p {
+        grid-area: 1 / 1;
+        align-self: end;
+        font-size: clamp(20px, 1.9vw, 30px);
+        padding: 22px;
+    }
+
+    .preview-project[data-held="true"] .preview-project-frog {
+        width: min(100%, var(--project-frog-size));
+    }
+
+    .preview-project[data-held="true"][data-side="right"] .preview-stage {
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 28%);
+    }
+
+    .preview-project[data-held="true"][data-side="right"]
+        [data-project-devices] {
+        grid-column: 1;
+        padding-left: 0;
+        padding-right: 32px;
+        justify-self: start;
+    }
+
+    .preview-project[data-held="true"][data-side="right"]
+        .preview-phone-perspective {
+        left: auto;
+        right: 0;
+    }
+
+    .preview-project[data-held="true"][data-side="right"] .preview-narrator {
+        grid-column: 2;
+    }
+
+    .preview-project[data-held="true"][data-side="left"]
+        .preview-desktop-view
+        figcaption {
+        left: auto;
+        right: 0;
+    }
+}
+
+/* Mobile held sequence, driven by data-responsive="held". */
+@media (max-width: 1023px) {
+    .preview-project[data-responsive="held"] {
+        height: 600vh;
+        padding-block: 0;
+    }
+
+    .preview-project[data-responsive="held"] .preview-stage {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding-block: 24px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .preview-project[data-responsive="held"] .preview-heading {
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-shrink: 0;
+    }
+
+    .preview-project[data-responsive="held"] [data-project-devices] {
+        height: clamp(220px, 34vh, 360px);
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        grid-template-rows: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0;
+    }
+
+    .preview-project[data-responsive="held"] [data-browser-frame] {
+        grid-area: 1 / 1;
+        width: min(100%, calc((clamp(220px, 34vh, 360px) - 32px) * 1.6));
+    }
+
+    .preview-project[data-responsive="held"] [data-screen-strip] {
+        display: grid;
+    }
+
+    .preview-project[data-responsive="held"] .preview-desktop-view {
+        grid-area: 1 / 1;
+        width: 100%;
+    }
+
+    .preview-project[data-responsive="held"] .preview-phone-perspective {
+        grid-area: 1 / 1;
+        height: clamp(220px, 34vh, 360px);
+        width: calc(clamp(220px, 34vh, 360px) / 2);
+        min-width: 0;
+        min-height: 0;
+        aspect-ratio: 9 / 18;
+        margin: 0;
+        perspective: 1000px;
+    }
+
+    .preview-project[data-responsive="held"] .preview-phone {
+        transform-style: preserve-3d;
+        height: 100%;
+        min-height: 0;
+        grid-template-rows: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .preview-project[data-responsive="held"] .preview-phone-face {
+        backface-visibility: hidden;
+        grid-area: 1 / 1;
+        min-width: 0;
+        min-height: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .preview-project[data-responsive="held"]
+        .preview-phone-face[data-face="back"] {
+        transform: rotateY(180deg);
+    }
+
+    .preview-project[data-responsive="held"] .preview-narrator {
+        min-height: var(--narration-height);
+        margin-top: auto;
+    }
+
+    .preview-project[data-responsive="held"] [data-bubbles] {
+        position: absolute;
+        bottom: calc(var(--corner-height) * 0.8 + env(safe-area-inset-bottom));
+        left: auto;
+        right: 0;
+        width: var(--speech-width);
+        display: grid;
+        pointer-events: none;
+    }
+
+    .preview-project[data-responsive="held"][data-side="right"] [data-bubbles] {
+        left: 0;
+        right: auto;
+    }
+
+    .preview-project[data-responsive="held"] [data-bubbles] p {
+        grid-area: 1 / 1;
+        align-self: end;
+        position: relative;
+        padding: 16px;
+        font-size: clamp(16px, 2.3vw, 22px);
+    }
+
+    .preview-project[data-responsive="held"] [data-bubbles] p::after {
+        content: "";
+        position: absolute;
+        bottom: 16px;
+        left: -10px;
+        border-block: 8px solid transparent;
+        border-right: 12px solid #fbfbf8;
+    }
+
+    .preview-project[data-responsive="held"][data-side="right"]
+        [data-bubbles]
+        p::after {
+        left: auto;
+        right: -10px;
+        border-right: 0;
+        border-left: 12px solid #fbfbf8;
+    }
+
+    .preview-project[data-responsive="held"] .preview-project-frog {
+        position: absolute;
+        left: calc(-1 * max(4.72vw, 24px));
+        bottom: env(safe-area-inset-bottom);
+        margin: 0;
+    }
+
+    .preview-project[data-responsive="held"][data-side="right"]
+        .preview-project-frog {
+        left: auto;
+        right: calc(-1 * max(4.72vw, 24px));
+    }
+}
+
+/* Both phone faces remain readable when a sequence is not active. */
+.preview-project:not([data-held="true"]):not([data-responsive="held"])
+    .preview-phone-perspective {
+    aspect-ratio: auto;
+    perspective: none;
+}
+
+.preview-project:not([data-held="true"]):not([data-responsive="held"])
+    .preview-phone {
+    height: auto;
+    display: grid;
+    gap: 24px;
+    transform-style: flat;
+}
+
+.preview-project:not([data-held="true"]):not([data-responsive="held"])
+    .preview-phone-face {
+    position: relative;
+    aspect-ratio: 9 / 18;
+    transform: none;
+    backface-visibility: visible;
+}
+
+/* ---- Work grid transition state ---------------------------------------- */
+
+.preview-work[data-transitioning="true"]
+    .preview-work-card:not([data-active="true"])
+    .preview-work-cover {
+    opacity: 0.35;
+}
+
+.preview-work-card[data-active="true"] .preview-work-cover {
+    transform: scale(1.02);
+}
+
+/* ---- Case-study frog, driven by runtime variables ---------------------- */
+
+.case-frog {
+    /* 30% below the redesign preview's corner scale, flush to the corner. */
+    --case-frog-size: clamp(154px, 47.6vw, 210px);
+    --case-dialogue-gap: 8px;
+    --case-frog-corner-inset: 32px;
+    --case-frog-corner-lift: 6px;
+    position: fixed;
+    right: calc(-1 * var(--case-frog-corner-inset));
+    bottom: calc(var(--case-frog-corner-lift) - var(--case-frog-corner-inset));
+    z-index: 5;
+    width: var(--case-frog-size);
+    aspect-ratio: 320 / 336;
+    pointer-events: none;
+}
+
+.case-frog-host {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+}
+
+.case-frog[data-frog-ready="true"] .case-frog-host {
+    visibility: visible;
+}
+
+.case-frog-fallback {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    display: block;
+    width: calc(100% - 64px);
+    height: calc(100% - 64px);
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.case-frog[data-frog-ready="true"] .case-frog-fallback {
+    visibility: hidden;
+}
+
+.case-dialogue {
+    position: absolute;
+    right: calc(var(--case-frog-corner-inset) + var(--case-dialogue-gap));
+    bottom: calc(100% - 45px);
+    z-index: 1;
+    width: min(340px, calc(100vw - 32px));
+    margin: 0;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: #fbfbf8;
+    color: #0b0b0c;
+    font-size: clamp(15px, 1.15vw, 18px);
+    font-weight: 600;
+    line-height: 1.35;
+    pointer-events: none;
+}
+
+/* The same dithered offset shadow the screenshot frames use. */
+.case-dialogue-shadow {
+    position: absolute;
+    z-index: 0;
+    border-radius: 18px;
+    background: conic-gradient(
+            #0b0b0c 25%,
+            transparent 0 50%,
+            #0b0b0c 0 75%,
+            transparent 0
+        )
+        0 0 / 4px 4px;
+    opacity: 0.45;
+    pointer-events: none;
+    transform: translate(4px, 4px);
+}
+
+.case-dialogue-text {
+    transition: opacity 0.18s ease;
+}
+
+.case-dialogue-pixels {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+
+.case-dialogue::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: calc(
+        var(--case-frog-size) / 2 - var(--case-frog-corner-inset) -
+            var(--case-dialogue-gap) - 10px
+    );
+    border-inline: 10px solid transparent;
+    border-top: 12px solid #fbfbf8;
+}
+
+@media (max-width: 767px) {
+    .case-dialogue {
+        bottom: calc(100% - 39px);
+        width: min(340px, calc(100vw - 24px));
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+}
+
+/* ---- Case-study reveal states ----------------------------------------- */
+
+.preview-root [data-case-reveal] {
+    transition:
+        opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.preview-root[data-reveal="ready"]
+    [data-case-reveal]:not([data-visible="true"]) {
+    opacity: 0;
+    transform: translateY(26px);
+}
+
+/* ---- Reduced motion ---------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .preview-root[data-frog-ready="true"] .preview-frog-slot img {
+        visibility: visible;
+    }
+
+    .preview-frog-layer {
+        display: none;
+    }
+
+    .preview-root [data-case-reveal] {
+        transition: none;
+    }
+}
