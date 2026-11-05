@@ -41,36 +41,10 @@ test("the root layout restores a saved theme and defaults to dark", async () => 
     assert.match(layoutSource, /suppressHydrationWarning/)
 })
 
-test("the Experience section uses a theme-aware alternate paper surface", async () => {
-    const [experienceHtml, caseStudySource, globalStyles] = await Promise.all([
-        renderDefaultComponent("../app/components/experience/Experience"),
-        readFile(
-            path.join(
-                process.cwd(),
-                "app/components/work/PortfolioCaseStudy.tsx",
-            ),
-            "utf8",
-        ),
-        readFile(path.join(process.cwd(), "app/globals.css"), "utf8"),
-    ])
-
-    assert.match(experienceHtml, /<section[^>]*\bbg-paper-alt\b/)
-    assert.doesNotMatch(experienceHtml, /\bbg-\[#/)
-    assert.doesNotMatch(caseStudySource, /\bbg-\[#/)
-    assert.equal(globalStyles.match(/--paper-alt-rgb:/g)?.length, 2)
-})
-
 test("theme colors are driven by light and dark design tokens", async () => {
-    const [globalStyles, tailwindConfig, shaderSource] = await Promise.all([
+    const [globalStyles, tailwindConfig] = await Promise.all([
         readFile(path.join(process.cwd(), "app/globals.css"), "utf8"),
         readFile(path.join(process.cwd(), "tailwind.config.ts"), "utf8"),
-        readFile(
-            path.join(
-                process.cwd(),
-                "app/components/hero/ShaderBackground.tsx",
-            ),
-            "utf8",
-        ),
     ])
 
     assert.match(globalStyles, /:root\.dark\s*{/)
@@ -78,6 +52,4 @@ test("theme colors are driven by light and dark design tokens", async () => {
     assert.match(globalStyles, /--ink-rgb:\s*242 239 232/)
     assert.match(tailwindConfig, /rgb\(var\(--paper-rgb\)/)
     assert.match(tailwindConfig, /rgb\(var\(--ink-rgb\)/)
-    assert.match(shaderSource, /MutationObserver\(handleThemeChange\)/)
-    assert.match(shaderSource, /getRenderingMode\(\) === "static"/)
 })

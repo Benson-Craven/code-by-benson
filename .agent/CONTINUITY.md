@@ -79,6 +79,8 @@
 
 ## [PROGRESS]
 
+- 2026-11-05: Removed the unused pre-redesign homepage tree: `About`, `Experience`, `Hero`, `LocalTime`, `ShaderBackground`, `shaderMotion`, `ProjectFeature`, `ProjectShowcase`, `SelectedWork` and `app/data/experience.ts`, plus `tests/project-showcase.test.ts` and `tests/shader-motion.test.ts`. Trimmed the stale assertions from `homepage-v2`, `theme-toggle` and `hiring-conversion-foundation`. Typecheck, lint, changed-file Prettier, all 85 tests and an isolated production build at `/tmp/benson-omit-build-92092` pass. `public/images/portrait.avif` is now unreferenced but was kept as original personal media. No commit or deployment.
+
 - 2026-11-04: Made the redesign the homepage. Added the `app/(site)` route group, moved the home and project routes, updated `projectNavigation` and `ProjectCase` links, added permanent redirects, indexed the new pages with typed project metadata and sitemap entries, and updated the homepage content date. Formatting, lint, typecheck, all 95 tests and an isolated production build pass. Chrome at 1440 and 390 verified the home and project pages, redirects with fragments, keyboard open and focus return, reduced-motion navigation, and no horizontal scroll at 320, 390, 768 and 1440. No commit or deployment.
 
 - 2026-11-04: Frog speech bubbles now use the screenshot pixel reveal: a canvas silhouette of the bubble and its glyphs develops, hands over to the real bubble, then dissolves while the text fades in. The bubble also has the frames' 4px checkerboard shadow. Verified in Chrome with SwiftShader WebGL at 1440 and 390: canvas 170x37 cells and text fades before the dissolve ends. Formatting, lint, typecheck, 94 tests and an isolated production build pass. No commit or deployment.

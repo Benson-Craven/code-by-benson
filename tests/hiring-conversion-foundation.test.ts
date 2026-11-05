@@ -75,38 +75,6 @@ test("the approved resume is published at a stable path", async () => {
     )
 })
 
-test("experience renders the complete verified CV chronology", async () => {
-    const experienceHtml = await renderDefaultComponent(
-        "../app/components/experience/Experience",
-    )
-    const expectedEntries = [
-        ["Frontend Developer", "First Page Australia", "Dec 2024 - July 2026"],
-        [
-            "Freelance Full Stack Developer",
-            "Self-Employed",
-            "Jan 2023 - Dec 2024",
-        ],
-        ["Technical Consultant", "CGI UK Ltd", "July 2020 - Aug 2021"],
-    ]
-    const titlePositions = expectedEntries.map(([title]) =>
-        experienceHtml.indexOf(title),
-    )
-    const renderedEntries = experienceHtml.match(/<li\b[\s\S]*?<\/li>/g) ?? []
-
-    assert.ok(titlePositions.every((position) => position >= 0))
-    assert.deepEqual(
-        titlePositions,
-        [...titlePositions].sort((a, b) => a - b),
-    )
-    assert.equal(renderedEntries.length, expectedEntries.length)
-
-    expectedEntries.forEach(([title, company, period], index) => {
-        assert.ok(renderedEntries[index]?.includes(title))
-        assert.ok(renderedEntries[index]?.includes(company))
-        assert.ok(renderedEntries[index]?.includes(period))
-    })
-})
-
 test("metadata and structured data use the confirmed public positioning", async () => {
     const [layoutSource, jsonLdHtml] = await Promise.all([
         readFile(path.join(process.cwd(), "app/layout.tsx"), "utf8"),

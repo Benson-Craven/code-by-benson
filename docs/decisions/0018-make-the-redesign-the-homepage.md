@@ -34,3 +34,9 @@ The homepage no longer links the résumé or shows the employment chronology. Th
 - `/work/<slug>` keeps its previous markup and metadata.
 - The sitemap contains the homepage, the `/work` set and the `/projects` set; no `/redesign` URL appears.
 - The transition, focus return and reduced-motion fallback still work from the homepage.
+
+## Follow-up
+
+On 2026-11-05 the unused previous-homepage tree was deleted: `About`, `Experience`, `Hero`, `LocalTime`, `ShaderBackground`, `shaderMotion`, `ProjectFeature`, `ProjectShowcase` and `SelectedWork`, together with `app/data/experience.ts` and their stale tests. No route imported them after the redesign became the homepage. `/work/[slug]` is still unchanged and still indexed, so retiring it remains a separate migration.
+
+`public/images/portrait.avif` is now unreferenced by application code. It was kept because it is original personal media, not generated code, and removing it is a content decision rather than file cleanup.
