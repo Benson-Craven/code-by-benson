@@ -2,7 +2,7 @@ import type { PortfolioProjectSlug } from "../data/portfolio"
 
 export const footerDialogue = [
     "I live down here. The rent is reasonable.",
-    "You've scrolled a long way. Rest your thumb.",
+    "You've scrolled a long way. Take a breather.",
     "I'd offer you tea, but this is a pond.",
     "Benson does the coding. I supervise.",
     "My hobbies? Sitting. Occasionally hopping.",
@@ -14,12 +14,9 @@ export const footerDialogue = [
 // The docked All Work badge has its own bubble, so these lines are about the
 // section itself: choosing a project while the frog stands guard in the corner.
 export const allWorkDialogue = [
-    "Three projects. I have notes on all three.",
-    "Hover a title. The cover follows along.",
     "This circle is smaller than my last office.",
     "I guard the work. Mostly I stand here.",
     "Open one. I will be right here.",
-    "The third project is still in the workshop.",
     "Scroll slowly. The covers are worth it.",
     "Benson built these. I watched.",
 ]

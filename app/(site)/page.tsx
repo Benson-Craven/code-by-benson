@@ -34,7 +34,7 @@ function FrogSlot({
             {trick && (
                 <>
                     <p
-                        className="preview-footer-dialogue speech-tail-down bg-preview-white text-preview-black pointer-events-none absolute bottom-[90%] left-0 z-[4] m-0 w-full rounded-[20px] px-5 py-4 text-[clamp(18px,1.7vw,24px)] font-semibold leading-[1.3]"
+                        className="preview-footer-dialogue speech-tail-down pointer-events-none absolute bottom-[90%] left-0 z-[4] m-0 w-full rounded-[20px] bg-preview-white px-5 py-4 text-[clamp(18px,1.7vw,24px)] font-semibold leading-[1.3] text-preview-black"
                         data-frog-dialogue
                         hidden
                     />
@@ -50,13 +50,13 @@ export default function Redesign() {
         <div className="preview-root group" data-redesign>
             <a
                 href="#redesign-main"
-                className="bg-preview-white text-preview-black fixed left-6 top-4 z-10 -translate-y-[200%] p-3 focus:translate-y-0"
+                className="fixed left-6 top-4 z-10 -translate-y-[200%] bg-preview-white p-3 text-preview-black focus:translate-y-0"
             >
                 Skip to content
             </a>
             <main id="redesign-main" tabIndex={-1}>
                 <section
-                    className="preview-hero bg-preview-blue text-preview-white grid-paper flex min-h-[max(720px,100svh)] flex-col justify-between px-[max(4.72vw,24px)] pb-[74px] pt-[46px] [--grid-line:#fbfbf80a] max-md:px-6 max-md:pb-9 max-md:pt-7 md:min-h-svh md:py-[clamp(24px,5svh,46px)]"
+                    className="preview-hero flex min-h-[max(720px,100svh)] flex-col justify-between bg-preview-blue px-[max(4.72vw,24px)] pb-[74px] pt-[46px] text-preview-white grid-paper [--grid-line:#fbfbf80a] max-md:px-6 max-md:pb-9 max-md:pt-7 md:min-h-svh md:py-[clamp(24px,5svh,46px)]"
                     data-frog-section
                     aria-labelledby="redesign-title"
                 >
@@ -85,11 +85,11 @@ export default function Redesign() {
                         </h1>
                         <div className="preview-hero-guide w-full min-w-0 max-lg:mt-10">
                             <p
-                                className="preview-greeting speech-tail-down bg-preview-white text-preview-black relative mb-[18px] rounded-[20px] px-[22px] py-[18px] text-[clamp(20px,1.9vw,28px)] font-semibold leading-[1.25]"
+                                className="preview-greeting speech-tail-down relative mb-[18px] rounded-[20px] bg-preview-white px-[22px] py-[18px] text-[clamp(20px,1.9vw,28px)] font-semibold leading-[1.25] text-preview-black"
                                 data-frog-greeting
                             >
-                                Hi, I&apos;m Benson&apos;s frog. Scroll down,
-                                I&apos;ll show you around.
+                                Oh, hey! Follow me, I&apos;ll show you what
+                                Benson has been up to.
                             </p>
                             <FrogSlot className="ml-auto w-full md:w-[min(100%,var(--project-frog-size))]" />
                         </div>
@@ -97,7 +97,7 @@ export default function Redesign() {
                 </section>
                 <section
                     id="intro"
-                    className="preview-intro grid-paper relative grid min-h-[max(792px,110svh)] grid-cols-[36%_1fr] items-center gap-x-[5%] px-[max(4.72vw,24px)] pb-[74px] pt-[46px] [--grid-line:#0b0b0c0a] max-lg:flex max-lg:flex-col max-md:min-h-[110svh] max-md:justify-center max-md:gap-10 max-md:px-6 max-md:pb-9 max-md:pt-20"
+                    className="preview-intro relative grid min-h-[max(792px,110svh)] grid-cols-[36%_1fr] items-center gap-x-[5%] px-[max(4.72vw,24px)] pb-[74px] pt-[46px] grid-paper [--grid-line:#0b0b0c0a] max-lg:flex max-lg:flex-col max-md:min-h-[110svh] max-md:justify-center max-md:gap-10 max-md:px-6 max-md:pb-9 max-md:pt-20"
                     data-frog-section
                     aria-label="About Benson"
                 >
@@ -109,7 +109,7 @@ export default function Redesign() {
             </main>
             <footer
                 id="contact"
-                className="preview-contact bg-preview-black text-preview-white grid-paper flex min-h-[max(720px,100svh)] flex-col justify-between px-[max(4.72vw,24px)] pb-[74px] pt-[clamp(96px,13.9vw,200px)] [--grid-line:#fbfbf80a] max-md:px-6 max-md:pb-9 max-md:pt-[88px] md:min-h-svh md:py-[clamp(24px,5svh,46px)]"
+                className="preview-contact flex min-h-[max(720px,100svh)] flex-col justify-between bg-preview-black px-[max(4.72vw,24px)] pb-[74px] pt-[clamp(96px,13.9vw,200px)] text-preview-white grid-paper [--grid-line:#fbfbf80a] max-md:px-6 max-md:pb-9 max-md:pt-[88px] md:min-h-svh md:py-[clamp(24px,5svh,46px)]"
                 data-frog-section
             >
                 <div>

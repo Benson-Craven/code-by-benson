@@ -75,6 +75,7 @@ export default function FrogPresentation() {
         let dialogueTimer: ReturnType<typeof setTimeout> | undefined
         let dialogueActive = false
         let previousDialogue = ""
+
         function clearDialogue() {
             clearTimeout(dialogueTimer)
             gsap.killTweensOf(dialogue)
@@ -447,6 +448,7 @@ export default function FrogPresentation() {
             }
             if (!beat && !project) spokenBeat = ""
         }
+
         function resetAboutAnimation() {
             if (!aboutAnimation) return
             aboutAnimation.kill()
@@ -454,6 +456,7 @@ export default function FrogPresentation() {
             frog?.setSmiling(false)
             gsap.set(host, { y: 0 })
         }
+
         function drawCatch() {
             if (!frog) return
             const mouth = frog.mouthScreenPos()
@@ -475,6 +478,7 @@ export default function FrogPresentation() {
             if (catchState.returning)
                 firefly.setAttribute("transform", `translate(${tipX} ${tipY})`)
         }
+
         function resetTrick() {
             hop?.kill()
             busy = false
@@ -484,6 +488,7 @@ export default function FrogPresentation() {
             gsap.set(host, { y: 0 })
             gsap.set(firefly, { opacity: caught ? 0 : footerSeen ? 1 : 0 })
         }
+
         function fly() {
             if (disposed || caught) return
             const rect = artwork.getBoundingClientRect()
@@ -538,6 +543,7 @@ export default function FrogPresentation() {
                 onComplete: fly,
             })
         }
+
         function updateFirefly(running: boolean) {
             const rect = footer.getBoundingClientRect()
             const visible = rect.top < innerHeight && rect.bottom > 0
@@ -562,13 +568,16 @@ export default function FrogPresentation() {
                 else hop.pause()
             }
         }
+
         function badgeInset() {
             return narrow.matches ? 20 : 24
         }
+
         // The layer's CSS top is 0 on desktop and the safe-area lift on phones.
         function layerBaseTop() {
             return parseFloat(getComputedStyle(layer).top) || 0
         }
+
         // The live normal placement in layer coordinates, so the exit can
         // chase the footer as the page keeps scrolling.
         function layerPlacement(): FrogAnchor {
@@ -594,6 +603,7 @@ export default function FrogPresentation() {
                 y: rootRect.top + anchor.y,
             }
         }
+
         function resetBadge() {
             badgeTimeline?.kill()
             badgeTimeline = undefined
@@ -613,6 +623,7 @@ export default function FrogPresentation() {
                 clearProps: "boxShadow",
             })
         }
+
         function enterBadge() {
             if (!frog || failed || reduced.matches || disposed) return
             badgeState = "entering"
@@ -681,6 +692,7 @@ export default function FrogPresentation() {
                     0.08,
                 )
         }
+
         function leaveBadge() {
             if (badgeState === "off") return
             badgeState = "leaving"
@@ -757,6 +769,7 @@ export default function FrogPresentation() {
                     0,
                 )
         }
+
         function position() {
             if (disposed || anchors.length === 0) return
             readAnchors()
@@ -885,11 +898,13 @@ export default function FrogPresentation() {
                 return [anchor]
             })
         }
+
         function measure() {
             readAnchors()
             position()
             frog?.resize()
         }
+
         function fail() {
             failed = true
             dialogueActive = false
@@ -905,6 +920,7 @@ export default function FrogPresentation() {
             flightTween?.pause()
             artwork.dataset.fluttering = "false"
         }
+
         async function ensureFrog() {
             if (frog || failed || loading || reduced.matches || disposed) return
             loading = true
@@ -921,6 +937,7 @@ export default function FrogPresentation() {
                 loading = false
             }
         }
+
         function preferences() {
             resetAboutAnimation()
             resetTrick()
@@ -935,12 +952,14 @@ export default function FrogPresentation() {
             position()
             void ensureFrog()
         }
+
         function visibility() {
             if (document.hidden) hop?.pause()
             else if (hop && hop.progress() < 1) hop.resume()
             smoothScroll()
             position()
         }
+
         function trick() {
             if (busy) return
             clearDialogue()
@@ -1002,6 +1021,7 @@ export default function FrogPresentation() {
                 .to(host, { y: -64, duration: 0.26, ease: "power2.out" })
                 .to(host, { y: 0, duration: 0.32, ease: "power2.in" })
         }
+
         const observer = new ResizeObserver(measure)
         observer.observe(root)
         slots.forEach((slot) => observer.observe(slot))
@@ -1012,12 +1032,15 @@ export default function FrogPresentation() {
         desktop.addEventListener("change", preferences)
         narrow.addEventListener("change", measure)
         held.addEventListener("change", measure)
+
         void document.fonts.ready.then(() => {
             if (!disposed) measure()
         })
+
         button.addEventListener("click", trick)
         measure()
         preferences()
+
         return () => {
             disposed = true
             dialogueActive = false

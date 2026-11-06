@@ -99,19 +99,19 @@ export const showcaseMedia: Record<
 
 const bubbles: [string, string, string][] = [
     [
-        "A healthcare website that helps patients find pain science, treatment information and consultation routes.",
-        "Benson designed the interface, built the Next.js frontend and prepared the production deployment.",
-        "Reusable sections bring headings, image descriptions and FAQ schema into the page structure.",
+        "Oh, this one's Chronic Pain Recovery! Benson built their website to help people find the support they need.",
+        "He built the whole thing with Next.js, including all the clever bits you don't see behind the scenes.",
+        "Go on, have a little look for yourself. I'll be here.",
     ],
     [
-        "A food and travel site for recipes and stories. Nifa owns the writing, photography and editorial direction.",
-        "Benson built the Next.js frontend and Sanity content architecture, including private previews.",
-        "A separate recipe ready state lets the admin keep rough notes without publishing incomplete recipes or stories.",
+        "Ooh, this one's Nibbles with Nifa! It's all about good food, recipes and little adventures.",
+        "Benson built it with Next.js and Sanity, so Nifa can add recipes and travel stories whenever she likes.",
+        "I'm getting hungry just looking at it. Go on, have a nose around!",
     ],
     [
-        "An record-collecting tool that brings collection, shelf and buying information together from Discogs.",
-        "Benson built the product interface, server-side Spotify OAuth, Discogs integration and PostgreSQL storage.",
-        "Deterministic matching scores release confidence before price and availability rank buying options.",
+        "You'll like this one! Waxlist helps vinyl lovers discover records based on what they listen to on Spotify.",
+        "Benson's been building it with Next.js, connecting Spotify and Discogs to help you find records worth adding to your collection.",
+        "Careful, though. One minute you're browsing, the next you've got ten records on your wishlist. Don't blame me!",
     ],
 ]
 export const projectPresentations: ProjectPresentationData[] =

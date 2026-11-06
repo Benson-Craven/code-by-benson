@@ -503,7 +503,7 @@ export default function ProjectPresentations() {
                                             className="showcase-dialogue-tail"
                                             aria-hidden="true"
                                         />
-                                        <span className="relative">
+                                        <span className="relative text-base md:text-2xl">
                                             {bubble}
                                         </span>
                                     </p>
