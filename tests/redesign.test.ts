@@ -779,6 +779,10 @@ test("about flag follows About on desktop and the corner frog on mobile", () => 
 test("responsive stages size devices before falling back to document flow", async () => {
     const { responsiveStageSize: size } =
         await import("../app/redesign/projectPresentationData")
+    // Bubbles overlay devices; the 425px layout reserves the full-body frog.
+    const frogHeight = Math.round(425 * 0.68 * (291 / 273))
+    assert.equal(size(715, 96, frogHeight, 64), 247)
+    assert.equal(size(600, 96, frogHeight, 64), null)
     assert.equal(size(600, 100, 256, 64), 180)
     assert.equal(size(599.9, 100, 256, 64), null)
     assert.equal(size(1000, 100, 256, 64), 345)

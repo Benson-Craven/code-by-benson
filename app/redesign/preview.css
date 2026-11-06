@@ -510,7 +510,7 @@
 
     .preview-project[data-responsive="held"] [data-browser-frame] {
         grid-area: 1 / 1;
-        width: min(100%, calc(var(--device-height, 345px) * 328 / 345));
+        width: 100%;
     }
 
     .preview-project[data-responsive="held"] [data-screen-strip] {
@@ -520,6 +520,7 @@
     .preview-project[data-responsive="held"] .preview-desktop-view {
         grid-area: 1 / 1;
         width: 100%;
+        max-height: calc(var(--device-height, 345px) - 38px);
     }
 
     .preview-project[data-responsive="held"] .preview-phone-perspective {

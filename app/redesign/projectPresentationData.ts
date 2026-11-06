@@ -111,7 +111,7 @@ export const showcaseMedia: Record<
                 src: "/images/waxlist/waxlist-1.mp4",
                 width: 1470,
                 height: 802,
-                poster: implementedPortfolioProjects[1].cover.src,
+                poster: implementedPortfolioProjects[2].cover.src,
                 alt: "Nibbles with Nifa desktop homepage walkthrough",
                 label: "Homepage",
             },

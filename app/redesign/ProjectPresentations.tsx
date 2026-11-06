@@ -137,19 +137,8 @@ export default function ProjectPresentations() {
                                 section.querySelector<HTMLElement>(
                                     "[data-frog-slot]",
                                 )!.offsetHeight
-                            const bubbleBottom = parseFloat(
-                                getComputedStyle(bubbles[0].parentElement!)
-                                    .bottom,
-                            )
-                            const narration = Math.max(
-                                frogHeight,
-                                bubbleBottom +
-                                    Math.max(
-                                        ...bubbles.map(
-                                            (bubble) => bubble.offsetHeight,
-                                        ),
-                                    ),
-                            )
+                            // Speech overlays the devices, so reserve only the frog's height.
+                            const narration = frogHeight
                             section.style.setProperty(
                                 "--narration-height",
                                 `${narration}px`,
@@ -476,7 +465,10 @@ export default function ProjectPresentations() {
                                 </span>
                             </Link>
                         </header>
-                        <div className="relative pb-12" data-project-devices>
+                        <div
+                            className="relative z-0 pb-12"
+                            data-project-devices
+                        >
                             <div
                                 className="overflow-hidden rounded-xl border-2 border-[#1e1e1e] bg-preview-white text-[#1e1e1e]"
                                 data-browser-frame
@@ -488,30 +480,25 @@ export default function ProjectPresentations() {
                                     <span className="tracking-[4px] text-[#777]">
                                         ● ● ●
                                     </span>
-                                    <span>{project.title}</span>
+                                    <span className="hidden md:inline">
+                                        {project.title}
+                                    </span>
                                 </div>
                                 <div className="preview-desktop-screen">
                                     <div className="relative" data-screen-strip>
                                         {project.desktop
-                                            .slice(
-                                                0,
-                                                project.slug === "waxlist" ||
-                                                    project.slug ===
-                                                        "nibbles-with-nifa"
-                                                    ? 1
-                                                    : 3,
-                                            )
+                                            .slice(0, 1)
                                             .map((media, index) => (
                                                 <figure
                                                     className="preview-desktop-view relative m-0"
                                                     style={{
-                                                        aspectRatio: `${media.width ?? 1440} / ${media.height ?? 900}`,
+                                                        aspectRatio: `${media.width ?? 1440} / ${(media.height ?? 900) * 1.1}`,
                                                     }}
                                                     data-responsive-slide
                                                     key={index}
                                                 >
                                                     <PreviewMedia
-                                                        className="absolute inset-0 h-full w-full object-contain"
+                                                        className="absolute inset-0 h-full w-full object-cover object-top"
                                                         media={media}
                                                         cover={
                                                             index === 0
@@ -529,11 +516,7 @@ export default function ProjectPresentations() {
                                     className="preview-phone relative h-full w-full [transform-style:preserve-3d]"
                                     data-phone
                                 >
-                                    {(project.slug === "waxlist" ||
-                                    project.slug === "nibbles-with-nifa"
-                                        ? (["front"] as const)
-                                        : (["front", "back"] as const)
-                                    ).map((face) => (
+                                    {(["front"] as const).map((face) => (
                                         <div
                                             className="preview-phone-face absolute inset-0 overflow-hidden rounded-[26px] border-[7px] border-preview-black bg-preview-white [backface-visibility:hidden] after:absolute after:left-[32%] after:top-[5px] after:h-2.5 after:w-[36%] after:rounded-xl after:bg-preview-black after:content-[''] data-[face=back]:[transform:rotateY(180deg)]"
                                             data-face={face}
@@ -550,7 +533,10 @@ export default function ProjectPresentations() {
                             </div>
                         </div>
                         <div className="preview-narrator mt-9">
-                            <div className="grid gap-4" data-bubbles>
+                            <div
+                                className="relative z-10 grid gap-4"
+                                data-bubbles
+                            >
                                 {project.bubbles.map((bubble) => (
                                     <p
                                         className="showcase-dialogue"

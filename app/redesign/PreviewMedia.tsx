@@ -1,3 +1,5 @@
+"use client"
+
 import type { PreviewMedia as Media } from "./projectPresentationData"
 
 export default function PreviewMedia({
@@ -21,6 +23,14 @@ export default function PreviewMedia({
                 poster={media.poster}
                 aria-label={media.alt}
                 style={style}
+                onCanPlay={(event) => {
+                    const video = event.currentTarget
+                    video.muted = true
+                    video.defaultMuted = true
+                    void video.play().catch(() => {
+                        // Browser playback restrictions can still require a gesture.
+                    })
+                }}
                 autoPlay
                 loop
                 muted
