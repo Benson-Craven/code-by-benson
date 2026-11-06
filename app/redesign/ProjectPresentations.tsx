@@ -309,10 +309,17 @@ export default function ProjectPresentations() {
                         })
                     }
                 }
+                const hangObservers: ResizeObserver[] = []
                 sections.forEach((section) => {
                     section.dataset.held = "true"
                     const strip = section.querySelector<HTMLElement>(
                         "[data-screen-strip]",
+                    )!
+                    const devices = section.querySelector<HTMLElement>(
+                        "[data-project-devices]",
+                    )!
+                    const frame = section.querySelector<HTMLElement>(
+                        "[data-browser-frame]",
                     )!
                     const phone =
                         section.querySelector<HTMLElement>("[data-phone]")
@@ -359,10 +366,28 @@ export default function ProjectPresentations() {
                         onRefresh: (self) => paint(self.progress),
                     })
                     paint(0)
+                    // The phone's foot hangs a quarter of the frame height below
+                    // the browser, so reserve that space in the device column.
+                    const measureHang = () => {
+                        devices.style.setProperty(
+                            "--showcase-hang",
+                            `${frame.getBoundingClientRect().height * 0.25}px`,
+                        )
+                    }
+                    measureHang()
+                    const hangObserver = new ResizeObserver(measureHang)
+                    hangObserver.observe(frame)
+                    hangObservers.push(hangObserver)
                 })
-                return () =>
+                return () => {
+                    hangObservers.forEach((observer) => observer.disconnect())
                     sections.forEach((section) => {
                         delete section.dataset.held
+                        section
+                            .querySelector<HTMLElement>(
+                                "[data-project-devices]",
+                            )
+                            ?.style.removeProperty("--showcase-hang")
                         gsap.set(
                             section.querySelector(".preview-desktop-screen"),
                             {
@@ -379,6 +404,7 @@ export default function ProjectPresentations() {
                             clearProps: "opacity,transform",
                         })
                     })
+                }
             },
         )
         const refresh = () => {
@@ -421,7 +447,7 @@ export default function ProjectPresentations() {
                     data-frog-section
                     aria-labelledby={`${project.slug}-title`}
                 >
-                    <div className="preview-stage mx-auto max-w-[1600px]">
+                    <div className="preview-stage mx-auto">
                         <header className="preview-heading mb-10 flex flex-wrap items-baseline justify-between gap-6">
                             <h2
                                 id={`${project.slug}-title`}
@@ -487,7 +513,7 @@ export default function ProjectPresentations() {
                                 <div className="preview-desktop-screen">
                                     <div className="relative" data-screen-strip>
                                         {project.desktop
-                                            .slice(0, 1)
+                                            .slice(0, project.showcase.desktop)
                                             .map((media, index) => (
                                                 <figure
                                                     className="preview-desktop-view relative m-0"
@@ -516,7 +542,7 @@ export default function ProjectPresentations() {
                                     className="preview-phone relative h-full w-full [transform-style:preserve-3d]"
                                     data-phone
                                 >
-                                    {(["front"] as const).map((face) => (
+                                    {project.showcase.phone.map((face) => (
                                         <div
                                             className="preview-phone-face absolute inset-0 overflow-hidden rounded-[26px] border-[7px] border-preview-black bg-preview-white [backface-visibility:hidden] after:absolute after:left-[32%] after:top-[5px] after:h-2.5 after:w-[36%] after:rounded-xl after:bg-preview-black after:content-[''] data-[face=back]:[transform:rotateY(180deg)]"
                                             data-face={face}

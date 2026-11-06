@@ -24,6 +24,10 @@ export type ProjectPresentationData = {
     bubbles: [string, string, string]
     desktop: [PreviewMedia, PreviewMedia, PreviewMedia]
     phone: { front: PreviewMedia; back: PreviewMedia }
+    // How much of the media set the homepage showcase renders. CPRIE cycles
+    // all three desktop views and both phone faces; the other projects show
+    // their single live view here and reserve extra slots for their pages.
+    showcase: { desktop: 1 | 3; phone: ("front" | "back")[] }
 }
 // Override individual device slots here. Omitted slots keep their existing media.
 export const showcaseMedia: Record<
@@ -49,18 +53,18 @@ export const showcaseMedia: Record<
                 src: "/images/chronic-pain-recovery/cprie-hp-2.mp4",
                 width: 1470,
                 height: 802,
-                poster: implementedPortfolioProjects[0].cover.src,
-                alt: "Chronic Pain Recovery desktop homepage walkthrough",
-                label: "Homepage",
+                poster: "/images/chronic-pain-recovery/conditions.webp",
+                alt: "Chronic Pain Recovery conditions section showing image-backed cards for chronic pain, musculoskeletal, head and facial, and gastrointestinal concerns.",
+                label: "Conditions",
             },
             2: {
                 type: "video",
                 src: "/images/chronic-pain-recovery/cprie-hp-3.mp4",
                 width: 1470,
                 height: 802,
-                poster: implementedPortfolioProjects[0].cover.src,
-                alt: "Chronic Pain Recovery desktop homepage walkthrough",
-                label: "Homepage",
+                poster: "/images/chronic-pain-recovery/science.webp",
+                alt: "Chronic Pain Recovery science section with an explanatory heading, summary, treatment image, signal explanation, and treatment-path card.",
+                label: "Science",
             },
         },
         mobile: {
@@ -92,13 +96,29 @@ export const showcaseMedia: Record<
                 alt: "Nibbles with Nifa desktop homepage walkthrough",
                 label: "Homepage",
             },
+            1: {
+                type: "image",
+                src: "/images/nibbles-with-nifa/recipes.webp",
+                width: 1440,
+                height: 900,
+                alt: "Nibbles with Nifa recipe index with the heading 'What shall we eat?', a short introduction and three recipe cards.",
+                label: "Recipes",
+            },
+            2: {
+                type: "image",
+                src: "/images/nibbles-with-nifa/travel-feature.webp",
+                width: 1440,
+                height: 900,
+                alt: "Nibbles with Nifa travel feature with a Japan street photograph and a link to the travel stories.",
+                label: "Travel",
+            },
         },
         mobile: {
             front: {
                 type: "video",
                 src: "/images/nibbles-with-nifa/nwn-mobile-1.mp4",
-                poster: implementedPortfolioProjects[1].cover.src,
-                alt: "Chronic Pain Recovery mobile homepage walkthrough",
+                poster: "/images/nibbles-with-nifa/nwn-1.png",
+                alt: "Nibbles with Nifa mobile homepage walkthrough",
                 label: "Mobile homepage",
                 position: "center top",
             },
@@ -184,6 +204,7 @@ export const projectPresentations: ProjectPresentationData[] =
             position: "center top",
         }
         const media = showcaseMedia[project.slug]
+        const fullShowcase = project.slug === "chronic-pain-recovery"
         return {
             slug: project.slug,
             title: project.title,
@@ -199,6 +220,10 @@ export const projectPresentations: ProjectPresentationData[] =
             phone: {
                 front: media?.mobile?.front ?? { ...phone },
                 back: media?.mobile?.back ?? { ...phone },
+            },
+            showcase: {
+                desktop: fullShowcase ? 3 : 1,
+                phone: fullShowcase ? ["front", "back"] : ["front"],
             },
         }
     })

@@ -38,9 +38,15 @@ export default function ProjectCase({
     const clipDescriptionId = `${project.slug}-project-clip-description`
     const frameHost = frameHosts[project.slug] ?? "Local build"
     const desktopMedia =
-        project.slug === "chronic-pain-recovery"
-            ? showcaseMedia[project.slug].desktop
+        project.slug === "chronic-pain-recovery" ||
+        project.slug === "nibbles-with-nifa"
+            ? showcaseMedia[project.slug]?.desktop
             : undefined
+    // Nibbles' clip opens on the homepage and then scrolls. In a 16:10 hero it
+    // lands mid-scroll and cuts the site heading, so the hero keeps the real
+    // still while the clip plays in the framed section below.
+    const heroMedia =
+        project.slug === "nibbles-with-nifa" ? undefined : desktopMedia?.[0]
     const leadShot = project.evidence.stills[0]
     const pairShots = [project.evidence.stills[1], project.evidence.stills[2]]
     // The reference pairs one claim with its screenshots. This uses the second
@@ -128,7 +134,7 @@ export default function ProjectCase({
             <main id="project-main" tabIndex={-1}>
                 <article>
                     <header
-                        className="relative bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(64px,12svh,130px)] pt-[clamp(88px,12svh,150px)] text-preview-black grid-paper [--grid-line:#0b0b0c12] max-md:pt-24"
+                        className="relative bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(64px,12svh,130px)] pt-[clamp(88px,12svh,150px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a] max-md:pt-24"
                         style={{ "--case-tint": tint } as CSSProperties}
                     >
                         <div className="pointer-events-none fixed inset-x-0 top-0 z-[6] mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-3 p-[16px_max(4.72vw,24px)] [&>*]:pointer-events-auto">
@@ -192,9 +198,9 @@ export default function ProjectCase({
                                 className="group/cover relative col-span-full mt-[clamp(28px,4vw,48px)] aspect-[16/10] overflow-hidden rounded-xl bg-preview-black md:col-span-8"
                                 data-project-hero={project.slug}
                             >
-                                {desktopMedia?.[0] ? (
+                                {heroMedia ? (
                                     <PreviewMedia
-                                        media={desktopMedia[0]}
+                                        media={heroMedia}
                                         className="block h-full w-full object-cover"
                                     />
                                 ) : (
@@ -222,7 +228,7 @@ export default function ProjectCase({
                     </header>
 
                     <section
-                        className="bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,14svh,168px)] text-preview-black"
+                        className="bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,14svh,168px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a]"
                         aria-labelledby="project-context"
                     >
                         <div className="mx-auto max-w-[1600px]">
@@ -243,7 +249,7 @@ export default function ProjectCase({
                     </section>
 
                     <section
-                        className="bg-[#e6e6e0] px-[max(4.72vw,24px)] py-[clamp(72px,14svh,168px)] text-preview-black"
+                        className="bg-[#e6e6e0] px-[max(4.72vw,24px)] py-[clamp(72px,14svh,168px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a]"
                         aria-labelledby="project-screens"
                     >
                         <div className="mx-auto max-w-[1600px]">
@@ -324,52 +330,56 @@ export default function ProjectCase({
                         </div>
                     </section>
 
-                    {project.slug !== "chronic-pain-recovery" && (
-                        <section
-                            className="grid min-h-svh content-center bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,12svh,150px)] text-preview-black max-md:min-h-0"
-                            aria-labelledby="project-clip"
-                        >
-                            <h2 id="project-clip" className="sr-only">
-                                Walkthrough
-                            </h2>
-                            <figure className="m-0 ml-auto grid w-full max-w-[1120px] gap-3.5 md:w-2/3">
-                                <BrowserFrame label={frameHost}>
-                                    <video
-                                        ref={videoRef}
-                                        controls={clip.controls}
-                                        preload={clip.preload}
-                                        playsInline={clip.playsInline}
-                                        muted={clip.muted}
-                                        poster={clip.poster}
-                                        aria-describedby={clipDescriptionId}
-                                    >
-                                        <source
-                                            src={clip.src}
-                                            type="video/mp4"
-                                        />
-                                        {clip.captionsSrc ? (
-                                            <track
-                                                kind="captions"
-                                                src={clip.captionsSrc}
-                                                srcLang="en"
-                                                label="English"
-                                                default
+                    {project.slug !== "chronic-pain-recovery" &&
+                        project.slug !== "nibbles-with-nifa" && (
+                            <section
+                                className="grid min-h-svh content-center bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,12svh,150px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a] max-md:min-h-0"
+                                aria-labelledby="project-clip"
+                            >
+                                <h2 id="project-clip" className="sr-only">
+                                    Walkthrough
+                                </h2>
+                                <figure className="m-0 ml-auto grid w-full max-w-[1120px] gap-3.5 md:w-2/3">
+                                    <BrowserFrame label={frameHost}>
+                                        <video
+                                            ref={videoRef}
+                                            controls={clip.controls}
+                                            preload={clip.preload}
+                                            playsInline={clip.playsInline}
+                                            muted={clip.muted}
+                                            poster={clip.poster}
+                                            aria-describedby={clipDescriptionId}
+                                        >
+                                            <source
+                                                src={clip.src}
+                                                type="video/mp4"
                                             />
-                                        ) : null}
-                                        Your browser does not support embedded
-                                        video.
-                                    </video>
-                                    <PixelDevelop poster={clip.poster} />
-                                </BrowserFrame>
-                                <p id={clipDescriptionId} className="sr-only">
-                                    {clip.description}
-                                </p>
-                            </figure>
-                        </section>
-                    )}
+                                            {clip.captionsSrc ? (
+                                                <track
+                                                    kind="captions"
+                                                    src={clip.captionsSrc}
+                                                    srcLang="en"
+                                                    label="English"
+                                                    default
+                                                />
+                                            ) : null}
+                                            Your browser does not support
+                                            embedded video.
+                                        </video>
+                                        <PixelDevelop poster={clip.poster} />
+                                    </BrowserFrame>
+                                    <p
+                                        id={clipDescriptionId}
+                                        className="sr-only"
+                                    >
+                                        {clip.description}
+                                    </p>
+                                </figure>
+                            </section>
+                        )}
 
                     <section
-                        className="grid min-h-svh content-start bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(48px,8svh,90px)] pt-[clamp(88px,14svh,170px)] text-preview-black max-md:min-h-0"
+                        className="grid min-h-svh content-start bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(48px,8svh,90px)] pt-[clamp(88px,14svh,170px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a] max-md:min-h-0"
                         style={{ "--case-tint": nextTint } as CSSProperties}
                         aria-labelledby="project-next"
                     >

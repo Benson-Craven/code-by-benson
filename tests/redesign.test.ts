@@ -5,6 +5,8 @@ import {
     aboutFlagOpacity,
     frogBadgeGeometry,
     frogPlacement,
+    heroGreetingDrift,
+    heroGreetingExit,
     shouldRenderFrog,
     workBadgeActive,
     workBadgeDock,
@@ -76,6 +78,60 @@ test("narrow screens keep the frog in a reserved slot", () => {
     for (const scroll of [0, 400, 800, 1200, 1600, 2100]) {
         assert.ok(anchors.includes(frogPlacement(anchors, scroll, true)))
     }
+})
+
+test("the hero greeting fades up as the hero scrolls away", () => {
+    // The bubble holds through the first third of the hero.
+    for (const scroll of [-200, 0, 100, 349]) {
+        const exit = heroGreetingExit(scroll, 1000)
+        assert.equal(exit.opacity, 1)
+        assert.equal(exit.offset, 0)
+    }
+    // It fades and drifts up before the frog changes slots at 60%.
+    assert.deepEqual(heroGreetingExit(475, 1000), {
+        opacity: 0.5,
+        offset: -heroGreetingDrift / 2,
+    })
+    for (const scroll of [600, 1200, 4000]) {
+        assert.deepEqual(heroGreetingExit(scroll, 1000), {
+            opacity: 0,
+            offset: -heroGreetingDrift,
+        })
+    }
+    // Scrolling back up reverses the exit instead of replaying it.
+    assert.ok(
+        heroGreetingExit(500, 1000).opacity >
+            heroGreetingExit(550, 1000).opacity,
+    )
+    // Short heroes keep a finite, bounded range.
+    const short = heroGreetingExit(720, 720)
+    assert.ok(short.opacity >= 0 && short.opacity <= 1)
+    assert.ok(short.offset <= 0 && short.offset >= -heroGreetingDrift)
+})
+
+test("the hero greeting replays its fade-up on every return to the top", async () => {
+    const presentation = await readFile(
+        new URL("../app/redesign/FrogPresentation.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(presentation, /Ready for another tour already\?/)
+    assert.match(presentation, /heroGreetingExit\(/)
+    assert.match(
+        presentation,
+        /greeting\.style\.transform = `translateY\(\$\{offset\}px\)`/,
+    )
+    // The return line rises into place, then leaves upward when scrolling.
+    assert.match(presentation, /greetingMotion\.offset = heroGreetingDrift/)
+    assert.match(presentation, /offset: -heroGreetingDrift/)
+    // Every visit to the top replays the entrance, not just the first.
+    assert.match(presentation, /greetingPhase !== "returning"/)
+    assert.match(presentation, /showReturnGreeting\(\)/)
+    assert.match(presentation, /hideReturnGreeting\(\)/)
+    // Reduced motion clears the inline motion instead of animating.
+    assert.match(
+        presentation,
+        /if \(reduced\.matches\) \{\s*greeting\.style\.opacity = ""/,
+    )
 })
 
 test("rendering stops for hidden tabs, reduced motion and offscreen positions", () => {
@@ -250,43 +306,91 @@ test("presentations preserve project order, project links and replaceable media"
             )
         }
         assert.ok(project.phone.front.label.trim().length > 0)
-        if (project.slug !== "chronic-pain-recovery") {
+        if (project.slug === "waxlist") {
             assert.ok(
-                project.desktop.every(({ label }) =>
-                    label.includes("Temporary"),
-                ),
+                project.desktop
+                    .slice(1)
+                    .every(({ label }) => label.includes("Temporary")),
             )
         }
     }
     assert.match(
         projectPresentations[1].bubbles.join(" "),
-        /Nifa owns.*editorial/,
+        /Nifa can add recipes and travel stories/,
     )
-    assert.match(projectPresentations[2].bubbles.join(" "), /unpublished/)
+    assert.match(
+        projectPresentations[2].bubbles.join(" "),
+        /Benson's been building it/,
+    )
 })
 
 test("showcase device slots select independent clips and images with fallbacks", async () => {
     const { projectPresentations, showcaseMedia } =
         await import("../app/redesign/projectPresentationData")
     const [cpr, nibbles] = projectPresentations
+    assert.deepEqual(cpr.showcase, {
+        desktop: 3,
+        phone: ["front", "back"],
+    })
+    assert.deepEqual(nibbles.showcase, {
+        desktop: 1,
+        phone: ["front"],
+    })
     assert.equal(cpr.desktop[0], showcaseMedia[cpr.slug].desktop?.[0])
     assert.equal(cpr.phone.front, showcaseMedia[cpr.slug].mobile?.front)
     assert.equal(cpr.phone.back, showcaseMedia[cpr.slug].mobile?.back)
     assert.equal(cpr.desktop[0].type, "video")
     assert.equal(cpr.phone.front.type, "video")
-    assert.equal(cpr.phone.back.type, "image")
+    assert.equal(cpr.phone.back.type, "video")
     assert.notEqual(cpr.desktop[0].src, cpr.phone.front.src)
     assert.notEqual(cpr.phone.front.src, cpr.phone.back.src)
-    assert.equal(cpr.phone.front.poster, cpr.phone.back.src)
+    assert.notEqual(cpr.phone.front.poster, cpr.phone.back.src)
+    // The three homepage views are genuinely different clips with their own stills.
+    assert.deepEqual(
+        cpr.desktop.map(({ label }) => label),
+        ["Homepage", "Conditions", "Science"],
+    )
+    assert.equal(new Set(cpr.desktop.map(({ src }) => src)).size, 3)
+    assert.deepEqual(
+        cpr.desktop.map(({ poster }) => poster),
+        [
+            "/images/chronic-pain-recovery/home.webp",
+            "/images/chronic-pain-recovery/conditions.webp",
+            "/images/chronic-pain-recovery/science.webp",
+        ],
+    )
+    assert.equal(nibbles.desktop[0].type, "video")
+    assert.equal(nibbles.desktop[1].type, "image")
+    assert.equal(nibbles.desktop[2].type, "image")
+    assert.equal(
+        nibbles.desktop[1].src,
+        "/images/nibbles-with-nifa/recipes.webp",
+    )
+    assert.equal(
+        nibbles.desktop[2].src,
+        "/images/nibbles-with-nifa/travel-feature.webp",
+    )
+    assert.equal(nibbles.phone.front.type, "video")
     assert.equal(
         nibbles.phone.front.src,
-        implementedPortfolioProjects[1].cover.src,
+        "/images/nibbles-with-nifa/nwn-mobile-1.mp4",
+    )
+    assert.equal(
+        nibbles.phone.front.poster,
+        "/images/nibbles-with-nifa/nwn-1.png",
     )
     assert.equal(
         nibbles.phone.back.src,
         implementedPortfolioProjects[1].cover.src,
     )
-    for (const media of [...cpr.desktop, cpr.phone.front, cpr.phone.back]) {
+    for (const media of [
+        ...cpr.desktop,
+        cpr.phone.front,
+        cpr.phone.back,
+        ...nibbles.desktop,
+        nibbles.phone.front,
+        nibbles.phone.back,
+    ]) {
         for (const path of [media.src, media.poster].filter(Boolean)) {
             assert.ok(
                 (await readFile(new URL(`../public${path}`, import.meta.url)))
@@ -294,6 +398,47 @@ test("showcase device slots select independent clips and images with fallbacks",
             )
         }
     }
+})
+
+test("desktop showcase follows the reference device proportions", async () => {
+    const css = await readFile(
+        new URL("../app/redesign/preview.css", import.meta.url),
+        "utf8",
+    )
+    // sebg.ch's tour, measured at 1440x900: the frame keeps 7/8 of the column,
+    // the phone 2/7 of the frame plus gutter, overhangs the frame's inner edge
+    // by 1/7, and its foot hangs a quarter of the frame height below the frame.
+    for (const marker of [
+        /--showcase-frame: 87\.5%/,
+        /--showcase-inset: 12\.5%/,
+        /--showcase-phone: 23\.4%/,
+        /--showcase-overhang: 12\.83%/,
+        /width: var\(--showcase-phone\)/,
+        /padding-bottom: var\(--showcase-hang/,
+    ])
+        assert.match(css, marker)
+    assert.match(
+        css,
+        /left: calc\(var\(--showcase-inset\) - var\(--showcase-overhang\)\)/,
+    )
+    assert.match(
+        css,
+        /right: calc\(var\(--showcase-inset\) - var\(--showcase-overhang\)\)/,
+    )
+    const presentation = await readFile(
+        new URL("../app/redesign/ProjectPresentations.tsx", import.meta.url),
+        "utf8",
+    )
+    assert.match(
+        presentation,
+        /frame\.getBoundingClientRect\(\)\.height \* 0\.25/,
+    )
+    assert.match(presentation, /new ResizeObserver\(measureHang\)/)
+    assert.match(presentation, /observer\.disconnect\(\)/)
+    // The showcase spans the padded section like sebg.ch's tour, so large
+    // screens keep the reference's share of the viewport.
+    assert.match(presentation, /className="preview-stage mx-auto"/)
+    assert.doesNotMatch(presentation, /preview-stage mx-auto max-w-/)
 })
 
 test("project beats hold, transition, reverse and fade before release", async () => {
@@ -1249,6 +1394,32 @@ test("project pages frame screenshots and keep only the short narrative", async 
         "text-ellipsis",
     ]) {
         assert.ok(frame.includes(marker), `missing ${marker}`)
+    }
+})
+
+test("every project page section keeps the faint grid", async () => {
+    const page = await readFile(
+        new URL("../app/redesign/ProjectCase.tsx", import.meta.url),
+        "utf8",
+    )
+
+    // The tinted header already carried the reference's 80px grid; every
+    // section below it must carry the same faint line colour.
+    const header = page.match(/<header\b[^>]*>/)?.[0] ?? ""
+    assert.ok(header.includes("grid-paper"), "header lost its grid")
+    assert.ok(
+        header.includes("[--grid-line:#0b0b0c0a]"),
+        "header lost its grid line colour",
+    )
+
+    const sections = page.match(/<section\b[^>]*>/g) ?? []
+    assert.equal(sections.length, 4)
+    for (const section of sections) {
+        assert.ok(section.includes("grid-paper"), "section lost its grid")
+        assert.ok(
+            section.includes("[--grid-line:#0b0b0c0a]"),
+            "section lost its grid line colour",
+        )
     }
 })
 

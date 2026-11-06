@@ -160,6 +160,28 @@ export function aboutFlagOpacity({
     return Math.min(enter, exit)
 }
 
+/**
+ * The hero greeting holds through the first third of the hero, then fades out
+ * and drifts up before the frog's slot changes at 60%. Driving it from scroll
+ * position keeps the motion reversible when the user scrolls back up.
+ */
+export const heroGreetingDrift = 16
+
+export function heroGreetingExit(scroll: number, heroHeight: number) {
+    const start = heroHeight * 0.35
+    const end = heroHeight * 0.6
+    const progress = Math.max(
+        0,
+        Math.min(1, (scroll - start) / Math.max(1, end - start)),
+    )
+    const offset = -heroGreetingDrift * progress
+    return {
+        opacity: 1 - progress,
+        // Avoid returning negative zero at the start of the range.
+        offset: offset === 0 ? 0 : offset,
+    }
+}
+
 export const responsiveFrogSides = [
     "right",
     "center",

@@ -30,7 +30,7 @@ export const projectPreviewCopy: Record<
     },
     "nibbles-with-nifa": {
         lead: "Nibbles with Nifa is a recipe site where Nifa publishes what she actually cooks.",
-        note: "I built the Next.js frontend and the Sanity content model, and Nifa writes and publishes the recipes. Drafts stay private until a recipe is ready, and the stills here come from a local development build.",
+        note: "I built the Next.js frontend and the Sanity content model, and Nifa writes and publishes the recipes. Drafts stay private until a recipe is ready. The screenshots here come from the current public site.",
     },
     waxlist: {
         lead: "Waxlist is a record-collecting app for people who buy second-hand vinyl.",

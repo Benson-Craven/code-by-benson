@@ -9,6 +9,8 @@ import {
     aboutFlagOpacity,
     frogPlacement,
     cornerFrogPlacement,
+    heroGreetingDrift,
+    heroGreetingExit,
     shouldRenderFrog,
     workBadgeActive,
     workBadgeDock,
@@ -224,6 +226,11 @@ export default function FrogPresentation() {
         let leftTop = false
         let returned = false
         let spokenBeat = ""
+        // The hero bubble leaves with the first scroll. Every later return to
+        // the top replays the return line's fade-up entrance and exit.
+        let greetingPhase: "initial" | "returning" | "away" = "initial"
+        const greetingMotion = { reveal: 1, offset: 0 }
+        const returnGreeting = "Ready for another tour already?"
         let frog: FrogInstance | undefined
         let lenis: Lenis | undefined
         let anchors: FrogAnchor[] = []
@@ -256,16 +263,95 @@ export default function FrogPresentation() {
                 gsap.ticker.add(tick)
             }
         }
+        function renderGreeting(
+            corner?: ReturnType<typeof cornerFrogPlacement>,
+        ) {
+            if (reduced.matches) {
+                greeting.style.opacity = ""
+                greeting.style.transform = ""
+                return
+            }
+            let opacity: number
+            let offset: number
+            if (greetingPhase === "initial") {
+                if (narrow.matches) {
+                    // Phones keep the bubble fixed above the corner frog, so
+                    // its existing speech fade drives the exit.
+                    opacity = corner && corner.index === 0 ? corner.speech : 0
+                    offset = -heroGreetingDrift * (1 - opacity)
+                } else {
+                    const exit = heroGreetingExit(
+                        window.scrollY,
+                        Math.max(1, sections[0].offsetHeight),
+                    )
+                    opacity = exit.opacity
+                    offset = exit.offset
+                }
+            } else {
+                opacity = greetingMotion.reveal
+                offset = greetingMotion.offset
+            }
+            greeting.style.opacity = String(opacity)
+            greeting.style.transform = `translateY(${offset}px)`
+        }
+
+        // The return line arrives from below and settles, then leaves upward.
+        function showReturnGreeting() {
+            greetingPhase = "returning"
+            gsap.killTweensOf(greetingMotion)
+            if (reduced.matches) {
+                greetingMotion.reveal = 1
+                greetingMotion.offset = 0
+                renderGreeting()
+                return
+            }
+            greetingMotion.reveal = 0
+            greetingMotion.offset = heroGreetingDrift
+            gsap.to(greetingMotion, {
+                reveal: 1,
+                offset: 0,
+                duration: 0.5,
+                ease: "power2.out",
+                overwrite: true,
+                onUpdate: () => renderGreeting(),
+            })
+        }
+
+        function hideReturnGreeting() {
+            greetingPhase = "away"
+            gsap.killTweensOf(greetingMotion)
+            if (reduced.matches) {
+                greetingMotion.reveal = 0
+                greetingMotion.offset = -heroGreetingDrift
+                renderGreeting()
+                return
+            }
+            gsap.to(greetingMotion, {
+                reveal: 0,
+                offset: -heroGreetingDrift,
+                duration: 0.35,
+                ease: "power2.in",
+                overwrite: true,
+                onUpdate: () => renderGreeting(),
+            })
+        }
+
         function reactToScroll(
             running: boolean,
             corner: ReturnType<typeof cornerFrogPlacement>,
             cornerActive: boolean,
         ) {
             if (window.scrollY > sections[0].offsetHeight * 0.6) leftTop = true
-            if (leftTop && window.scrollY <= 40 && !returned) {
-                returned = true
-                greeting.textContent = "Ready for another tour already?"
-                spokenBeat = ""
+            const atTop = window.scrollY <= 40
+            if (leftTop && atTop) {
+                if (greetingPhase !== "returning") {
+                    returned = true
+                    greeting.textContent = returnGreeting
+                    spokenBeat = ""
+                    showReturnGreeting()
+                }
+            } else if (greetingPhase === "returning") {
+                hideReturnGreeting()
             }
             const project = sections.find((section) => {
                 const rect = section.getBoundingClientRect()
@@ -801,9 +887,7 @@ export default function FrogPresentation() {
                       corner.index === sections.length - 1 ? corner.speech : 0,
                   )
                 : ""
-            greeting.style.opacity = responsive
-                ? String(corner.index === 0 ? corner.speech : 0)
-                : ""
+            renderGreeting(corner)
             sections.forEach((section, index) => {
                 const narration =
                     section.querySelector<HTMLElement>("[data-bubbles]")
@@ -941,6 +1025,16 @@ export default function FrogPresentation() {
         function preferences() {
             resetAboutAnimation()
             resetTrick()
+            // A preference change can land mid-tween, so settle the greeting
+            // before scroll position decides which state it should show.
+            gsap.killTweensOf(greetingMotion)
+            if (greetingPhase === "returning") {
+                greetingMotion.reveal = 1
+                greetingMotion.offset = 0
+            } else if (greetingPhase === "away") {
+                greetingMotion.reveal = 0
+                greetingMotion.offset = -heroGreetingDrift
+            }
             if (reduced.matches) {
                 resetBadge()
                 frog?.canvas.removeEventListener("webglcontextlost", fail)
@@ -1060,6 +1154,7 @@ export default function FrogPresentation() {
             aboutAnimation?.kill()
             resetBadge()
             flightTween?.kill()
+            gsap.killTweensOf(greetingMotion)
             gsap.killTweensOf([
                 layer,
                 host,
@@ -1080,6 +1175,7 @@ export default function FrogPresentation() {
             root.style.removeProperty("--corner-x")
             artwork.style.opacity = ""
             greeting.style.opacity = ""
+            greeting.style.transform = ""
             flag.style.opacity = ""
             delete flag.dataset.visible
             sections.forEach((section) => {

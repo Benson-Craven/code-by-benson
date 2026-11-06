@@ -398,14 +398,27 @@
         margin-bottom: 0;
     }
 
+    /* sebg.ch's tour proportions, measured at 1440x900: the frame holds 7/8 of
+       the column, the phone 2/7 of the frame plus gutter, it overhangs the
+       frame's inner edge by 1/7, and its foot hangs a quarter of the frame
+       height below the frame. Percentages resolve against this column. */
     .preview-project[data-held="true"] [data-project-devices] {
+        --showcase-frame: 87.5%;
+        --showcase-inset: 12.5%;
+        --showcase-phone: 23.4%;
+        --showcase-overhang: 12.83%;
         grid-column: 2;
         grid-row: 2;
         align-self: center;
         width: min(100%, calc((100svh - 240px) * 1.6));
         justify-self: end;
-        padding-bottom: 36px;
-        padding-left: 32px;
+        padding-bottom: var(--showcase-hang, 96px);
+        padding-left: 0;
+    }
+
+    .preview-project[data-held="true"] [data-browser-frame] {
+        width: var(--showcase-frame);
+        margin-left: auto;
     }
 
     .preview-project[data-held="true"] .preview-desktop-screen {
@@ -421,8 +434,8 @@
         margin: 0;
         bottom: 0;
         right: auto;
-        left: 0;
-        width: clamp(110px, 13vw, 190px);
+        left: calc(var(--showcase-inset) - var(--showcase-overhang));
+        width: var(--showcase-phone);
     }
 
     .preview-project[data-held="true"] .preview-narrator {
@@ -453,14 +466,19 @@
         [data-project-devices] {
         grid-column: 1;
         padding-left: 0;
-        padding-right: 32px;
+        padding-right: 0;
         justify-self: start;
+    }
+
+    .preview-project[data-held="true"][data-side="right"] [data-browser-frame] {
+        margin-left: 0;
+        margin-right: auto;
     }
 
     .preview-project[data-held="true"][data-side="right"]
         .preview-phone-perspective {
         left: auto;
-        right: 0;
+        right: calc(var(--showcase-inset) - var(--showcase-overhang));
     }
 
     .preview-project[data-held="true"][data-side="right"] .preview-narrator {

@@ -4,29 +4,11 @@ import "./globals.css"
 import JsonLd from "./components/JsonLd"
 
 const siteDescription =
-    "Frontend Engineer in Cork building client websites, publishing tools and record-collection software with React, TypeScript and Next.js."
-
-const themeInitScript = `
-    (function () {
-        try {
-            var savedTheme = window.localStorage.getItem("benson-theme");
-            var theme = savedTheme === "dark" || savedTheme === "light"
-                ? savedTheme
-                : "dark";
-            var isDark = theme === "dark";
-
-            document.documentElement.classList.toggle("dark", isDark);
-            document.documentElement.style.colorScheme = theme;
-        } catch (error) {
-            document.documentElement.classList.add("dark");
-            document.documentElement.style.colorScheme = "dark";
-        }
-    })();
-`
+    "Full-stack Engineer in Cork building client websites and tools with React, TypeScript and Next.js."
 
 export const metadata: Metadata = {
     title: {
-        default: "Benson Craven | Frontend Engineer",
+        default: "Benson Craven | Full-stack Engineer",
         template: "%s | Benson Craven",
     },
     description: siteDescription,
@@ -83,12 +65,6 @@ export default function RootLayout({
             className="scroll-smooth font-satoshi"
             suppressHydrationWarning
         >
-            <head>
-                <script
-                    id="theme-init"
-                    dangerouslySetInnerHTML={{ __html: themeInitScript }}
-                />
-            </head>
             <body className="overflow-x-hidden bg-paper text-ink antialiased">
                 <JsonLd />
                 {children}
