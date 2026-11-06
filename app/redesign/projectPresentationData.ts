@@ -104,7 +104,29 @@ export const showcaseMedia: Record<
             },
         },
     },
-    waxlist: { desktop: {}, mobile: {} },
+    waxlist: {
+        desktop: {
+            0: {
+                type: "video",
+                src: "/images/waxlist/waxlist-1.mp4",
+                width: 1470,
+                height: 802,
+                poster: implementedPortfolioProjects[1].cover.src,
+                alt: "Nibbles with Nifa desktop homepage walkthrough",
+                label: "Homepage",
+            },
+        },
+        mobile: {
+            front: {
+                type: "image",
+                src: "/images/waxlist/waxlist-2.png",
+                poster: implementedPortfolioProjects[2].cover.src,
+                alt: "Waxlist mobile homepage walkthrough",
+                label: "Mobile homepage",
+                position: "center top",
+            },
+        },
+    },
 }
 
 const bubbles: [string, string, string][] = [

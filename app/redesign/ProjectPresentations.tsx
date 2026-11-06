@@ -102,18 +102,28 @@ export default function ProjectPresentations() {
                             ),
                         )
                         const phone =
-                            section.querySelector<HTMLElement>("[data-phone]")!
-                        const phoneWrapper = phone.parentElement!
+                            section.querySelector<HTMLElement>("[data-phone]")
+                        const phoneWrapper = phone?.parentElement
+                        const desktopSlides = slides.filter((slide) =>
+                            browser.contains(slide),
+                        )
+                        const singlePreview = desktopSlides.length === 1
                         const clearPresentation = () => {
                             section.style.removeProperty("--device-height")
                             section.style.removeProperty("--narration-height")
                             gsap.set(
-                                [...slides, browser, ...bubbles, phoneWrapper],
+                                [
+                                    ...slides,
+                                    browser,
+                                    ...bubbles,
+                                    ...(phoneWrapper ? [phoneWrapper] : []),
+                                ],
                                 {
                                     clearProps: "opacity,transform",
                                 },
                             )
-                            gsap.set(phone, { clearProps: "transform" })
+                            if (phone)
+                                gsap.set(phone, { clearProps: "transform" })
                         }
                         let trigger: ScrollTrigger | undefined
                         let flowTriggers: ScrollTrigger[] = []
@@ -204,28 +214,41 @@ export default function ProjectPresentations() {
                             const paint = (progress: number) => {
                                 const state =
                                     responsivePresentationProgress(progress)
-                                const laptopOpacity = Math.min(
-                                    1,
-                                    state.slides
-                                        .slice(0, 3)
-                                        .reduce((sum, value) => sum + value, 0),
-                                )
-                                slides.slice(0, 3).forEach((slide, index) =>
+                                const laptopOpacity =
+                                    singlePreview && !phone
+                                        ? 1
+                                        : Math.min(
+                                              1,
+                                              state.slides
+                                                  .slice(0, 3)
+                                                  .reduce(
+                                                      (sum, value) =>
+                                                          sum + value,
+                                                      0,
+                                                  ),
+                                          )
+                                desktopSlides.forEach((slide, index) =>
                                     gsap.set(slide, {
-                                        opacity:
-                                            index < 3 && laptopOpacity > 0
-                                                ? state.slides[index] /
-                                                  laptopOpacity
-                                                : state.slides[index],
+                                        opacity: singlePreview
+                                            ? 1
+                                            : index < 3 && laptopOpacity > 0
+                                              ? state.slides[index] /
+                                                laptopOpacity
+                                              : state.slides[index],
                                     }),
                                 )
                                 gsap.set(browser, { opacity: laptopOpacity })
-                                gsap.set(phoneWrapper, {
-                                    opacity: state.phoneOpacity,
-                                })
-                                gsap.set(phone, {
-                                    rotationY: state.phoneRotation,
-                                })
+                                if (phoneWrapper)
+                                    gsap.set(phoneWrapper, {
+                                        opacity: state.phoneOpacity,
+                                    })
+                                if (phone)
+                                    gsap.set(phone, {
+                                        rotationY:
+                                            phone.children.length === 1
+                                                ? 0
+                                                : state.phoneRotation,
+                                    })
                                 bubbles.forEach((bubble, index) =>
                                     gsap.set(bubble, {
                                         opacity: state.bubbles[index],
@@ -303,15 +326,18 @@ export default function ProjectPresentations() {
                         "[data-screen-strip]",
                     )!
                     const phone =
-                        section.querySelector<HTMLElement>("[data-phone]")!
+                        section.querySelector<HTMLElement>("[data-phone]")
                     const bubbles =
                         section.querySelectorAll<HTMLElement>("[data-bubble]")
                     const screen = strip.parentElement!
                     const slides = Array.from(strip.children) as HTMLElement[]
                     const paint = (progress: number) => {
                         const state = presentationProgress(progress)
-                        const index = Math.min(2, Math.floor(state.screen))
-                        const next = Math.min(2, index + 1)
+                        const index = Math.min(
+                            slides.length - 1,
+                            Math.floor(state.screen),
+                        )
+                        const next = Math.min(slides.length - 1, index + 1)
                         const mix = state.screen - index
                         const top = slides[index].offsetTop
                         const nextTop = slides[next].offsetTop
@@ -321,7 +347,13 @@ export default function ProjectPresentations() {
                                 slides[index].offsetHeight * (1 - mix) +
                                 slides[next].offsetHeight * mix,
                         })
-                        gsap.set(phone, { rotationY: state.phoneRotation })
+                        if (phone)
+                            gsap.set(phone, {
+                                rotationY:
+                                    phone.children.length === 1
+                                        ? 0
+                                        : state.phoneRotation,
+                            })
                         bubbles.forEach((bubble, index) =>
                             gsap.set(bubble, {
                                 opacity: state.bubbles[index],
@@ -460,26 +492,35 @@ export default function ProjectPresentations() {
                                 </div>
                                 <div className="preview-desktop-screen">
                                     <div className="relative" data-screen-strip>
-                                        {project.desktop.map((media, index) => (
-                                            <figure
-                                                className="preview-desktop-view relative m-0"
-                                                style={{
-                                                    aspectRatio: `${media.width ?? 1440} / ${media.height ?? 900}`,
-                                                }}
-                                                data-responsive-slide
-                                                key={index}
-                                            >
-                                                <PreviewMedia
-                                                    className="absolute inset-0 h-full w-full object-contain"
-                                                    media={media}
-                                                    cover={
-                                                        index === 0
-                                                            ? project.slug
-                                                            : undefined
-                                                    }
-                                                />
-                                            </figure>
-                                        ))}
+                                        {project.desktop
+                                            .slice(
+                                                0,
+                                                project.slug === "waxlist" ||
+                                                    project.slug ===
+                                                        "nibbles-with-nifa"
+                                                    ? 1
+                                                    : 3,
+                                            )
+                                            .map((media, index) => (
+                                                <figure
+                                                    className="preview-desktop-view relative m-0"
+                                                    style={{
+                                                        aspectRatio: `${media.width ?? 1440} / ${media.height ?? 900}`,
+                                                    }}
+                                                    data-responsive-slide
+                                                    key={index}
+                                                >
+                                                    <PreviewMedia
+                                                        className="absolute inset-0 h-full w-full object-contain"
+                                                        media={media}
+                                                        cover={
+                                                            index === 0
+                                                                ? project.slug
+                                                                : undefined
+                                                        }
+                                                    />
+                                                </figure>
+                                            ))}
                                     </div>
                                 </div>
                             </div>
@@ -488,21 +529,23 @@ export default function ProjectPresentations() {
                                     className="preview-phone relative h-full w-full [transform-style:preserve-3d]"
                                     data-phone
                                 >
-                                    {(["front", "back"] as const).map(
-                                        (face) => (
-                                            <div
-                                                className="preview-phone-face absolute inset-0 overflow-hidden rounded-[26px] border-[7px] border-preview-black bg-preview-white [backface-visibility:hidden] after:absolute after:left-[32%] after:top-[5px] after:h-2.5 after:w-[36%] after:rounded-xl after:bg-preview-black after:content-[''] data-[face=back]:[transform:rotateY(180deg)]"
-                                                data-face={face}
-                                                data-responsive-slide
-                                                key={face}
-                                            >
-                                                <PreviewMedia
-                                                    className="h-full w-full object-cover"
-                                                    media={project.phone[face]}
-                                                />
-                                            </div>
-                                        ),
-                                    )}
+                                    {(project.slug === "waxlist" ||
+                                    project.slug === "nibbles-with-nifa"
+                                        ? (["front"] as const)
+                                        : (["front", "back"] as const)
+                                    ).map((face) => (
+                                        <div
+                                            className="preview-phone-face absolute inset-0 overflow-hidden rounded-[26px] border-[7px] border-preview-black bg-preview-white [backface-visibility:hidden] after:absolute after:left-[32%] after:top-[5px] after:h-2.5 after:w-[36%] after:rounded-xl after:bg-preview-black after:content-[''] data-[face=back]:[transform:rotateY(180deg)]"
+                                            data-face={face}
+                                            data-responsive-slide
+                                            key={face}
+                                        >
+                                            <PreviewMedia
+                                                className="h-full w-full object-cover"
+                                                media={project.phone[face]}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

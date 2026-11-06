@@ -2,6 +2,8 @@
 
 Edit `showcaseMedia` near the top of `app/redesign/projectPresentationData.ts`. Each project has independent `desktop` and `mobile` entries. Desktop keys `0`, `1` and `2` select the three laptop views. Mobile keys `front` and `back` select the two phone faces. Each slot accepts either an image or a clip. Omitted slots keep their existing media.
 
+Waxlist and Nibbles with Nifa render only desktop slot `0` and the phone's `front` preview, with all three frog speech bubbles. Their phones stay front-facing without flipping. The other desktop slots and the phone's `back` face are omitted.
+
 These are device mockup slots, not viewport overrides. The scroll sequence shows both laptop and phone views on narrow screens. Put files under `public/images` and use paths beginning with `/images`.
 
 Video entries accept an optional poster image:

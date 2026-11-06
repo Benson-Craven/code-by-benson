@@ -2,6 +2,10 @@
 
 ## [PLANS]
 
+- 2026-11-06: Nibbles with Nifa now uses the same first-desktop and front-phone presentation as Waxlist, retaining all three speech bubbles. Local verification is complete; browser visuals remain unverified.
+
+- 2026-11-06: Keep Waxlist desktop slot 0 and restore its front phone screenshot without flipping, retaining all three frog speech bubbles. Implementation and local checks are complete. Preserve the existing user media edits. Browser layout and playback remain unverified.
+
 - 2026-11-05: Independent showcase device media is implemented and locally checked. Browser playback and visual review remain outstanding.
 
 - 2026-11-05: Release the All Work badge when the footer covers 20% of the viewport, blending back into the frog's normal scroll travel instead of holding the badge to the footer top. Implementation and local verification are complete. Real-device review, commit and deployment remain outstanding.
@@ -215,6 +219,10 @@
 - The in-app browser controller was not exposed during the 2026-07-16 refinement. Chrome responsive mode confirmed no horizontal overflow and hero wrapping of 4, 3, 2, and 2 lines at 320, 390, 768, and 1440 CSS pixels. The shared case-study layout also had no overflow at 1024 pixels. A physical 200% page-zoom pass preserved reflow, skip-link focus, mobile-menu focus entry, and Escape focus restoration.
 
 ## [OUTCOMES]
+
+- 2026-11-06: Nibbles with Nifa retains nwn-hp-1.mp4 and front phone nwn-mobile-1.mp4, omits the other desktop views and back phone face, and preserves all three speech bubbles. Reuses Waxlist single-view handling and zero phone rotation. Updated ProjectPresentations.tsx and media notes. Formatting, lint, typecheck, build, built-HTML assertions and diff whitespace passed. Focused tests passed 46/48 with the same existing media-data failures at lines 254 and 277. Browser visuals, playback and live motion checks were not run.
+
+- 2026-11-06: Waxlist renders its first desktop video and the restored front phone screenshot, with all three speech bubbles. Its phone has no back face and stays at zero rotation in desktop and responsive animation. Other projects retain five media views. Updated ProjectPresentations.tsx and docs/showcase-media.md. Formatting, lint, typecheck, production build, built-HTML media/phone/bubble assertions and diff whitespace passed. Focused redesign tests passed 46/48; the same failures at lines 254 and 277 expect temporary labels and a CPR image that conflict with existing media data. Browser layout, keyboard and live reduced-motion/playback checks were not run.
 
 - 2026-11-06: Removed desktop showcase letterboxing by sizing each slide to measured media dimensions instead of 1440/900. Desktop scroll now interpolates actual slide offsets and viewport heights, with height cleanup when leaving held mode. Updated ProjectPresentations, projectPresentationData and preview.css. Formatter, diff whitespace and production build including lint/type checks passed; redesign tests remain 46/48 with the same two unrelated media-data failures. Browser host is unavailable, so visual scrolling and responsive review remain unverified.
 
