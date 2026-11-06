@@ -306,9 +306,21 @@ export default function ProjectPresentations() {
                         section.querySelector<HTMLElement>("[data-phone]")!
                     const bubbles =
                         section.querySelectorAll<HTMLElement>("[data-bubble]")
+                    const screen = strip.parentElement!
+                    const slides = Array.from(strip.children) as HTMLElement[]
                     const paint = (progress: number) => {
                         const state = presentationProgress(progress)
-                        gsap.set(strip, { yPercent: (-state.screen * 100) / 3 })
+                        const index = Math.min(2, Math.floor(state.screen))
+                        const next = Math.min(2, index + 1)
+                        const mix = state.screen - index
+                        const top = slides[index].offsetTop
+                        const nextTop = slides[next].offsetTop
+                        gsap.set(strip, { y: -(top + (nextTop - top) * mix) })
+                        gsap.set(screen, {
+                            height:
+                                slides[index].offsetHeight * (1 - mix) +
+                                slides[next].offsetHeight * mix,
+                        })
                         gsap.set(phone, { rotationY: state.phoneRotation })
                         bubbles.forEach((bubble, index) =>
                             gsap.set(bubble, {
@@ -330,6 +342,12 @@ export default function ProjectPresentations() {
                 return () =>
                     sections.forEach((section) => {
                         delete section.dataset.held
+                        gsap.set(
+                            section.querySelector(".preview-desktop-screen"),
+                            {
+                                clearProps: "height",
+                            },
+                        )
                         gsap.set(
                             section.querySelectorAll(
                                 "[data-screen-strip], [data-phone]",
@@ -441,15 +459,18 @@ export default function ProjectPresentations() {
                                     <span>{project.title}</span>
                                 </div>
                                 <div className="preview-desktop-screen">
-                                    <div data-screen-strip>
+                                    <div className="relative" data-screen-strip>
                                         {project.desktop.map((media, index) => (
                                             <figure
-                                                className="preview-desktop-view relative m-0 aspect-[1440/900] bg-[#e6e6e0]"
+                                                className="preview-desktop-view relative m-0"
+                                                style={{
+                                                    aspectRatio: `${media.width ?? 1440} / ${media.height ?? 900}`,
+                                                }}
                                                 data-responsive-slide
                                                 key={index}
                                             >
                                                 <PreviewMedia
-                                                    className="absolute inset-0 h-full w-full object-cover"
+                                                    className="absolute inset-0 h-full w-full object-contain"
                                                     media={media}
                                                     cover={
                                                         index === 0
@@ -457,9 +478,6 @@ export default function ProjectPresentations() {
                                                             : undefined
                                                     }
                                                 />
-                                                <figcaption className="pointer-events-none absolute left-0 top-0 bg-preview-white px-3 py-1.5 text-sm leading-[1.5] tracking-normal text-[#1e1e1e]">
-                                                    {media.label}
-                                                </figcaption>
                                             </figure>
                                         ))}
                                     </div>
@@ -482,9 +500,6 @@ export default function ProjectPresentations() {
                                                     className="h-full w-full object-cover"
                                                     media={project.phone[face]}
                                                 />
-                                                <span className="pointer-events-none absolute inset-x-0 top-5 bg-preview-white p-2 text-center text-xs leading-[1.5] tracking-normal text-[#1e1e1e]">
-                                                    {project.phone[face].label}
-                                                </span>
                                             </div>
                                         ),
                                     )}

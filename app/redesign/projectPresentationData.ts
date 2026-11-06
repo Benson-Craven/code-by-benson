@@ -12,6 +12,8 @@ export type PreviewMedia = {
     alt: string
     label: string
     position?: string
+    width?: number
+    height?: number
 }
 export type ProjectPresentationData = {
     slug: string
@@ -36,6 +38,8 @@ export const showcaseMedia: Record<
             0: {
                 type: "video",
                 src: "/images/chronic-pain-recovery/cprie-hp-1-vid.mp4",
+                width: 1470,
+                height: 802,
                 poster: implementedPortfolioProjects[0].cover.src,
                 alt: "Chronic Pain Recovery desktop homepage walkthrough",
                 label: "Homepage",
@@ -43,6 +47,8 @@ export const showcaseMedia: Record<
             1: {
                 type: "video",
                 src: "/images/chronic-pain-recovery/cprie-hp-2.mp4",
+                width: 1470,
+                height: 802,
                 poster: implementedPortfolioProjects[0].cover.src,
                 alt: "Chronic Pain Recovery desktop homepage walkthrough",
                 label: "Homepage",
@@ -50,6 +56,8 @@ export const showcaseMedia: Record<
             2: {
                 type: "video",
                 src: "/images/chronic-pain-recovery/cprie-hp-3.mp4",
+                width: 1470,
+                height: 802,
                 poster: implementedPortfolioProjects[0].cover.src,
                 alt: "Chronic Pain Recovery desktop homepage walkthrough",
                 label: "Homepage",
@@ -78,6 +86,8 @@ export const showcaseMedia: Record<
             0: {
                 type: "video",
                 src: "/images/nibbles-with-nifa/nwn-hp-1.mp4",
+                width: 1470,
+                height: 802,
                 poster: implementedPortfolioProjects[1].cover.src,
                 alt: "Nibbles with Nifa desktop homepage walkthrough",
                 label: "Homepage",
@@ -116,7 +126,12 @@ const bubbles: [string, string, string][] = [
 ]
 export const projectPresentations: ProjectPresentationData[] =
     implementedPortfolioProjects.map((project, index) => {
-        const cover: PreviewMedia = { ...project.cover, label: "Homepage" }
+        const cover: PreviewMedia = {
+            ...project.cover,
+            label: "Homepage",
+            width: index === 0 ? 1440 : 1918,
+            height: index === 0 ? 900 : index === 1 ? 951 : 900,
+        }
         const desktop: ProjectPresentationData["desktop"] =
             index === 0
                 ? ([

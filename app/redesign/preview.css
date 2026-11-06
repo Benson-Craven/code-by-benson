@@ -409,7 +409,6 @@
     }
 
     .preview-project[data-held="true"] .preview-desktop-screen {
-        aspect-ratio: 1440 / 900;
         overflow: hidden;
     }
 

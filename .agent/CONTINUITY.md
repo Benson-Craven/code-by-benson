@@ -216,6 +216,12 @@
 
 ## [OUTCOMES]
 
+- 2026-11-06: Removed desktop showcase letterboxing by sizing each slide to measured media dimensions instead of 1440/900. Desktop scroll now interpolates actual slide offsets and viewport heights, with height cleanup when leaving held mode. Updated ProjectPresentations, projectPresentationData and preview.css. Formatter, diff whitespace and production build including lint/type checks passed; redesign tests remain 46/48 with the same two unrelated media-data failures. Browser host is unavailable, so visual scrolling and responsive review remain unverified.
+
+- 2026-11-06: Desktop showcase media now uses object-contain in `ProjectPresentations.tsx` to fit the full image or video within the existing frame. Phone media is unchanged. Scoped formatting, diff whitespace and production build including lint/type checks passed. Browser review and automated tests were not rerun for this styling change; the two media-data test failures recorded below remain unresolved.
+
+- 2026-11-06: Removed desktop and phone screenshot label overlays from `ProjectPresentations.tsx`. Media descriptions and browser-frame titles remain. Formatting, lint, typecheck, production build and diff whitespace checks passed. Redesign tests passed 46/48; the two failures concern unchanged media data expecting Temporary labels and an image instead of a video. Browser review was not run.
+
 - 2026-11-05: Removed the final walkthrough section from the CPRIE project page only. Its replacement showcase videos and next-project section remain. Scoped formatting, lint, typecheck and diff whitespace passed. Browser checks and production build were not rerun for this conditional rendering change.
 
 - 2026-11-05: ProjectCase now reuses the three CPR desktop showcase videos for its hero and screenshot frames through PreviewMedia, retaining muted inline looping playback and existing posters. Other project media and the separate walkthrough remain unchanged. Scoped Prettier, lint, typecheck, diff whitespace and isolated production build passed. Redesign tests passed 46/48; existing homepage copy and mobile-back image expectations fail against unchanged data. Browser playback, mobile, keyboard and reduced-motion checks were not run.
