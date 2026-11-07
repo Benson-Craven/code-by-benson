@@ -42,6 +42,12 @@ export default function ProjectCase({
         project.slug === "nibbles-with-nifa"
             ? showcaseMedia[project.slug]?.desktop
             : undefined
+    // The paired frames read the extra desktop slots directly, so Waxlist's two
+    // new clips show without replacing the wide frame's architecture still.
+    const pairMedia = [
+        showcaseMedia[project.slug]?.desktop?.[1],
+        showcaseMedia[project.slug]?.desktop?.[2],
+    ]
     // Nibbles' clip opens on the homepage and then scrolls. In a 16:10 hero it
     // lands mid-scroll and cuts the site heading, so the hero keeps the real
     // still while the clip plays in the framed section below.
@@ -291,41 +297,40 @@ export default function ProjectCase({
                             </div>
 
                             <div className="grid gap-[clamp(28px,6vw,64px)] md:grid-cols-2 md:items-start md:gap-5">
-                                {pairShots.map((still, index) => (
-                                    <figure
-                                        key={still.id}
-                                        className="m-0 grid gap-3"
-                                    >
-                                        <BrowserFrame label={frameHost}>
-                                            {desktopMedia?.[
-                                                (index + 1) as 1 | 2
-                                            ] ? (
-                                                <PreviewMedia
-                                                    media={
-                                                        desktopMedia[
-                                                            (index + 1) as 1 | 2
-                                                        ]!
-                                                    }
-                                                    className="block w-full"
-                                                />
-                                            ) : (
-                                                <>
-                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                    <img
-                                                        src={still.src}
-                                                        alt={still.alt}
-                                                        width={still.width}
-                                                        height={still.height}
-                                                        loading="lazy"
+                                {pairShots.map((still, index) => {
+                                    const media = pairMedia[index]
+                                    return (
+                                        <figure
+                                            key={still.id}
+                                            className="m-0 grid gap-3"
+                                        >
+                                            <BrowserFrame label={frameHost}>
+                                                {media ? (
+                                                    <PreviewMedia
+                                                        media={media}
+                                                        className="block w-full"
                                                     />
-                                                    <PixelDevelop
-                                                        delayMs={80}
-                                                    />
-                                                </>
-                                            )}
-                                        </BrowserFrame>
-                                    </figure>
-                                ))}
+                                                ) : (
+                                                    <>
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                        <img
+                                                            src={still.src}
+                                                            alt={still.alt}
+                                                            width={still.width}
+                                                            height={
+                                                                still.height
+                                                            }
+                                                            loading="lazy"
+                                                        />
+                                                        <PixelDevelop
+                                                            delayMs={80}
+                                                        />
+                                                    </>
+                                                )}
+                                            </BrowserFrame>
+                                        </figure>
+                                    )
+                                })}
                             </div>
                         </div>
                     </section>

@@ -307,10 +307,13 @@ test("presentations preserve project order, project links and replaceable media"
         }
         assert.ok(project.phone.front.label.trim().length > 0)
         if (project.slug === "waxlist") {
-            assert.ok(
-                project.desktop
-                    .slice(1)
-                    .every(({ label }) => label.includes("Temporary")),
+            assert.deepEqual(
+                project.desktop.map(({ label }) => label),
+                ["Homepage", "Collection", "Privacy"],
+            )
+            assert.deepEqual(
+                project.desktop.map(({ type }) => type),
+                ["video", "video", "video"],
             )
         }
     }
@@ -327,13 +330,17 @@ test("presentations preserve project order, project links and replaceable media"
 test("showcase device slots select independent clips and images with fallbacks", async () => {
     const { projectPresentations, showcaseMedia } =
         await import("../app/redesign/projectPresentationData")
-    const [cpr, nibbles] = projectPresentations
+    const [cpr, nibbles, waxlist] = projectPresentations
     assert.deepEqual(cpr.showcase, {
         desktop: 3,
         phone: ["front", "back"],
     })
     assert.deepEqual(nibbles.showcase, {
         desktop: 1,
+        phone: ["front"],
+    })
+    assert.deepEqual(waxlist.showcase, {
+        desktop: 3,
         phone: ["front"],
     })
     assert.equal(cpr.desktop[0], showcaseMedia[cpr.slug].desktop?.[0])
@@ -383,6 +390,21 @@ test("showcase device slots select independent clips and images with fallbacks",
         nibbles.phone.back.src,
         implementedPortfolioProjects[1].cover.src,
     )
+    // Waxlist cycles the homepage, collection and privacy clips, with the two
+    // new clips after the landing view.
+    assert.deepEqual(
+        waxlist.desktop.map(({ src }) => src),
+        [
+            "/images/waxlist/waxlist-1.mp4",
+            "/images/waxlist/waxlist-4.mp4",
+            "/images/waxlist/waxlist-3.mp4",
+        ],
+    )
+    assert.deepEqual(
+        waxlist.desktop.map(({ label }) => label),
+        ["Homepage", "Collection", "Privacy"],
+    )
+    assert.equal(waxlist.phone.front.type, "image")
     for (const media of [
         ...cpr.desktop,
         cpr.phone.front,
@@ -390,6 +412,9 @@ test("showcase device slots select independent clips and images with fallbacks",
         ...nibbles.desktop,
         nibbles.phone.front,
         nibbles.phone.back,
+        ...waxlist.desktop,
+        waxlist.phone.front,
+        waxlist.phone.back,
     ]) {
         for (const path of [media.src, media.poster].filter(Boolean)) {
             assert.ok(
@@ -1363,6 +1388,8 @@ test("project pages frame screenshots and keep only the short narrative", async 
         "WordReveal",
         "data-project-hero={project.slug}",
         "pairShots.map",
+        "const pairMedia =",
+        "showcaseMedia[project.slug]?.desktop?.[1]",
         'id="project-clip"',
         "data-project-cover={nextProject.slug}",
     ]) {

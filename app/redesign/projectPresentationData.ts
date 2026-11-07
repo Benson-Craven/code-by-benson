@@ -25,8 +25,9 @@ export type ProjectPresentationData = {
     desktop: [PreviewMedia, PreviewMedia, PreviewMedia]
     phone: { front: PreviewMedia; back: PreviewMedia }
     // How much of the media set the homepage showcase renders. CPRIE cycles
-    // all three desktop views and both phone faces; the other projects show
-    // their single live view here and reserve extra slots for their pages.
+    // all three desktop views and both phone faces, Waxlist cycles its three
+    // desktop views with the front phone, and Nibbles shows its single live
+    // view here while reserving extra desktop slots for its project page.
     showcase: { desktop: 1 | 3; phone: ("front" | "back")[] }
 }
 // Override individual device slots here. Omitted slots keep their existing media.
@@ -132,8 +133,24 @@ export const showcaseMedia: Record<
                 width: 1470,
                 height: 802,
                 poster: implementedPortfolioProjects[2].cover.src,
-                alt: "Nibbles with Nifa desktop homepage walkthrough",
+                alt: "Waxlist desktop homepage walkthrough",
                 label: "Homepage",
+            },
+            1: {
+                type: "video",
+                src: "/images/waxlist/waxlist-4.mp4",
+                width: 1470,
+                height: 802,
+                alt: "Waxlist collection view with a grid of invented vinyl records, a featured record and the selected-record inspector.",
+                label: "Collection",
+            },
+            2: {
+                type: "video",
+                src: "/images/waxlist/waxlist-3.mp4",
+                width: 1470,
+                height: 802,
+                alt: "Waxlist privacy policy explaining what the app collects, how data is used, what it stores and how to delete account data.",
+                label: "Privacy",
             },
         },
         mobile: {
@@ -204,7 +221,10 @@ export const projectPresentations: ProjectPresentationData[] =
             position: "center top",
         }
         const media = showcaseMedia[project.slug]
-        const fullShowcase = project.slug === "chronic-pain-recovery"
+        const cyclesDesktop =
+            project.slug === "chronic-pain-recovery" ||
+            project.slug === "waxlist"
+        const cyclesPhone = project.slug === "chronic-pain-recovery"
         return {
             slug: project.slug,
             title: project.title,
@@ -222,8 +242,8 @@ export const projectPresentations: ProjectPresentationData[] =
                 back: media?.mobile?.back ?? { ...phone },
             },
             showcase: {
-                desktop: fullShowcase ? 3 : 1,
-                phone: fullShowcase ? ["front", "back"] : ["front"],
+                desktop: cyclesDesktop ? 3 : 1,
+                phone: cyclesPhone ? ["front", "back"] : ["front"],
             },
         }
     })
