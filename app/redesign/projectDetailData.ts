@@ -43,7 +43,7 @@ export const projectPreviewCopy: Record<
         note: "I built the Next.js frontend and the Sanity content model, and Nifa writes and publishes the recipes. Drafts stay private until a recipe is ready. The screenshots here come from the current public site.",
         personal: {
             heading: "The best part was handing it over.",
-            body: "I built the publishing flow so Nifa can write a recipe, mark it ready and put it live without asking me to touch a template. The strict ready state does the boring checking, so a rough note can still become something a reader can cook from. She owns the food and the words. I look after the machinery.",
+            body: "I built the publishing flow so Nifa can write a recipe, mark it ready and put it live without asking me to touch a template. The strict ready state does the boring checking, so a rough note can still become something a reader can cook from. She owns the food and the words.",
         },
     },
     waxlist: {
