@@ -6,7 +6,7 @@ import type { RedesignProjectPage } from "./projectDetailData"
 import BrowserFrame from "./BrowserFrame"
 import PreviewMedia from "./PreviewMedia"
 import { showcaseMedia } from "./projectPresentationData"
-import PixelDevelop from "./PixelDevelop"
+import type { PreviewMedia as PreviewMediaData } from "./projectPresentationData"
 import PixelReveal from "./PixelReveal"
 import ProjectFrog from "./ProjectFrog"
 import WordReveal from "./WordReveal"
@@ -30,33 +30,27 @@ export default function ProjectCase({
     preview,
 }: RedesignProjectPage) {
     const rootRef = useRef<HTMLDivElement>(null)
-    const videoRef = useRef<HTMLVideoElement>(null)
     const liveSite = project.actions.find(
         (action) => action.kind === "live-site",
     )
-    const clip = project.evidence.clip
-    const clipDescriptionId = `${project.slug}-project-clip-description`
     const frameHost = frameHosts[project.slug] ?? "Local build"
-    const desktopMedia =
-        project.slug === "chronic-pain-recovery" ||
-        project.slug === "nibbles-with-nifa"
-            ? showcaseMedia[project.slug]?.desktop
-            : undefined
-    // The paired frames read the extra desktop slots directly, so Waxlist's two
-    // new clips show without replacing the wide frame's architecture still.
-    const pairMedia = [
-        showcaseMedia[project.slug]?.desktop?.[1],
-        showcaseMedia[project.slug]?.desktop?.[2],
-    ]
+    // The project page shows real product media only. Architecture diagrams
+    // stay on the /work case studies, where they sit beside the decision they
+    // explain.
+    const desktopMedia = showcaseMedia[project.slug]?.desktop
+    const wideMedia = desktopMedia?.[0]
+    const pairMedia = [desktopMedia?.[1], desktopMedia?.[2]].filter(
+        (media): media is PreviewMediaData => media !== undefined,
+    )
     // Nibbles' clip opens on the homepage and then scrolls. In a 16:10 hero it
     // lands mid-scroll and cuts the site heading, so the hero keeps the real
-    // still while the clip plays in the framed section below.
+    // still while the clip plays in the framed section below. Waxlist keeps its
+    // cover still in the hero for the same reason: its clip starts on a moving
+    // gradient.
     const heroMedia =
-        project.slug === "nibbles-with-nifa" ? undefined : desktopMedia?.[0]
-    const leadShot = project.evidence.stills[0]
-    const pairShots = [project.evidence.stills[1], project.evidence.stills[2]]
-    // The reference pairs one claim with its screenshots. This uses the second
-    // decision, which is the one whose evidence sits in the half-width frames.
+        project.slug === "chronic-pain-recovery" ? wideMedia : undefined
+    // The reference pairs one claim with its product view. This uses the second
+    // decision, which is the one the framed section illustrates.
     const narrative = project.caseStudy.decisions[1]
 
     useEffect(() => {
@@ -98,30 +92,6 @@ export default function ProjectCase({
             delete root.dataset.reveal
             items.forEach((item) => delete item.dataset.visible)
         }
-    }, [])
-
-    // The reference plays its clip while it is in view. Keep that, but pause as
-    // soon as the frame leaves and never start for reduced-motion readers.
-    useEffect(() => {
-        const video = videoRef.current
-        if (!video) return
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-            return
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        void video.play().catch(() => undefined)
-                    } else {
-                        video.pause()
-                    }
-                })
-            },
-            { threshold: 0.6 },
-        )
-        observer.observe(video)
-        return () => observer.disconnect()
     }, [])
 
     return (
@@ -251,6 +221,18 @@ export default function ProjectCase({
                                     className="m-0 text-[clamp(20px,2vw,34px)] font-medium leading-[1.2] tracking-[-0.02em] max-md:text-xl max-md:leading-[1.35]"
                                 />
                             </div>
+                            <div className="mt-[clamp(48px,8vw,120px)] max-w-[760px] border-t border-[rgb(11_11_12_/_0.15)] pt-[clamp(28px,4vw,48px)]">
+                                <p className="text-sm font-medium leading-[1.5] opacity-55">
+                                    A note from me
+                                </p>
+                                <h3 className="mt-4 max-w-[540px] text-[clamp(26px,3vw,48px)] font-semibold leading-[1.02] tracking-[-0.03em]">
+                                    {preview.personal.heading}
+                                </h3>
+                                <WordReveal
+                                    text={preview.personal.body}
+                                    className="mt-5 max-w-[680px] text-[clamp(20px,2vw,34px)] font-medium leading-[1.2] tracking-[-0.02em] max-md:text-xl max-md:leading-[1.35]"
+                                />
+                            </div>
                         </div>
                     </section>
 
@@ -259,28 +241,16 @@ export default function ProjectCase({
                         aria-labelledby="project-screens"
                     >
                         <div className="mx-auto max-w-[1600px]">
-                            <figure className="m-0 grid gap-3">
-                                <BrowserFrame label={frameHost}>
-                                    {desktopMedia?.[0] ? (
+                            {wideMedia ? (
+                                <figure className="m-0 grid gap-3">
+                                    <BrowserFrame label={frameHost}>
                                         <PreviewMedia
-                                            media={desktopMedia[0]}
+                                            media={wideMedia}
                                             className="block w-full"
                                         />
-                                    ) : (
-                                        <>
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={leadShot.src}
-                                                alt={leadShot.alt}
-                                                width={leadShot.width}
-                                                height={leadShot.height}
-                                                loading="eager"
-                                            />
-                                            <PixelDevelop delayMs={120} />
-                                        </>
-                                    )}
-                                </BrowserFrame>
-                            </figure>
+                                    </BrowserFrame>
+                                </figure>
+                            ) : null}
 
                             <div className="grid gap-5 py-[clamp(44px,10svh,120px)] md:grid-cols-2 md:items-start md:gap-5">
                                 <h2
@@ -296,92 +266,25 @@ export default function ProjectCase({
                                 />
                             </div>
 
-                            <div className="grid gap-[clamp(28px,6vw,64px)] md:grid-cols-2 md:items-start md:gap-5">
-                                {pairShots.map((still, index) => {
-                                    const media = pairMedia[index]
-                                    return (
+                            {pairMedia.length > 0 ? (
+                                <div className="grid gap-[clamp(28px,6vw,64px)] md:grid-cols-2 md:items-start md:gap-5">
+                                    {pairMedia.map((media) => (
                                         <figure
-                                            key={still.id}
+                                            key={media.src}
                                             className="m-0 grid gap-3"
                                         >
                                             <BrowserFrame label={frameHost}>
-                                                {media ? (
-                                                    <PreviewMedia
-                                                        media={media}
-                                                        className="block w-full"
-                                                    />
-                                                ) : (
-                                                    <>
-                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                        <img
-                                                            src={still.src}
-                                                            alt={still.alt}
-                                                            width={still.width}
-                                                            height={
-                                                                still.height
-                                                            }
-                                                            loading="lazy"
-                                                        />
-                                                        <PixelDevelop
-                                                            delayMs={80}
-                                                        />
-                                                    </>
-                                                )}
+                                                <PreviewMedia
+                                                    media={media}
+                                                    className="block w-full"
+                                                />
                                             </BrowserFrame>
                                         </figure>
-                                    )
-                                })}
-                            </div>
+                                    ))}
+                                </div>
+                            ) : null}
                         </div>
                     </section>
-
-                    {project.slug !== "chronic-pain-recovery" &&
-                        project.slug !== "nibbles-with-nifa" && (
-                            <section
-                                className="grid min-h-svh content-center bg-preview-white px-[max(4.72vw,24px)] py-[clamp(72px,12svh,150px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a] max-md:min-h-0"
-                                aria-labelledby="project-clip"
-                            >
-                                <h2 id="project-clip" className="sr-only">
-                                    Walkthrough
-                                </h2>
-                                <figure className="m-0 ml-auto grid w-full max-w-[1120px] gap-3.5 md:w-2/3">
-                                    <BrowserFrame label={frameHost}>
-                                        <video
-                                            ref={videoRef}
-                                            controls={clip.controls}
-                                            preload={clip.preload}
-                                            playsInline={clip.playsInline}
-                                            muted={clip.muted}
-                                            poster={clip.poster}
-                                            aria-describedby={clipDescriptionId}
-                                        >
-                                            <source
-                                                src={clip.src}
-                                                type="video/mp4"
-                                            />
-                                            {clip.captionsSrc ? (
-                                                <track
-                                                    kind="captions"
-                                                    src={clip.captionsSrc}
-                                                    srcLang="en"
-                                                    label="English"
-                                                    default
-                                                />
-                                            ) : null}
-                                            Your browser does not support
-                                            embedded video.
-                                        </video>
-                                        <PixelDevelop poster={clip.poster} />
-                                    </BrowserFrame>
-                                    <p
-                                        id={clipDescriptionId}
-                                        className="sr-only"
-                                    >
-                                        {clip.description}
-                                    </p>
-                                </figure>
-                            </section>
-                        )}
 
                     <section
                         className="grid min-h-svh content-start bg-[var(--case-tint)] px-[max(4.72vw,24px)] pb-[clamp(48px,8svh,90px)] pt-[clamp(88px,14svh,170px)] text-preview-black grid-paper [--grid-line:#0b0b0c0a] max-md:min-h-0"

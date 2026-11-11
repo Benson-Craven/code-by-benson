@@ -22,12 +22,15 @@ export type ProjectPresentationData = {
     tint: string
     side: "left" | "right"
     bubbles: [string, string, string]
-    desktop: [PreviewMedia, PreviewMedia, PreviewMedia]
+    // Only the views that have real media. The homepage showcase takes the
+    // first `showcase.desktop` entries; the project pages read slots 1 and 2
+    // when they exist.
+    desktop: PreviewMedia[]
     phone: { front: PreviewMedia; back: PreviewMedia }
     // How much of the media set the homepage showcase renders. CPRIE cycles
     // all three desktop views and both phone faces, Waxlist cycles its three
     // desktop views with the front phone, and Nibbles shows its single live
-    // view here while reserving extra desktop slots for its project page.
+    // view here.
     showcase: { desktop: 1 | 3; phone: ("front" | "back")[] }
 }
 // Override individual device slots here. Omitted slots keep their existing media.
@@ -90,35 +93,19 @@ export const showcaseMedia: Record<
         desktop: {
             0: {
                 type: "video",
-                src: "/images/nibbles-with-nifa/nwn-hp-1.mp4",
+                src: "/images/nibbles-with-nifa/nwn-des-1.mp4",
                 width: 1470,
                 height: 802,
                 poster: implementedPortfolioProjects[1].cover.src,
                 alt: "Nibbles with Nifa desktop homepage walkthrough",
                 label: "Homepage",
             },
-            1: {
-                type: "image",
-                src: "/images/nibbles-with-nifa/recipes.webp",
-                width: 1440,
-                height: 900,
-                alt: "Nibbles with Nifa recipe index with the heading 'What shall we eat?', a short introduction and three recipe cards.",
-                label: "Recipes",
-            },
-            2: {
-                type: "image",
-                src: "/images/nibbles-with-nifa/travel-feature.webp",
-                width: 1440,
-                height: 900,
-                alt: "Nibbles with Nifa travel feature with a Japan street photograph and a link to the travel stories.",
-                label: "Travel",
-            },
         },
         mobile: {
             front: {
                 type: "video",
-                src: "/images/nibbles-with-nifa/nwn-mobile-1.mp4",
-                poster: "/images/nibbles-with-nifa/nwn-1.png",
+                src: "/images/nibbles-with-nifa/nwn-mb-1.mp4",
+                poster: "/images/nibbles-with-nifa/nwn-mb-sc-1.png",
                 alt: "Nibbles with Nifa mobile homepage walkthrough",
                 label: "Mobile homepage",
                 position: "center top",
@@ -188,39 +175,14 @@ export const projectPresentations: ProjectPresentationData[] =
         const cover: PreviewMedia = {
             ...project.cover,
             label: "Homepage",
-            width: index === 0 ? 1440 : 1918,
-            height: index === 0 ? 900 : index === 1 ? 951 : 900,
-        }
-        const desktop: ProjectPresentationData["desktop"] =
-            index === 0
-                ? ([
-                      cover,
-                      ...["conditions-system", "science-structure"].map(
-                          (id) => {
-                              const still = project.evidence.stills.find(
-                                  (item) => item.id === id,
-                              )!
-                              return {
-                                  src: still.src,
-                                  alt: still.alt,
-                                  label:
-                                      id === "conditions-system"
-                                          ? "Conditions"
-                                          : "Science",
-                              }
-                          },
-                      ),
-                  ] as ProjectPresentationData["desktop"])
-                : (["top", "center", "bottom"].map((position, i) => ({
-                      ...cover,
-                      position,
-                      label: `Temporary cover view ${i + 1} of 3`,
-                  })) as ProjectPresentationData["desktop"])
-        const phone = {
-            ...cover,
             position: "center top",
         }
         const media = showcaseMedia[project.slug]
+        const desktop: PreviewMedia[] = [
+            media?.desktop?.[0] ?? cover,
+            media?.desktop?.[1],
+            media?.desktop?.[2],
+        ].filter((item): item is PreviewMedia => item !== undefined)
         const cyclesDesktop =
             project.slug === "chronic-pain-recovery" ||
             project.slug === "waxlist"
@@ -232,14 +194,10 @@ export const projectPresentations: ProjectPresentationData[] =
             tint: projectTints[project.slug],
             side: index === 1 ? "right" : "left",
             bubbles: bubbles[index],
-            desktop: [
-                media?.desktop?.[0] ?? desktop[0],
-                media?.desktop?.[1] ?? desktop[1],
-                media?.desktop?.[2] ?? desktop[2],
-            ],
+            desktop,
             phone: {
-                front: media?.mobile?.front ?? { ...phone },
-                back: media?.mobile?.back ?? { ...phone },
+                front: media?.mobile?.front ?? { ...cover },
+                back: media?.mobile?.back ?? { ...cover },
             },
             showcase: {
                 desktop: cyclesDesktop ? 3 : 1,

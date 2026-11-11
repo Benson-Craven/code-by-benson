@@ -2,6 +2,9 @@
 
 Date: 2026-11-06
 
+> Superseded in part by ADR 0023 (2026-11-11): the paired frames were removed
+> because their current slots held architecture diagrams.
+
 ## Decision
 
 `/projects/nibbles-with-nifa` now shows the real homepage still in the hero, the

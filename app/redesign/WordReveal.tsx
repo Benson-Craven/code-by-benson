@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef } from "react"
+import { wordRevealOpacity, wordRevealProgress } from "./wordRevealTiming"
 
 type WordRevealProps = {
     text: string
@@ -36,21 +37,14 @@ export default function WordReveal({ text, className }: WordRevealProps) {
             if (reduced.matches) return
 
             const rect = host.getBoundingClientRect()
-            const viewport = window.innerHeight
-            const start = viewport * 0.8
-            const span = viewport * 0.35 + rect.height
-            const progress = Math.min(
-                1,
-                Math.max(0, (start - rect.top) / Math.max(1, span)),
-            )
+            const progress = wordRevealProgress(rect.top, window.innerHeight)
 
-            // A small overlap per word keeps the leading edge soft instead of
-            // switching a whole word at once.
-            const position = progress * (spans.length + 3)
-
+            // The helper keeps a soft leading edge, so the words do not all
+            // switch on at once.
             spans.forEach((word, index) => {
-                const value = Math.min(1, Math.max(0, position - index))
-                word.style.opacity = String(0.12 + 0.88 * value)
+                word.style.opacity = String(
+                    wordRevealOpacity(progress, spans.length, index),
+                )
             })
         }
 

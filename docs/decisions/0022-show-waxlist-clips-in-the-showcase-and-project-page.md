@@ -2,6 +2,9 @@
 
 Date: 2026-11-07
 
+> Superseded in part by ADR 0023 (2026-11-11): the wide frame now plays the
+> homepage clip and the separate walkthrough section is gone.
+
 ## Decision
 
 The Waxlist showcase now cycles three desktop clips: the homepage, the

@@ -266,7 +266,7 @@ export const nibblesWithNifaProject = {
         },
     ],
     cover: {
-        src: "/images/nibbles-with-nifa/home.png",
+        src: "/images/nibbles-with-nifa/nwn-sc.png",
         alt: "Nibbles with Nifa homepage with recipe and travel photography beneath the publication title.",
         width: 1440,
         height: 900,

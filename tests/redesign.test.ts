@@ -290,7 +290,12 @@ test("presentations preserve project order, project links and replaceable media"
     for (const project of projectPresentations) {
         assert.equal(project.href, `/projects/${project.slug}`)
         assert.equal(project.bubbles.length, 3)
-        assert.equal(project.desktop.length, 3)
+        // Only the views with real media are listed. Nibbles has one desktop
+        // capture; the other projects have three.
+        assert.equal(
+            project.desktop.length,
+            project.slug === "nibbles-with-nifa" ? 1 : 3,
+        )
         assert.notEqual(project.phone.front, project.phone.back)
         for (const media of [
             ...project.desktop,
@@ -366,30 +371,32 @@ test("showcase device slots select independent clips and images with fallbacks",
             "/images/chronic-pain-recovery/science.webp",
         ],
     )
+    assert.equal(nibbles.desktop.length, 1)
     assert.equal(nibbles.desktop[0].type, "video")
-    assert.equal(nibbles.desktop[1].type, "image")
-    assert.equal(nibbles.desktop[2].type, "image")
     assert.equal(
-        nibbles.desktop[1].src,
-        "/images/nibbles-with-nifa/recipes.webp",
-    )
-    assert.equal(
-        nibbles.desktop[2].src,
-        "/images/nibbles-with-nifa/travel-feature.webp",
+        nibbles.desktop[0].src,
+        "/images/nibbles-with-nifa/nwn-des-1.mp4",
     )
     assert.equal(nibbles.phone.front.type, "video")
     assert.equal(
         nibbles.phone.front.src,
-        "/images/nibbles-with-nifa/nwn-mobile-1.mp4",
+        "/images/nibbles-with-nifa/nwn-mb-1.mp4",
     )
     assert.equal(
         nibbles.phone.front.poster,
-        "/images/nibbles-with-nifa/nwn-1.png",
+        "/images/nibbles-with-nifa/nwn-mb-sc-1.png",
     )
     assert.equal(
         nibbles.phone.back.src,
         implementedPortfolioProjects[1].cover.src,
     )
+    // The project pages show real product media only. The architecture
+    // diagrams stay on the /work case studies.
+    for (const project of [nibbles, waxlist]) {
+        for (const media of project.desktop) {
+            assert.doesNotMatch(media.src, /\.svg$/)
+        }
+    }
     // Waxlist cycles the homepage, collection and privacy clips, with the two
     // new clips after the landing view.
     assert.deepEqual(
@@ -1384,17 +1391,23 @@ test("project pages frame screenshots and keep only the short narrative", async 
 
     for (const marker of [
         "BrowserFrame",
-        "PixelDevelop",
         "WordReveal",
         "data-project-hero={project.slug}",
-        "pairShots.map",
+        "pairMedia.map",
         "const pairMedia =",
-        "showcaseMedia[project.slug]?.desktop?.[1]",
-        'id="project-clip"',
+        "const wideMedia",
+        "desktopMedia?.[1]",
+        "preview.personal",
         "data-project-cover={nextProject.slug}",
     ]) {
         assert.ok(page.includes(marker), `missing ${marker}`)
     }
+
+    // The project pages keep real product media and no longer fall back to the
+    // architecture diagrams or end on a separate walkthrough clip.
+    assert.doesNotMatch(page, /project\.evidence/)
+    assert.doesNotMatch(page, /project-clip/)
+    assert.doesNotMatch(page, /leadShot|pairShots|PixelDevelop/)
 
     // Captions were the bulk of the remaining copy; alt text keeps the detail.
     assert.doesNotMatch(page, /<figcaption/)
@@ -1440,7 +1453,7 @@ test("every project page section keeps the faint grid", async () => {
     )
 
     const sections = page.match(/<section\b[^>]*>/g) ?? []
-    assert.equal(sections.length, 4)
+    assert.equal(sections.length, 3)
     for (const section of sections) {
         assert.ok(section.includes("grid-paper"), "section lost its grid")
         assert.ok(
@@ -1494,8 +1507,32 @@ test("project copy reveals word by word and reads at one size on phones", async 
         "utf8",
     )
     // Phones read body copy at one size, whatever the block.
-    assert.equal(caseSource.match(/max-md:text-xl/g)?.length, 3)
+    assert.equal(caseSource.match(/max-md:text-xl/g)?.length, 4)
     assert.doesNotMatch(caseSource, /caseClipNote/)
+})
+
+test("project pages carry a personal note and reveal it promptly", async () => {
+    const { projectPreviewCopy } =
+        await import("../app/redesign/projectDetailData")
+    for (const copy of Object.values(projectPreviewCopy)) {
+        assert.ok(copy.personal.heading.length > 0)
+        assert.ok(copy.personal.body.length > 0)
+        assert.doesNotMatch(copy.personal.body, /—/)
+    }
+
+    const { wordRevealOpacity, wordRevealProgress } =
+        await import("../app/redesign/wordRevealTiming")
+    const viewport = 900
+    // The reveal starts as the paragraph reaches the viewport bottom.
+    assert.equal(wordRevealProgress(viewport, viewport), 0)
+    // It completes before the paragraph reaches the middle of the viewport.
+    assert.ok(wordRevealProgress(viewport * 0.55, viewport) >= 0.999)
+    assert.ok(wordRevealProgress(viewport * 0.75, viewport) > 0.5)
+    // Words start faint rather than invisible, and the last one reaches full
+    // strength by the end of the travel.
+    assert.equal(wordRevealOpacity(0, 40, 0), 0.12)
+    assert.ok(wordRevealOpacity(1, 40, 39) >= 0.999)
+    assert.ok(wordRevealOpacity(0.5, 40, 10) > 0.12)
 })
 
 test("the frog speech bubble develops like a screenshot frame", async () => {

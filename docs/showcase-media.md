@@ -1,16 +1,16 @@
 # Showcase media
 
-Edit `showcaseMedia` near the top of `app/redesign/projectPresentationData.ts`. Each project has independent `desktop` and `mobile` entries. Desktop keys `0`, `1` and `2` select the three laptop views. Mobile keys `front` and `back` select the two phone faces. Each slot accepts either an image or a clip. Omitted slots keep their existing media.
+Edit `showcaseMedia` near the top of `app/redesign/projectPresentationData.ts`. Each project has independent `desktop` and `mobile` entries. Desktop keys `0`, `1` and `2` select the three laptop views. Mobile keys `front` and `back` select the two phone faces. Each slot accepts either an image or a clip. Omitted slots are absent; the project pages only render the media that exists.
 
 Waxlist renders all three desktop clips and the phone's `front` preview, with all three frog speech bubbles. Its phone stays front-facing without flipping, and the `back` face is omitted.
 
-Nibbles with Nifa renders only desktop slot `0` and the phone's `front` preview, with all three frog speech bubbles. Its phone stays front-facing without flipping. The other desktop slots are reserved for its project page.
+Nibbles with Nifa renders only desktop slot `0` and the phone's `front` preview, with all three frog speech bubbles. Its phone stays front-facing without flipping. Its project page uses the same wide clip and has no paired frames.
 
 Chronic Pain Recovery renders all three desktop clips and both phone faces, so the section cycles through the homepage, conditions and science views before flipping the phone. Each desktop clip keeps a matching still as its poster, which is what shows while the clip loads.
 
-The Nibbles project page also reads desktop slots `1` and `2` for its two half-width screenshot frames. Those are live captures of the recipe index and the travel feature; the homepage showcase still renders only slot `0`. The project page skips its separate walkthrough section because the desktop clip fills the main frame and the real homepage still fills the hero.
+The Nibbles project page uses slot `0` in its wide frame. It has no paired frames: the earlier recipe-index and travel-feature captures belonged to the previous public design and were removed from `showcaseMedia`. The architecture diagrams stay on `/work/nibbles-with-nifa`, next to the decisions they explain.
 
-The Waxlist project page reads slots `1` and `2` for its two half-width frames, which show the Collection and Privacy clips. Its wide frame keeps the workspace architecture still.
+The Waxlist project page uses slot `0` in its wide frame and slots `1` and `2` in the paired frames. Its wide frame plays the homepage clip, and its separate walkthrough section is gone. The walkthrough clip stays on `/work/waxlist`.
 
 These are device mockup slots, not viewport overrides. The scroll sequence shows both laptop and phone views on narrow screens. Put files under `public/images` and use paths beginning with `/images`.
 
