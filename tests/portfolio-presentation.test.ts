@@ -151,7 +151,8 @@ test("public pages avoid high-confidence machine-written copy tells", async () =
     ])
     const renderedPages = [
         await readFile(path.join(process.cwd(), "app/(site)/page.tsx"), "utf8"),
-        await renderDefaultComponent("../app/not-found"),
+        await readFile(path.join(process.cwd(), "app/not-found.tsx"), "utf8"),
+        await renderDefaultComponent("../app/redesign/TrickFrog"),
         await renderDefaultComponent("../app/loading"),
     ]
     const redesignedCopy = await Promise.all(

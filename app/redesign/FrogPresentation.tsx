@@ -22,7 +22,8 @@ import {
     presentationProgress,
     responsivePresentationProgress,
 } from "./projectPresentationData"
-import { foodTreatment, heartTreatment, frogTrick } from "./frogTreatment"
+import { foodTreatment, heartTreatment } from "./frogTreatment"
+import { createFrogTricks } from "./frogTricks"
 import FrogFood from "./FrogFood"
 import FrogFlag from "./FrogFlag"
 import { pickAllWorkDialogue, pickFooterDialogue } from "./frogDialogue"
@@ -56,16 +57,9 @@ export default function FrogPresentation() {
         const artwork = root.querySelector<SVGSVGElement>(
             "[data-frog-trick-art]",
         )!
-        const firefly = artwork.querySelector<SVGGElement>("[data-firefly]")!
-        const tongues = Array.from(
-            artwork.querySelectorAll<SVGPathElement>("[data-frog-tongue]"),
-        )
         const status = root.querySelector<HTMLElement>(
             "[data-frog-trick-status]",
         )!
-        const setMessage = (text: string) => {
-            status.textContent = text
-        }
         const dialogue = root.querySelector<HTMLElement>(
             "[data-frog-dialogue]",
         )!
@@ -91,7 +85,7 @@ export default function FrogPresentation() {
                 () => {
                     dialogueTimer = undefined
                     if (!dialogueActive) return
-                    if (busy) {
+                    if (tricks.busy) {
                         scheduleDialogue()
                         return
                     }
@@ -208,13 +202,6 @@ export default function FrogPresentation() {
             if (active) scheduleWorkDialogue()
             else clearWorkDialogue()
         }
-        let footerSeen = false
-        let clicks = 0
-        let busy = false
-        let caught = false
-        const catchState = { reach: 0, returning: false }
-        const flight = { x: 78, y: 23 }
-        let flightTween: gsap.core.Tween | undefined
         const reduced = matchMedia("(prefers-reduced-motion: reduce)")
         const desktop = matchMedia("(min-width: 1024px) and (pointer: fine)")
         const narrow = matchMedia("(max-width: 1023px)")
@@ -237,7 +224,6 @@ export default function FrogPresentation() {
         let disposed = false
         let failed = false
         let loading = false
-        let hop: gsap.core.Timeline | undefined
         let aboutAnimation: gsap.core.Timeline | undefined
         let badgeState: "off" | "entering" | "on" | "leaving" = "off"
         let badgeTimeline: gsap.core.Timeline | undefined
@@ -543,118 +529,6 @@ export default function FrogPresentation() {
             gsap.set(host, { y: 0 })
         }
 
-        function drawCatch() {
-            if (!frog) return
-            const mouth = frog.mouthScreenPos()
-            const hostRect = host.getBoundingClientRect()
-            const artRect = artwork.getBoundingClientRect()
-            if (!artRect.width || !artRect.height) return
-            const x =
-                ((hostRect.left + mouth.x - artRect.left) / artRect.width) * 100
-            const y =
-                ((hostRect.top + mouth.y - artRect.top) / artRect.height) * 105
-            const tipX = x + (flight.x - x) * catchState.reach
-            const tipY = y + (flight.y - y) * catchState.reach
-            tongues.forEach((tongue) =>
-                tongue.setAttribute(
-                    "d",
-                    catchState.reach > 0 ? `M${x} ${y}L${tipX} ${tipY}` : "",
-                ),
-            )
-            if (catchState.returning)
-                firefly.setAttribute("transform", `translate(${tipX} ${tipY})`)
-        }
-
-        function resetTrick() {
-            hop?.kill()
-            busy = false
-            button.removeAttribute("aria-disabled")
-            catchState.reach = 0
-            tongues.forEach((tongue) => tongue.removeAttribute("d"))
-            gsap.set(host, { y: 0 })
-            gsap.set(firefly, { opacity: caught ? 0 : footerSeen ? 1 : 0 })
-        }
-
-        function fly() {
-            if (disposed || caught) return
-            const rect = artwork.getBoundingClientRect()
-            const minX = Math.max(-47.5, ((8 - rect.left) / rect.width) * 100)
-            const maxX = Math.min(
-                147.5,
-                ((innerWidth - 8 - rect.left) / rect.width) * 100,
-            )
-            const start = { ...flight }
-            const end = {
-                x: minX + Math.random() * (maxX - minX),
-                y: narrow.matches
-                    ? -45 + Math.random() * 90
-                    : -55 + Math.random() * 180,
-            }
-            const control = {
-                x: gsap.utils.clamp(
-                    minX,
-                    maxX,
-                    (start.x + end.x) / 2 + (Math.random() - 0.5) * 60,
-                ),
-                y: gsap.utils.clamp(
-                    -55,
-                    125,
-                    (start.y + end.y) / 2 + (Math.random() - 0.5) * 60,
-                ),
-            }
-            const progress = { value: 0 }
-            flightTween = gsap.to(progress, {
-                value: 1,
-                duration:
-                    3.5 +
-                    Math.hypot(end.x - start.x, end.y - start.y) / 30 +
-                    Math.random() * 1.5,
-                ease: "sine.inOut",
-                onUpdate: () => {
-                    const t = progress.value
-                    const remaining = 1 - t
-                    flight.x =
-                        remaining ** 2 * start.x +
-                        2 * remaining * t * control.x +
-                        t ** 2 * end.x
-                    flight.y =
-                        remaining ** 2 * start.y +
-                        2 * remaining * t * control.y +
-                        t ** 2 * end.y
-                    firefly.setAttribute(
-                        "transform",
-                        `translate(${flight.x} ${flight.y})`,
-                    )
-                },
-                onComplete: fly,
-            })
-        }
-
-        function updateFirefly(running: boolean) {
-            const rect = footer.getBoundingClientRect()
-            const visible = rect.top < innerHeight && rect.bottom > 0
-            if (visible && !footerSeen) {
-                footerSeen = true
-                firefly.setAttribute("transform", "translate(78 23)")
-                gsap.set(firefly, { opacity: 1 })
-            }
-            const flying =
-                visible &&
-                !document.hidden &&
-                !reduced.matches &&
-                !caught &&
-                !failed
-            artwork.dataset.fluttering = String(flying)
-            if (flying) {
-                if (flightTween) flightTween.resume()
-                else fly()
-            } else flightTween?.pause()
-            if (hop && busy) {
-                if (running && visible) hop.resume()
-                else hop.pause()
-            }
-        }
-
         function badgeInset() {
             return narrow.matches ? 20 : 24
         }
@@ -944,7 +818,7 @@ export default function FrogPresentation() {
                 placement.height,
                 window.innerHeight,
             )
-            updateFirefly(running)
+            tricks.update(running)
             updateDialogue(running)
             updateWorkDialogue(running)
             frog?.setPaused(!running)
@@ -1000,9 +874,7 @@ export default function FrogPresentation() {
             frog?.destroy()
             frog = undefined
             layer.style.visibility = "hidden"
-            resetTrick()
-            flightTween?.pause()
-            artwork.dataset.fluttering = "false"
+            tricks.reset()
         }
 
         async function ensureFrog() {
@@ -1024,7 +896,7 @@ export default function FrogPresentation() {
 
         function preferences() {
             resetAboutAnimation()
-            resetTrick()
+            tricks.reset()
             // A preference change can land mid-tween, so settle the greeting
             // before scroll position decides which state it should show.
             gsap.killTweensOf(greetingMotion)
@@ -1048,73 +920,25 @@ export default function FrogPresentation() {
         }
 
         function visibility() {
-            if (document.hidden) hop?.pause()
-            else if (hop && hop.progress() < 1) hop.resume()
             smoothScroll()
             position()
         }
 
-        function trick() {
-            if (busy) return
-            clearDialogue()
-            scheduleDialogue()
-            if (clicks >= 4) {
-                setMessage("Sighs...")
-                return
-            }
-            if (reduced.matches || !frog || failed) {
-                setMessage(
-                    "The frog is resting. Tricks need animation enabled.",
-                )
-                return
-            }
-            const action = frogTrick(++clicks)
-            setMessage("")
-            frog.wake()
-            busy = true
-            button.setAttribute("aria-disabled", "true")
-            const complete = (text: string) => {
-                busy = false
-                button.removeAttribute("aria-disabled")
-                setMessage(text)
-                frog?.setAttention(null)
-            }
-            if (action === "catch") {
-                caught = true
-                flightTween?.kill()
-                artwork.dataset.fluttering = "false"
-                catchState.returning = false
-                frog.setAttention(-0.5, -0.3)
-                hop = gsap
-                    .timeline({
-                        onUpdate: drawCatch,
-                        onComplete: () => {
-                            tongues.forEach((tongue) =>
-                                tongue.removeAttribute("d"),
-                            )
-                            gsap.set(firefly, { opacity: 0 })
-                            frog?.talk(0.4)
-                            complete("Gulp!")
-                        },
-                    })
-                    .to(
-                        catchState,
-                        { reach: 1, duration: 0.22, ease: "power2.in" },
-                        0.2,
-                    )
-                    .set(catchState, { returning: true })
-                    .to(
-                        catchState,
-                        { reach: 0, duration: 0.3, ease: "power2.in" },
-                        "+=0.08",
-                    )
-                return
-            }
-            hop = gsap
-                .timeline({ onComplete: () => complete("One small hop!") })
-                .to(host, { y: -64, duration: 0.26, ease: "power2.out" })
-                .to(host, { y: 0, duration: 0.32, ease: "power2.in" })
-        }
+        const tricks = createFrogTricks({
+            host,
+            artwork,
+            button,
+            status,
+            footer,
+            getFrog: () => frog,
+            reduced: () => reduced.matches,
+            narrow: () => narrow.matches,
+            failed: () => failed,
+            beforeTrick: () => {
+                clearDialogue()
+                scheduleDialogue()
+            },
+        })
 
         const observer = new ResizeObserver(measure)
         observer.observe(root)
@@ -1131,7 +955,6 @@ export default function FrogPresentation() {
             if (!disposed) measure()
         })
 
-        button.addEventListener("click", trick)
         measure()
         preferences()
 
@@ -1147,22 +970,13 @@ export default function FrogPresentation() {
             desktop.removeEventListener("change", preferences)
             narrow.removeEventListener("change", measure)
             held.removeEventListener("change", measure)
-            button.removeEventListener("click", trick)
+            tricks.destroy()
             gsap.ticker.remove(tick)
             lenis?.destroy()
-            hop?.kill()
             aboutAnimation?.kill()
             resetBadge()
-            flightTween?.kill()
             gsap.killTweensOf(greetingMotion)
-            gsap.killTweensOf([
-                layer,
-                host,
-                firefly,
-                catchState,
-                ...hearts,
-                ...foods,
-            ])
+            gsap.killTweensOf([layer, host, ...hearts, ...foods])
             artwork.dataset.fluttering = "false"
             button.removeAttribute("aria-disabled")
             frog?.canvas.removeEventListener("webglcontextlost", fail)
